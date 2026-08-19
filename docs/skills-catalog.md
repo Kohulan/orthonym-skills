@@ -39,6 +39,15 @@ the target if its signature also matches inputs that already succeed (a "lead", 
 **Triggers:** before proposing/starting a fix; whenever a cluster/tell/signature is named as "the thing
 to fix". **Wire up:** nothing; pairs with `cluster-failures` and `spy-site`.
 
+### `understand-before-merge`
+Make model-written code reviewable instead of skimmable. Delivers three parts in a fixed order: the code
+with a short "why" on each non-obvious decision, an explicit **failure-mode table** (malformed input, slow
+or dropped dependency, partial completion, concurrency, scale, auth, time, blast radius) that describes
+actual behaviour and marks the rows to trace by hand, and 3–7 **open questions** only the human can answer
+— left unanswered so the review gate stays human. Scales down for trivial helpers and skips explicitly
+throwaway code out loud. **Triggers:** any code the user intends to ship, merge, or run against real data —
+bug fixes, endpoints, pipelines, migrations, jobs — even "write me a function". **Wire up:** nothing.
+
 ---
 
 ## Workflow skills (wire in your project's commands)

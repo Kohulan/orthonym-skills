@@ -28,6 +28,7 @@ They were hardened on a real deterministic cheminformatics engine and generalize
 | [`fable-review`](skills/fable-review/) | Adversarially review a plan / finding / diagnosis with a cross-model reviewer before shipping |
 | [`spy-site`](skills/spy-site/) | Prove a code site is actually on the execution path *before* editing it |
 | [`check-target`](skills/check-target/) | Validate a proposed fix target is a real, single defect class before any code is written |
+| [`understand-before-merge`](skills/understand-before-merge/) | Write code that can actually be reviewed: inline reasoning, an explicit failure-mode table, and open questions only the human can answer |
 
 **Workflow skills — wire in your project's commands once (each says exactly what to substitute):**
 
