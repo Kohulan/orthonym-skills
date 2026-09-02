@@ -1,0 +1,12 @@
+{
+  "name": "stitch-skills",
+  "displayName": "stitch-skills",
+  "version": "0.2.0",
+  "description": "Claude Code skills, hooks and an agent for measurement-driven chemistry / ML tool development: decide from measurement, prove a code site is on the path before editing, reuse results before re-running, get an adversarial second opinion before shipping.",
+  "author": { "name": "Kohulan Rajan", "email": "kohulan.rajan@uni-jena.de" },
+  "homepage": "https://github.com/Kohulan/stitch-skills",
+  "repository": "https://github.com/Kohulan/stitch-skills",
+  "license": "MIT",
+  "keywords": ["claude-code", "agent-skills", "cheminformatics", "chemistry", "ml", "measurement"],
+  "hooks": "./hooks/hooks.json"
+}
