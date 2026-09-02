@@ -9,7 +9,7 @@ Produce a durable handoff so the next session can start with your project's `kic
 skill (or a bare "continue") instead of a hand-written multi-KB prompt.
 
 Wire this up: point step 3's file at wherever your project keeps its handoff note (e.g.
-`NEXT-SESSION.md`, a "resume" doc) and step 2 at wherever it keeps durable cross-session
+`HANDOFF.md`, a "resume" doc) and step 2 at wherever it keeps durable cross-session
 memory (a memory file, a wiki page, a project-notes doc).
 
 ## Steps
@@ -32,6 +32,13 @@ memory (a memory file, a wiki page, a project-notes doc).
    when it is wrong or superseded, never merely long. Moving genuinely new bulk into a
    separate topic note (rather than inlining everything into one file) is fine — that's
    composition, not trimming.
+
+2b. **Capture every session lesson into BOTH memory layers.** A lesson = anything the next
+   session must not re-learn: a refuted premise, a spy that changed a plan, a corpus error,
+   a working-style correction, a measured ceiling. Write each into **(a)** its durable note,
+   with **Why** + **How to apply**, and **(b)** your project's semantic memory tool, if it
+   has one, so `kickoff`'s searchable layer has it. Notes are the source of truth; never
+   leave one only in a task report or gitignored ledger.
 3. **Write your project's handoff note** (overwrite; keep it short, roughly ≤30 lines)
    from this template:
 

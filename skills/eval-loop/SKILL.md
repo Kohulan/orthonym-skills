@@ -1,6 +1,6 @@
 ---
 name: eval-loop
-description: The repeatable developer loop for improving a chemistry tool's accuracy — evaluate, diagnose one failure cluster, fix the root cause, re-evaluate, log. Use when the user says "improve accuracy", "work the loop", "run the eval loop", "what should we fix next", or wants measurable progress across iterations.
+description: Use when the user says "improve accuracy", "work the loop", "run the eval loop", "what should we fix next", or wants measurable progress on a chemistry model or pipeline across iterations. Also use when an accuracy push has no stated objective and no bounds, or when an iteration moved the headline number by zero and the next step is unclear.
 ---
 
 # The evaluation loop

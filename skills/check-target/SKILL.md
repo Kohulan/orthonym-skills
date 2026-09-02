@@ -1,6 +1,6 @@
 ---
 name: check-target
-description: Validate that a proposed fix target is a real, single defect class before any code is written. Use BEFORE proposing or starting a fix, and whenever a cluster, tell, signature, or failure pattern is named as "the thing to fix". Refuses the target if its signature also matches rows that already succeed.
+description: Use when a cluster, tell, signature, or failure pattern has been named as "the thing to fix" — before proposing, scoping, or starting any fix. Triggers on "the biggest failure class is X", on a fix target inherited from a handoff note, roadmap, or review, and on sizing a defect class by counting rows that match a tag or substring.
 ---
 
 # Check the target before you propose a fix

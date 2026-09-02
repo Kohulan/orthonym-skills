@@ -1,6 +1,6 @@
 ---
 name: refusal-census
-description: Attribute abstentions/failures to the specific code site that produced them, so build order can be ranked by measured blocking. Use when the question is "why did we abstain/fail on these", "which site is blocking the most inputs", or before scoping any coverage work. Answers what a run record alone cannot — every abstention in a typical run log reports the same undifferentiated code.
+description: Use when the question is "why did we abstain/fail on these", "which site is blocking the most inputs", or "what should we build to raise coverage" — and before scoping any coverage work. Triggers on a run whose failures all carry one undifferentiated reason code, and on a build order ranked by touched-count instead of measured sole-blocker count.
 ---
 
 # Census the refusals

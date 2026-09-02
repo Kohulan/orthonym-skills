@@ -1,6 +1,6 @@
 ---
 name: cluster-failures
-description: Group an eval run's failures by structural feature of the input molecule to decide what to fix next. Use after an eval run, or whenever the question is "what should I work on", "where are we losing", "what is the biggest failure class". ANALYSIS ONLY — findings must become general fixes, never per-molecule special cases or string post-processing on the output.
+description: Use after an eval or benchmark run, and whenever the question is "what should I work on", "where are we losing", or "what is the biggest failure class" — also before scoping any accuracy work. Triggers on failures bucketed by what the output looked like rather than by a structural feature of the input molecule. Analysis only — it ranks build order, it never licenses a per-molecule special case or a string rewrite on the output.
 ---
 
 # Cluster the failures

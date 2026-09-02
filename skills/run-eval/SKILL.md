@@ -1,6 +1,6 @@
 ---
 name: run-eval
-description: Measure your chemistry tool's accuracy on a fixed split. Use whenever the question is "did that change help", "what is our accuracy now", "run the eval/benchmark", or before and after any fix. Encodes the split rules, the gate configuration that makes a number interpretable, and which split must never be touched.
+description: Use whenever the question is "did that change help", "what is our accuracy now", or "run the eval/benchmark" — and before and after any fix to a chemistry model or pipeline. Triggers on quoting an accuracy number with no run id, on a hand-rolled measurement loop in a scratchpad, on a single headline rate quoted alone, and on any request to measure against a held-out split.
 ---
 
 # Run the evaluation

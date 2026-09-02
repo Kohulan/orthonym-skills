@@ -22,14 +22,23 @@ yet, skip that step and fall back to git plus whatever notes do exist.
    one correction it names **before** starting work — do not proceed on a drifted plan.
    If your project has an authoritative roadmap/plan doc, name it here so the drift-check
    agent knows where to look, and never let it re-open a decision your project has
-   explicitly locked.
-1. **Read your project's handoff note** (e.g. `NEXT-SESSION.md`, a "resume" doc, or
+   explicitly locked. **Its anchor check matters most: verify the handoff note against git
+   before trusting it** — if the note's declared last commit or phase is not what `git log`
+   shows, treat the note as stale and reconstruct from git plus the durable notes (step 3).
+1. **Read your project's handoff note** (e.g. `HANDOFF.md`, a "resume" doc, or
    whatever your project's end-of-session skill writes). It should be the primary state:
    current milestone/phase, last commit, any gate/benchmark baseline, the NEXT task, and
    active hazards/lessons.
-2. **Read the durable notes it points at** — at minimum whatever "start here" note covers
-   the current milestone, wherever your project keeps durable cross-session memory (a
-   memory file, a wiki, a project-notes doc, or similar).
+2. **Read BOTH memory layers, every kickoff.**
+   - **(a) File-based notes — the source of truth:** at minimum whatever "start here" note
+     the handoff points at for the current milestone, wherever your project keeps durable
+     cross-session memory (a memory file, a wiki, a project-notes doc, or similar).
+   - **(b) A semantic recall tool, if your project has one** (a searchable memory of past
+     sessions): query it **once** for "<current milestone> lessons / refuted premises"
+     before starting the task and read the top hits. The previous session's lessons are
+     written there at handoff, so that is where "have we tried / refuted this?" is answered
+     fastest. A recalled note is a **recall aid, never authoritative** over the file notes
+     plus git — verify it before acting (see *Cross-session recall* below).
 3. **Verify against git**: `git log -5 --oneline` and `git status --short`.
    - If the handoff note's "last commit" is not in the log, or the tree has unexplained
      changes, the note is stale: trust git plus the durable notes, say so in one

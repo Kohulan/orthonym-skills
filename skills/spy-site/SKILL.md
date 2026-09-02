@@ -1,6 +1,6 @@
 ---
 name: spy-site
-description: Prove a code site is actually on the execution path before editing it. Use BEFORE any fix that names a function, method, or module as "the place to change" — and whenever a plan, roadmap, or audit doc points at a central decision point. Refuses the site if it records zero calls for the target molecules.
+description: Use before any fix that names a function, method, or module as "the place to change", and whenever a plan, roadmap, audit doc, or review points at a central decision point. Triggers on "the fix goes in X", "X is where this is decided", and any code site inherited from a document rather than from a measurement.
 ---
 
 # Spy the site before you code
@@ -44,8 +44,8 @@ path" from "my spy is broken" with one data point. If neither positive registers
 broken; fix the spy before believing any zero.
 
 **4. Assert the counter is non-zero before believing any number derived from it.** A probe
-calling a non-existent method "succeeds" by never running (invariant 10). A `-k` selector
-matching no test exits 5 and looks like a pass.
+calling a non-existent method "succeeds" by never running — verify your harness actually
+ran before trusting its zero. A `-k` selector matching no test exits 5 and looks like a pass.
 
 **5. Run over the target rows and record the count.**
 

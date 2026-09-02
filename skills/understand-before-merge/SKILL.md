@@ -1,6 +1,6 @@
 ---
 name: understand-before-merge
-description: Produce code that can actually be reviewed - inline reasoning for every non-obvious decision, an explicit failure-mode table (slow dependencies, dropped connections, malformed input, concurrent callers, partial writes), and a short list of open questions only the human can answer. Use this skill whenever writing, refactoring, or reviewing code the user intends to ship, merge, or run against real data, including bug fixes, API endpoints, data pipelines, migrations, background jobs, and any script that touches a network, database, filesystem, or user input. Trigger it even when the user just says "write me a function" or "fix this bug", unless they have explicitly said the code is throwaway or exploratory.
+description: Use when writing, refactoring, or reviewing code the user intends to ship, merge, or run against real data — bug fixes, API endpoints, data pipelines, migrations, background jobs, and any script touching a network, database, filesystem, or user input. Triggers even on a bare "write me a function" or "fix this bug". Not for code the user has said is throwaway or exploratory.
 ---
 
 # Understand Before Merge

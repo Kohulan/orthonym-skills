@@ -17,9 +17,8 @@ project doesn't keep a formal roadmap doc, this check degrades gracefully to ste
    current). If your project has superseded an older roadmap with a newer one, read the
    current one and only consult the older one for locked decisions it explicitly says
    still bind.
-2. `<your-handoff-note>` — the declared NEXT TASK (often named something like
-   `NEXT-SESSION.md`; written by your project's end-of-session/handoff step, if it has
-   one).
+2. `<your-handoff-note>` — the declared NEXT TASK (a handoff note, e.g. `HANDOFF.md`;
+   written by your project's end-of-session/handoff step, if it has one).
 3. `git log -8 --oneline` — what actually shipped recently.
 4. The active plan file for the current phase, if your project's workflow names one
    (e.g. a spec/plan doc under a `plans/` directory).

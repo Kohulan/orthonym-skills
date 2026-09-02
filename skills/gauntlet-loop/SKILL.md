@@ -1,6 +1,6 @@
 ---
 name: gauntlet-loop
-description: Turns any goal into one short, paste-ready "gauntlet loop" prompt - a prompt that makes an agent set a concrete quality bar, split the work into small judgeable pieces, run a builder and a separate harsh critic on each, compare blind against the bar, and loop until it wins. Works for builds, writing, code, research, or design. Triggers on "/gauntlet-loop", "gauntlet loop", "gauntlet this", "make a gauntlet prompt", "loop until it beats X".
+description: Use when the user wants an agent to grind on a goal until it beats a named reference — triggers on "/gauntlet-loop", "gauntlet loop", "gauntlet this", "make a gauntlet prompt", "loop until it beats X", or "make it as good as <named thing>". Applies to builds, writing, code, research, and design goals alike.
 ---
 
 # Gauntlet Loop

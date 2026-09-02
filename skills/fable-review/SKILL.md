@@ -1,6 +1,6 @@
 ---
 name: fable-review
-description: Adversarially review a plan / finding / diagnosis with a cross-model FABLE reviewer before shipping. Use before committing a load-bearing plan, when a diagnosis is load-bearing, or when the user says "fable-review" / "review the plan with fable". Targets a common failure mode in chemistry-tool development — a confident-but-wrong PREMISE.
+description: Use before shipping a load-bearing plan, diagnosis, or finding — anything whose premise, if wrong, wastes the next iteration. Triggers on "fable-review", "review the plan with fable", "get a second opinion", a diagnosis about to size or scope a build, and any claim repeated across sessions without being re-derived. Not for ordinary line-by-line code review.
 ---
 
 # Fable review — independent cross-model challenge of a plan/diagnosis
@@ -32,7 +32,8 @@ Agent(
 ```
 
 Run it in the **background** (async) when the user wants to continue other work meanwhile; wait
-for it when the plan is blocking a commit. One reviewer, not a fan-out (`feedback_no_oversized_agent_fanout`).
+for it when the plan is blocking a commit. One reviewer, not a fan-out — an oversized fan-out
+of reviewers adds cost, not independence.
 
 ## The review brief (fill in the doc path)
 
@@ -62,6 +63,6 @@ for it when the plan is blocking a commit. One reviewer, not a fan-out (`feedbac
 
 ## After the review
 
-Treat findings per `superpowers:receiving-code-review` — verify each with rigour, don't
+Treat findings the way good code review should be received — verify each with rigour, don't
 performatively agree, don't blindly implement. A [BLOCKER] must be resolved (or explicitly
 refuted with evidence) before the plan ships. Record durable outcomes in the finding doc.
