@@ -1,0 +1,35 @@
+# This CITATION.cff file was generated for stitch-skills.
+# Validate with:  cffconvert --validate   (https://github.com/citation-file-format/cffconvert)
+cff-version: 1.2.0
+message: "If you use these skills, hooks or the agent in your work, please cite them as below."
+type: software
+title: "stitch-skills: Claude Code skills for measurement-driven chemistry development"
+abstract: >-
+  A collection of Claude Code skills, PreToolUse hooks and a reference-consult agent that
+  encode a measurement-first development discipline for chemistry software and ML tools:
+  prove a code site is on the execution path before editing it, validate a fix target is a
+  real defect class before building, reuse existing results before re-running expensive
+  measurements, bound optimisation objectives, and obtain an adversarial cross-model review
+  before shipping a load-bearing claim. Hardened on a deterministic SMILES-to-IUPAC naming
+  engine and generalized so the method transfers to other chemistry sub-domains.
+authors:
+  - family-names: Rajan
+    given-names: Kohulan
+    orcid: "https://orcid.org/0000-0003-1066-7792"
+    email: kohulan.rajan@uni-jena.de
+    affiliation: "Beilstein-Institut, Frankfurt am Main, Germany; Friedrich Schiller University Jena, Jena, Germany"
+version: 0.2.0
+date-released: 2026-09-02
+license: MIT
+repository-code: "https://github.com/Kohulan/stitch-skills"
+url: "https://github.com/Kohulan/stitch-skills"
+keywords:
+  - claude-code
+  - agent-skills
+  - large-language-models
+  - cheminformatics
+  - chemistry
+  - machine-learning
+  - measurement-driven-development
+  - regression-gate
+  - reproducibility

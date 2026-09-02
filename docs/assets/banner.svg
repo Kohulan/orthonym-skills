@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 280" width="1200" height="280" role="img" aria-labelledby="t d">
+  <title id="t">stitch-skills</title>
+  <desc id="d">Claude Code skills for measurement-driven chemistry development</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1f2a"/>
+      <stop offset="0.55" stop-color="#0f3d4a"/>
+      <stop offset="1" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2dd4bf"/>
+      <stop offset="1" stop-color="#a78bfa"/>
+    </linearGradient>
+    <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
+      <path d="M28 0H0V28" fill="none" stroke="#ffffff" stroke-opacity="0.045" stroke-width="1"/>
+    </pattern>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="280" rx="18" fill="url(#bg)"/>
+  <rect width="1200" height="280" rx="18" fill="url(#grid)"/>
+
+  <!-- wordmark -->
+  <text x="64" y="118" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="64" font-weight="700" fill="#f8fafc" letter-spacing="-1">stitch<tspan fill="url(#accent)">-</tspan>skills</text>
+  <text x="66" y="160" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="22" fill="#cbd5e1">Claude Code skills for measurement-driven chemistry development</text>
+  <text x="66" y="206" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="18" font-style="italic" fill="#94a3b8">Decide from measurement, not from a confident guess.</text>
+
+  <!-- chips -->
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#e2e8f0">
+    <rect x="66" y="228" width="92" height="26" rx="13" fill="#ffffff" fill-opacity="0.08" stroke="#2dd4bf" stroke-opacity="0.6"/>
+    <text x="112" y="246" text-anchor="middle">20 skills</text>
+    <rect x="168" y="228" width="84" height="26" rx="13" fill="#ffffff" fill-opacity="0.08" stroke="#a78bfa" stroke-opacity="0.6"/>
+    <text x="210" y="246" text-anchor="middle">2 hooks</text>
+    <rect x="262" y="228" width="80" height="26" rx="13" fill="#ffffff" fill-opacity="0.08" stroke="#f472b6" stroke-opacity="0.6"/>
+    <text x="302" y="246" text-anchor="middle">1 agent</text>
+    <rect x="352" y="228" width="150" height="26" rx="13" fill="#ffffff" fill-opacity="0.08" stroke="#fbbf24" stroke-opacity="0.6"/>
+    <text x="427" y="246" text-anchor="middle">plugin-installable</text>
+  </g>
+
+  <!-- the loop: measure -> diagnose -> fix -> gate, stitched -->
+  <g transform="translate(790 40)">
+    <path d="M60 100 C 60 40, 150 20, 200 60 S 340 40, 340 100 S 250 180, 200 140 S 60 160, 60 100 Z"
+          fill="none" stroke="url(#accent)" stroke-width="3" stroke-dasharray="10 8" stroke-linecap="round" opacity="0.9"/>
+    <!-- nodes -->
+    <g filter="url(#glow)">
+      <circle cx="60" cy="100" r="16" fill="#2dd4bf"/>
+      <circle cx="200" cy="60" r="16" fill="#60a5fa"/>
+      <circle cx="340" cy="100" r="16" fill="#a78bfa"/>
+      <circle cx="200" cy="140" r="16" fill="#f472b6"/>
+    </g>
+    <!-- bonds between nodes, molecule-like -->
+    <g stroke="#ffffff" stroke-opacity="0.35" stroke-width="2">
+      <line x1="76" y1="100" x2="184" y2="62"/>
+      <line x1="216" y1="60" x2="324" y2="98"/>
+      <line x1="324" y1="102" x2="216" y2="140"/>
+      <line x1="184" y1="138" x2="76" y2="102"/>
+      <line x1="200" y1="76" x2="200" y2="124"/>
+    </g>
+    <g font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="13" font-weight="600" fill="#e2e8f0" text-anchor="middle">
+      <text x="60" y="140">measure</text>
+      <text x="200" y="36">diagnose</text>
+      <text x="340" y="140">fix at root</text>
+      <text x="200" y="176">gate</text>
+    </g>
+    <!-- checkmark badge -->
+    <g transform="translate(300 8)">
+      <circle cx="0" cy="0" r="14" fill="#0b1f2a" stroke="#2dd4bf" stroke-width="2"/>
+      <path d="M-6 0 L-2 4 L7 -5" fill="none" stroke="#2dd4bf" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </g>
+</svg>

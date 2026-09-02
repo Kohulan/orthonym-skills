@@ -1,98 +1,218 @@
-# stitch-skills
+<div align="center">
 
-**Claude Code skills for measurement-driven chemistry development.**
+<a href="https://github.com/Kohulan/stitch-skills">
+  <img src="docs/assets/banner.svg" alt="stitch-skills — Claude Code skills for measurement-driven chemistry development" width="100%">
+</a>
 
-A collection of [Claude Code](https://docs.claude.com/en/docs/claude-code) *skills* — packaged
-instruction sets Claude loads on demand to follow a specific workflow — plus two guard *hooks* and one
-reference-consult *agent*, aimed at anyone building
-**chemistry software or ML tools**: property prediction, structure↔name, reaction / retrosynthesis
-prediction, docking / QSAR, molecular generation, cheminformatics pipelines.
+<br/><br/>
 
-They were hardened on a real deterministic cheminformatics engine and generalized here so the
-*method* transfers to any chemistry sub-domain. The through-line of every skill:
+[![License: MIT](https://img.shields.io/badge/license-MIT-0f766e.svg?style=flat-square)](LICENSE)
+[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-1d4ed8.svg?style=flat-square&logo=anthropic&logoColor=white)](#install)
+[![Skills](https://img.shields.io/badge/skills-20-7c3aed.svg?style=flat-square)](#the-skills)
+[![Hooks](https://img.shields.io/badge/hooks-2-b45309.svg?style=flat-square)](#hooks)
+[![Agent](https://img.shields.io/badge/agent-1-be185d.svg?style=flat-square)](#agent)
+[![Cite](https://img.shields.io/badge/cite-CITATION.cff-475569.svg?style=flat-square)](#cite)
+[![ORCID](https://img.shields.io/badge/ORCID-0000--0003--1066--7792-a6ce39.svg?style=flat-square&logo=orcid&logoColor=white)](https://orcid.org/0000-0003-1066-7792)
 
-> **Decide from measurement, not from a confident guess.** Prove a code site is on the execution path
-> before you edit it. Prove a fix target is a real defect class before you build. Bound your
-> objectives before you optimise. Get an adversarial second opinion before you ship a load-bearing
-> claim. Attribute failures to the exact site that produced them.
+<br/>
 
-> **Topics:** `claude` · `claude-code` · `agent-skills` · `cheminformatics` · `chemistry` · `ml`
+**Decide from measurement, not from a confident guess.**
+
+Skills, hooks and an agent for [Claude Code](https://docs.claude.com/en/docs/claude-code) — hardened on a
+real deterministic cheminformatics engine, generalized for anyone building **chemistry software or ML
+tools**: property prediction, structure ↔ name, reaction / retrosynthesis prediction, docking / QSAR,
+molecular generation, cheminformatics pipelines.
+
+[**Install**](#install) · [**The skills**](#the-skills) · [**Hooks**](#hooks) · [**Agent**](#agent) ·
+[**Catalog**](docs/skills-catalog.md) · [**Cite**](#cite)
+
+</div>
+
+---
+
+## Why this exists
+
+Autonomous coding agents fail in one recurring way: a **confident-but-wrong premise** that every test
+passes, because tests verify code, not reasoning. Every skill here closes one gap in that chain:
+
+> Prove a code site is on the execution path **before** you edit it.
+> Prove a fix target is a real defect class **before** you build.
+> Reuse the result you already have **before** you re-measure for four hours.
+> Bound your objectives **before** you optimise.
+> Get an adversarial second opinion **before** you ship a load-bearing claim.
+> Attribute failures to the exact site that produced them.
+
+## The loop
+
+The workflow skills chain into one repeatable session. Process skills (below the line) fire wherever a
+decision is about to be made on trust.
+
+```mermaid
+flowchart LR
+    K([kickoff]) --> RE["run-eval\nmeasure on a fixed split"]
+    RE --> CF["cluster-failures\nrefusal-census"]
+    CF --> CT["check-target\none real defect class"]
+    CT --> SS["spy-site\nis the site on the path?"]
+    SS --> BU["build at the root\nunderstand-before-merge"]
+    BU --> RG["run-gate\nstructured verdict"]
+    RG --> FR["fable-review\ncross-model challenge"]
+    FR --> HO([handoff])
+    HO -. next session .-> K
+    RB["reuse-before-rerun"] -. before any run > 1 min .-> RE
+    RB -.-> RG
+    WB["watching-background-jobs"] -. while it runs .-> RG
+    classDef proc fill:#f1f5f9,stroke:#64748b,color:#0f172a
+    classDef gate fill:#ccfbf1,stroke:#0f766e,color:#134e4a
+    classDef side fill:#ede9fe,stroke:#6d28d9,color:#3b0764
+    class RE,CF,CT,SS,BU proc
+    class RG,FR gate
+    class RB,WB side
+```
+
+## Install
+
+**As a plugin** — everything in two commands, inside Claude Code:
+
+```text
+/plugin marketplace add Kohulan/stitch-skills
+/plugin install stitch-skills@stitch-skills
+```
+
+You get all 20 skills (as `/stitch-skills:<name>`), the `reference-consult` agent, and the
+`block-git-add-all` hook. The `ask-gate` hook is opt-in — see [`hooks/README.md`](hooks/README.md).
+
+<details>
+<summary><b>Copy only what you want</b></summary>
+
+```bash
+# per-project
+cp -r skills/spy-site  /path/to/your/project/.claude/skills/
+# user-global (every session on this machine)
+cp -r skills/spy-site  ~/.claude/skills/
+```
+
+Invoke by name — `/spy-site` — or let Claude pick the skill up from its description when your task
+matches. Full options, hooks and agent setup: [`docs/INSTALL.md`](docs/INSTALL.md).
+</details>
+
+<details>
+<summary><b>Clone and track upstream</b></summary>
+
+```bash
+git clone https://github.com/Kohulan/stitch-skills.git ~/stitch-skills
+ln -s ~/stitch-skills/skills/spy-site ~/.claude/skills/spy-site
+git -C ~/stitch-skills pull      # update
+```
+</details>
 
 ## The skills
 
-**Process skills — ready to use, no setup:**
+### 🧭 Process skills — ready to use, no setup
 
-| Skill | Purpose |
-|---|---|
-| [`gauntlet-loop`](skills/gauntlet-loop/) | Turn any goal into a builder-vs-harsh-critic loop that runs until it beats a stated bar |
-| [`council`](skills/council/) | A 3-voice, search-first process for strategy / prioritization / "your call" decisions |
-| [`fable-review`](skills/fable-review/) | Adversarially review a plan / finding / diagnosis with a cross-model reviewer before shipping |
-| [`spy-site`](skills/spy-site/) | Prove a code site is actually on the execution path *before* editing it |
-| [`check-target`](skills/check-target/) | Validate a proposed fix target is a real, single defect class before any code is written |
-| [`understand-before-merge`](skills/understand-before-merge/) | Write code that can actually be reviewed: inline reasoning, an explicit failure-mode table, and open questions only the human can answer |
-| [`enumerate-first`](skills/enumerate-first/) | Before arguing a case is "unreachable" or "rare", enumerate it: confirm the decision point executes at all |
-| [`verify-source`](skills/verify-source/) | Before stating what a spec / standard / paper requires, read the source — never a note that quotes it |
-| [`prove-invariant`](skills/prove-invariant/) | When a suite passes but you are not sure the values are *right*: prove the invariant, don't trust the golden file |
-| [`change-asserted-value`](skills/change-asserted-value/) | Whenever a change would move a committed expected value (golden, snapshot, asserted label, benchmark target) |
-| [`bounded-goals`](skills/bounded-goals/) | Write the success criteria of an optimisation loop as one objective plus explicit bounds, so multi-metric loops stop thrashing |
+| Skill | When it fires | What it forces |
+|---|---|---|
+| [`spy-site`](skills/spy-site/) | Before any fix that names a function as "the place to change" | Instrument, run a known positive, count calls. Zero calls = wrong site. |
+| [`check-target`](skills/check-target/) | Before starting a fix on a named cluster or signature | The signature must not also match inputs that already succeed. |
+| [`enumerate-first`](skills/enumerate-first/) | "Probably unreachable", "edge case", "unlikely to matter" | Enumerate the space and count. The count is the answer. |
+| [`verify-source`](skills/verify-source/) | "The spec says…", "per IUPAC / RFC / ISO…" | Open the source, cite the section. Never a note that quotes it. |
+| [`prove-invariant`](skills/prove-invariant/) | A suite passes but you are not sure the values are *right* | Derive the invariant the output must satisfy and test that. |
+| [`change-asserted-value`](skills/change-asserted-value/) | A change would move a golden file, snapshot, or asserted label | Answer "which is wrong, the code or the expectation?" with evidence first. |
+| [`bounded-goals`](skills/bounded-goals/) | Writing success criteria with more than one metric | One objective, explicit bounds on the rest. Multi-objective loops thrash. |
+| [`council`](skills/council/) | "Which option?", "what next?", "is X worth it?", "your call" | Search first, three named voices, one recorded call with a flip condition. |
+| [`fable-review`](skills/fable-review/) | Before shipping a load-bearing plan, finding, or diagnosis | An adversarial review by a *different* model. Refute, don't agree. |
+| [`gauntlet-loop`](skills/gauntlet-loop/) | "Loop until it beats X" | Builder vs. harsh critic against a stated bar, until it wins. |
+| [`understand-before-merge`](skills/understand-before-merge/) | Any code meant to ship, merge, or touch real data | Inline reasoning, a failure-mode table, open questions only a human can answer. |
 
-**Workflow skills — wire in your project's commands once (each says exactly what to substitute):**
+### 🔁 Workflow skills — wire in your project's commands once
 
-| Skill | Purpose |
-|---|---|
-| [`run-gate`](skills/run-gate/) | Run a regression gate correctly: fast pre-check → background launch → wait on a verdict file → read the *structured* verdict, not the exit code |
-| [`run-eval`](skills/run-eval/) | Measure accuracy on a fixed split, reading several numbers (not one) so you can tell "fixed a wrong output" from "stopped emitting one" |
-| [`eval-loop`](skills/eval-loop/) | The repeatable measure→diagnose-one-class→fix-at-root→re-measure→gate→log loop, with bounded objectives |
-| [`cluster-failures`](skills/cluster-failures/) | Group failures by a *structural feature of the input molecule* to decide what to fix next (analysis only) |
-| [`refusal-census`](skills/refusal-census/) | Attribute abstentions/failures to the exact code site that produced them; rank build order by measured *sole-blocker* count |
-| [`kickoff`](skills/kickoff/) | Start/resume a session by self-priming from durable state (handoff note + notes + git) instead of a hand-written prompt |
-| [`handoff`](skills/handoff/) | End-of-session handoff — verify durable memory is written and produce a next-session resume note |
-| [`reuse-before-rerun`](skills/reuse-before-rerun/) | Before any run longer than a minute, sweep the ledger, repo, scratch dirs and notes for the existing result; declare REUSE / EXTEND / RERUN with a cost line |
-| [`watching-background-jobs`](skills/watching-background-jobs/) | Own the watch loop for a multi-hour job yourself (no zombie watcher agents), post a one-line progress line at each wake-up, tell a stall from a quiet compute phase |
+| Skill | When it fires | What it forces |
+|---|---|---|
+| [`kickoff`](skills/kickoff/) | Session start, "continue", "resume" | Self-prime from the handoff note, both memory layers and `git log`; drift-check before trusting the plan. |
+| [`run-eval`](skills/run-eval/) | "What is the accuracy?" | A fixed, hashed split; several numbers, so "fixed a wrong output" ≠ "stopped emitting one". |
+| [`cluster-failures`](skills/cluster-failures/) | Deciding what to fix next | Group by a structural feature of the input. Analysis only, never per-item patches. |
+| [`refusal-census`](skills/refusal-census/) | Ranking build order | Attribute each abstention to its code site; rank by *sole-blocker* count. |
+| [`eval-loop`](skills/eval-loop/) | The improvement loop itself | measure → one class → root fix → re-measure → gate → log, with bounded goals. |
+| [`reuse-before-rerun`](skills/reuse-before-rerun/) | Before any run longer than a minute; "how many…", "where is the run from…" | One sweep of ledger, repo, scratch dirs, notes. Then a 3-line **REUSE / EXTEND / RERUN** verdict. |
+| [`run-gate`](skills/run-gate/) | Before shipping a phase | Background launch, wait on the verdict file, read the *structured* verdict, never the exit code. |
+| [`watching-background-jobs`](skills/watching-background-jobs/) | Anything running longer than ~5 minutes | Own the watch loop; one progress line per wake-up; CPU check before calling a stall. |
+| [`handoff`](skills/handoff/) | Wrapping up a session | Lessons into both memory layers; a resume note; never trim durable notes. |
 
-**Hooks** ([`hooks/`](hooks/)) — mechanical guards for rules that prose keeps losing:
+<details>
+<summary><b>What a skill's output looks like</b></summary>
 
-| Hook | Purpose |
-|---|---|
-| [`block-git-add-all`](hooks/) | PreToolUse on Bash: denies `git add -A` / `git add .` / `git commit -a` so generated files never get swept into a commit |
-| [`ask-gate`](hooks/) | PreToolUse on AskUserQuestion: in autonomous runs, lets only the 4 hard stops through (destructive, security/publish, 30k+ or 1h+ run, plan so broken every path is a guess); logs the rest |
+`reuse-before-rerun` ends every reply that reports a number with this block:
 
-**Agent** ([`agents/`](agents/)) — [`reference-consult`](agents/reference-consult.md): a subagent that reads
-the reference documents a project relies on (standards, specifications, published rules, reference data files) to extract the rule, its citation and its worked examples, so you implement
-at the root cause, from the document's own words.
+```text
+Existing: results/h2h/summary_chebifull_*.json · 2026-08-31 · HEAD 4133b60e
+Verdict:  REUSE — no commits to src/ since the run date
+Cost:     0 (reused)
+```
 
-**Reference docs** ([`reference-docs/`](reference-docs/)) — domain knowledge you point Claude at (not
-invocable). `rdkit-perception`, `fix-methodology`, `testing-commands` are chemistry-general; the
-[`examples-iupac-naming/`](reference-docs/examples-iupac-naming/) pack is a *worked example* of a
+`watching-background-jobs` ends every wake-up that shows progress with one line:
+
+```text
+gate · 2100/5000 (42%) · 40/min · ETA 08:43 UTC · last: "[2100/5000] row ok"
+```
+</details>
+
+## Hooks
+
+Mechanical guards for the two rules prose instructions kept losing under pressure. Both are
+`PreToolUse` hooks; [`hooks/README.md`](hooks/README.md) has the settings block and the one-line tests.
+
+| Hook | Matcher | Denies | Escape |
+|---|---|---|---|
+| [`block-git-add-all`](hooks/block-git-add-all.py) | `Bash` | `git add -A`, `git add .`, `git add --all`, `git commit -a` | Name the paths. |
+| [`ask-gate`](hooks/ask-gate.py) | `AskUserQuestion` | Any question that is not one of the 4 hard stops: destructive, security / publish, 30k+ rows or 1h+ run, plan so broken every path is a guess | `HARD STOP:` prefix, `ASK_GATE_OFF=1`, `.claude/ask-gate.off` |
+
+## Agent
+
+[`reference-consult`](agents/reference-consult.md) — a subagent that reads the reference documents a project relies on (standards, specifications, published rules, reference data files) and returns the rule: the rule, the code site, the reference's own test
+cases, what the reference gets wrong, and a confidence per finding. The main agent then re-implements
+root-cause. **Documents only, never source code.**
+
+## Reference docs
+
+[`reference-docs/`](reference-docs/) holds domain knowledge you point Claude at (not invocable).
+`rdkit-perception`, `fix-methodology`, `testing-commands` are chemistry-general. The
+[`examples-iupac-naming/`](reference-docs/examples-iupac-naming/) pack is a worked example of a
 domain-specific knowledge file, for when you build your own.
 
 ## Why "chemistry" and not "any code"?
 
-The process skills are genuinely domain-neutral, but the workflow skills assume the texture of
-chemistry-tool development: molecules and structures as inputs, reference-free validation by
-round-tripping through a parser/canonicalizer (e.g. RDKit → canonical InChIKey), fixed benchmark
-splits, and models/pipelines that *abstain* rather than emit a wrong structure. That framing is what
-makes them concrete instead of generic advice.
+The process skills are domain-neutral. The workflow skills assume the texture of chemistry-tool
+development: molecules as inputs, reference-free validation by round-tripping through a parser or
+canonicalizer (RDKit → canonical InChIKey), fixed benchmark splits, and pipelines that *abstain* rather
+than emit a wrong structure. That framing is what makes them concrete instead of generic advice.
 
-## Install
+## Contributing
 
-See **[`docs/INSTALL.md`](docs/INSTALL.md)**. Two ways:
+Run the release gate before a pull request:
 
-```text
-# 1. as a Claude Code plugin (all skills + the block-git-add-all hook + the agent, one command each)
-/plugin marketplace add Kohulan/stitch-skills
-/plugin install stitch-skills@stitch-skills
-
-# 2. copy only what you want
-cp -r skills/spy-site  /path/to/your/project/.claude/skills/   # per-project
-cp -r skills/spy-site  ~/.claude/skills/                        # user-global
+```bash
+python3 scripts/lint_skills.py        # frontmatter, names, triggers, leaked project tokens
+claude plugin validate . --strict     # plugin + marketplace manifests
 ```
 
-The `ask-gate` hook is opt-in even with the plugin — see [`hooks/README.md`](hooks/README.md).
+Every skill is tested the same way it was written: a baseline run **without** the skill that shows the
+failure, then a run **with** it that shows compliance. Bring both to the PR.
 
-Invoke by name in Claude Code — `/spy-site` — or let Claude pick it up from its description when your
-task matches. Per-skill "what to wire up" notes are in [`docs/skills-catalog.md`](docs/skills-catalog.md).
+## Cite
+
+If these skills, hooks or the agent help your work, please cite the repository
+([`CITATION.cff`](CITATION.cff) — GitHub's *Cite this repository* button reads it):
+
+```bibtex
+@software{rajan_stitch_skills_2026,
+  author    = {Rajan, Kohulan},
+  title     = {stitch-skills: Claude Code skills for measurement-driven chemistry development},
+  year      = {2026},
+  version   = {0.2.0},
+  url       = {https://github.com/Kohulan/stitch-skills},
+  license   = {MIT}
+}
+```
 
 ## License
 
-[MIT](LICENSE) © 2026 Kohulan. Skills are instruction text — use, adapt, and redistribute freely.
+[MIT](LICENSE) © 2026 Kohulan Rajan. Skills are instruction text — use, adapt, and redistribute freely.
