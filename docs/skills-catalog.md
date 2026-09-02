@@ -48,6 +48,39 @@ actual behaviour and marks the rows to trace by hand, and 3–7 **open questions
 throwaway code out loud. **Triggers:** any code the user intends to ship, merge, or run against real data —
 bug fixes, endpoints, pipelines, migrations, jobs — even "write me a function". **Wire up:** nothing.
 
+### `enumerate-first`
+Before you argue that a case is unreachable, rare, or not worth fixing — or before you tune any
+decision point — enumerate it: run the inputs and count how often the branch executes. "Probably
+unreachable" is a hypothesis; the count is the answer. **Triggers:** "edge case", "in practice this
+can't happen", "unlikely to matter", deciding whether a reported defect is real. **Wire up:** nothing.
+
+### `verify-source`
+Before stating what a specification, standard, RFC, paper, or datasheet requires, open the source and
+cite the section — even when a project note, a prior session, or another agent already asserts the
+rule. Notes drift; the source does not. **Triggers:** "the spec says", "per IUPAC / RFC / ISO", citing a
+section number, resolving a disagreement between code and a claimed rule. **Wire up:** nothing.
+
+### `prove-invariant`
+For correctness-critical output, a passing suite whose only oracle is a stored expectation proves
+nothing about the values. Derive the invariant the output must satisfy (a round-trip, a conservation
+law, a canonical form) and test that. **Triggers:** "all tests pass but…", "is this actually correct",
+regression suites for scientific or algorithmic output, before trusting a test you just wrote.
+**Wire up:** nothing.
+
+### `change-asserted-value`
+Use whenever a change would alter a committed expected value — a golden file, snapshot, asserted
+label, reference output, benchmark target — including when the new value looks obviously right.
+Forces the question "which one is wrong, the code or the expectation?" to be answered with evidence
+before the file moves. **Triggers:** updating a failing assertion to match current output, "the test
+expectation is stale". **Wire up:** nothing.
+
+### `bounded-goals`
+Write the success criteria of an optimisation or evaluation loop as **one objective plus explicit
+bounds** on every other metric. Multi-objective goals make every change a regression on something and
+stall the loop. **Triggers:** writing or revising `goals.json` / acceptance thresholds / benchmark
+targets with more than one metric; a loop where every proposed change is rejected. **Wire up:** nothing;
+`eval-loop` consumes the result.
+
 ---
 
 ## Workflow skills (wire in your project's commands)
@@ -103,6 +136,51 @@ your roadmap for the drift-check.
 End-of-session handoff — verify durable memory is written and produce a next-session resume note so the
 next session needs no hand-written prompt. Includes the "never trim your memory file to hit a byte
 target" lesson. **Wire up:** your memory-verification step and next-session-note path.
+
+### `reuse-before-rerun`
+Every expensive run is a claim that no usable result exists. Prove it first: one sweep over the
+results ledger, the repo, scratch directories, and notes; then a mandatory 3-line verdict block
+(**Existing / Verdict REUSE | EXTEND | RERUN / Cost**) in every reply that reports a number or
+launches a run; then a ledger row when the run finishes so the next session finds it. **Triggers:**
+about to run a benchmark, census, full gate, multi-row spy, or corpus-scale job; "how many…", "show me
+the table", "where is the run from <date>". **Wire up:** the ledger path, your results directories,
+and the search roots in `sweep.sh` (env vars; defaults work for a plain git repo).
+
+### `watching-background-jobs`
+Own the watch loop for a long job yourself: baseline the log, arm a scheduled wake-up, check CPU before
+calling a stall, and end every wake-up that shows progress with **one progress line** (done/total,
+rate, ETA, last log line). A spawned "watcher agent" dies at the end of its turn — never delegate the
+loop. **Triggers:** launching anything expected to run more than ~5 minutes; "is it still running?",
+"how much done?", "ping me when it's done". **Wire up:** your log / sentinel file paths.
+
+---
+
+## Hooks (`hooks/`)
+
+Mechanical guards for the two rules that prose instructions kept losing under pressure. Install by
+pasting the `hooks` block from [`hooks/README.md`](../hooks/README.md) into your `settings.json`, or
+get `block-git-add-all` automatically with the plugin install.
+
+### `block-git-add-all`
+PreToolUse on `Bash`. Denies bulk staging (`git add -A`, `git add .`, `git add --all`, `git commit -a`)
+so scratch files, logs and generated data never get swept into a commit. Explicit paths always pass.
+
+### `ask-gate`
+PreToolUse on `AskUserQuestion`. For autonomous runs where the user has said "do not ask, decide":
+allows only the **4 hard stops** — irreversible/destructive actions, security/secrets/publishing, an
+expensive run (30k+ rows or 1h+), or a plan so broken every path is a guess — and denies the rest with
+a reason that tells the agent to choose and proceed. Denials are logged to `.claude/ask-gate.log` for
+review. Opt-in: prefix a question with `HARD STOP:` to force it through, or disable with
+`ASK_GATE_OFF=1` / a `.claude/ask-gate.off` file.
+
+## Agent (`agents/`)
+
+### `reference-consult`
+A subagent definition. Point it at the reference documents a project relies on (standards,
+specifications, published rules, reference data files) and it returns the rule with its exact citation,
+the document's own examples as test cases, where the text is silent or ambiguous, and a confidence, so
+the main agent implements it at the root cause. It reads documents, never source code. **Wire up:**
+the paths of your reference documents.
 
 ---
 

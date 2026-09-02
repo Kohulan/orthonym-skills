@@ -3,7 +3,8 @@
 **Claude Code skills for measurement-driven chemistry development.**
 
 A collection of [Claude Code](https://docs.claude.com/en/docs/claude-code) *skills* — packaged
-instruction sets Claude loads on demand to follow a specific workflow — aimed at anyone building
+instruction sets Claude loads on demand to follow a specific workflow — plus two guard *hooks* and one
+reference-consult *agent*, aimed at anyone building
 **chemistry software or ML tools**: property prediction, structure↔name, reaction / retrosynthesis
 prediction, docking / QSAR, molecular generation, cheminformatics pipelines.
 
@@ -29,6 +30,11 @@ They were hardened on a real deterministic cheminformatics engine and generalize
 | [`spy-site`](skills/spy-site/) | Prove a code site is actually on the execution path *before* editing it |
 | [`check-target`](skills/check-target/) | Validate a proposed fix target is a real, single defect class before any code is written |
 | [`understand-before-merge`](skills/understand-before-merge/) | Write code that can actually be reviewed: inline reasoning, an explicit failure-mode table, and open questions only the human can answer |
+| [`enumerate-first`](skills/enumerate-first/) | Before arguing a case is "unreachable" or "rare", enumerate it: confirm the decision point executes at all |
+| [`verify-source`](skills/verify-source/) | Before stating what a spec / standard / paper requires, read the source — never a note that quotes it |
+| [`prove-invariant`](skills/prove-invariant/) | When a suite passes but you are not sure the values are *right*: prove the invariant, don't trust the golden file |
+| [`change-asserted-value`](skills/change-asserted-value/) | Whenever a change would move a committed expected value (golden, snapshot, asserted label, benchmark target) |
+| [`bounded-goals`](skills/bounded-goals/) | Write the success criteria of an optimisation loop as one objective plus explicit bounds, so multi-metric loops stop thrashing |
 
 **Workflow skills — wire in your project's commands once (each says exactly what to substitute):**
 
@@ -41,6 +47,19 @@ They were hardened on a real deterministic cheminformatics engine and generalize
 | [`refusal-census`](skills/refusal-census/) | Attribute abstentions/failures to the exact code site that produced them; rank build order by measured *sole-blocker* count |
 | [`kickoff`](skills/kickoff/) | Start/resume a session by self-priming from durable state (handoff note + notes + git) instead of a hand-written prompt |
 | [`handoff`](skills/handoff/) | End-of-session handoff — verify durable memory is written and produce a next-session resume note |
+| [`reuse-before-rerun`](skills/reuse-before-rerun/) | Before any run longer than a minute, sweep the ledger, repo, scratch dirs and notes for the existing result; declare REUSE / EXTEND / RERUN with a cost line |
+| [`watching-background-jobs`](skills/watching-background-jobs/) | Own the watch loop for a multi-hour job yourself (no zombie watcher agents), post a one-line progress line at each wake-up, tell a stall from a quiet compute phase |
+
+**Hooks** ([`hooks/`](hooks/)) — mechanical guards for rules that prose keeps losing:
+
+| Hook | Purpose |
+|---|---|
+| [`block-git-add-all`](hooks/) | PreToolUse on Bash: denies `git add -A` / `git add .` / `git commit -a` so generated files never get swept into a commit |
+| [`ask-gate`](hooks/) | PreToolUse on AskUserQuestion: in autonomous runs, lets only the 4 hard stops through (destructive, security/publish, 30k+ or 1h+ run, plan so broken every path is a guess); logs the rest |
+
+**Agent** ([`agents/`](agents/)) — [`reference-consult`](agents/reference-consult.md): a subagent that reads
+the reference documents a project relies on (standards, specifications, published rules, reference data files) to extract the rule, its citation and its worked examples, so you implement
+at the root cause, from the document's own words.
 
 **Reference docs** ([`reference-docs/`](reference-docs/)) — domain knowledge you point Claude at (not
 invocable). `rdkit-perception`, `fix-methodology`, `testing-commands` are chemistry-general; the
@@ -57,15 +76,19 @@ makes them concrete instead of generic advice.
 
 ## Install
 
-See **[`docs/INSTALL.md`](docs/INSTALL.md)**. Short version — copy a skill directory into a skills path
-Claude Code reads:
+See **[`docs/INSTALL.md`](docs/INSTALL.md)**. Two ways:
 
-```bash
-# per-project
-cp -r skills/spy-site  /path/to/your/project/.claude/skills/
-# user-global (every session on this machine)
-cp -r skills/spy-site  ~/.claude/skills/
+```text
+# 1. as a Claude Code plugin (all skills + the block-git-add-all hook + the agent, one command each)
+/plugin marketplace add Kohulan/stitch-skills
+/plugin install stitch-skills@stitch-skills
+
+# 2. copy only what you want
+cp -r skills/spy-site  /path/to/your/project/.claude/skills/   # per-project
+cp -r skills/spy-site  ~/.claude/skills/                        # user-global
 ```
+
+The `ask-gate` hook is opt-in even with the plugin — see [`hooks/README.md`](hooks/README.md).
 
 Invoke by name in Claude Code — `/spy-site` — or let Claude pick it up from its description when your
 task matches. Per-skill "what to wire up" notes are in [`docs/skills-catalog.md`](docs/skills-catalog.md).

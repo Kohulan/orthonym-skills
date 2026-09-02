@@ -8,9 +8,25 @@ Claude Code discovers *skills* from `SKILL.md` files under a `skills/` directory
   on the machine.
 
 Each skill here is a self-contained directory (`skills/<name>/` with a `SKILL.md`, sometimes plus
-helper files). Installing one = copying its directory into a skills path.
+helper files). Installing one = copying its directory into a skills path — or install everything at
+once as a plugin (Option 0).
 
 ---
+
+## Option 0 — Plugin (everything, two commands)
+
+The repo is a Claude Code plugin marketplace with one plugin. In Claude Code:
+
+```text
+/plugin marketplace add Kohulan/stitch-skills
+/plugin install stitch-skills@stitch-skills
+```
+
+You get every skill (namespaced as `/stitch-skills:<name>`, e.g. `/stitch-skills:spy-site`), the
+`reference-consult` agent, and the `block-git-add-all` hook. The `ask-gate` hook is **not** enabled by
+the plugin — it changes how Claude asks questions, so enable it per project (see "Hooks" below).
+Update with `/plugin update stitch-skills@stitch-skills`. Validate a checkout with
+`claude plugin validate .`.
 
 ## Option 1 — Per-project (recommended to start)
 
@@ -28,7 +44,8 @@ Scope stays local, and you can adapt a project-derived skill's paths without aff
 ## Option 2 — User-global (available everywhere)
 
 Best for the **process** skills (`gauntlet-loop`, `council`, `fable-review`, `spy-site`,
-`check-target`) that need no setup and are useful in any codebase:
+`check-target`, `enumerate-first`, `verify-source`, `prove-invariant`, `change-asserted-value`,
+`bounded-goals`) that need no setup and are useful in any codebase:
 
 ```bash
 mkdir -p ~/.claude/skills
@@ -78,7 +95,7 @@ or copy it next to your project docs and reference it from your own `CLAUDE.md`.
 ## Wiring up a workflow skill
 
 The **workflow** skills (`kickoff`, `handoff`, `run-gate`, `run-eval`, `eval-loop`,
-`cluster-failures`, `refusal-census`) encode a measurement discipline with **parameterized
+`cluster-failures`, `refusal-census`, `reuse-before-rerun`, `watching-background-jobs`) encode a measurement discipline with **parameterized
 placeholders** for the plumbing — a gate command, an eval command, a verdict file, a refusal-log
 parser, a handoff-note path. They run once you substitute your project's equivalents. Before using
 one:
@@ -89,6 +106,27 @@ one:
 3. Keep the *method* — the discipline the skill encodes; swap only the plumbing.
 
 The reasoning is the reusable part; the placeholders mark exactly what is yours to fill in.
+
+---
+
+## Hooks
+
+Two PreToolUse guards live in [`hooks/`](../hooks/). Copy the folder into your project and paste the
+`hooks` block from [`hooks/README.md`](../hooks/README.md) into `.claude/settings.json`:
+
+```bash
+mkdir -p /path/to/your/project/.claude/hooks
+cp hooks/*.py hooks/*.sh /path/to/your/project/.claude/hooks/
+```
+
+Test each hook with the one-line pipe commands in the same README before relying on it. Open `/hooks`
+once in Claude Code after editing settings so the change is picked up.
+
+## Agent
+
+Copy [`agents/reference-consult.md`](../agents/reference-consult.md) into
+`/path/to/your/project/.claude/agents/` and fill in the paths of your reference documents at the top.
+Claude then offers it as a subagent type.
 
 ---
 
