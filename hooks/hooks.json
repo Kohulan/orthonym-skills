@@ -1,5 +1,5 @@
 {
-  "description": "Hooks the stitch-skills plugin enables by default. Only block-git-add-all is wired here; ask-gate is opt-in (see hooks/README.md) because it changes how Claude asks questions.",
+  "description": "Hooks the Orthonym Skills plugin enables by default. Only block-git-add-all is wired here; ask-gate is opt-in (see hooks/README.md) because it changes how Claude asks questions.",
   "hooks": {
     "PreToolUse": [
       {
@@ -9,7 +9,7 @@
             "type": "command",
             "command": "bash \"${CLAUDE_PLUGIN_ROOT}\"/hooks/block-git-add-all.sh",
             "timeout": 10,
-            "statusMessage": "stitch-skills: guard bulk git add"
+            "statusMessage": "orthonym-skills: guard bulk git add"
           }
         ]
       }

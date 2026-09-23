@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 280" width="1200" height="280" role="img" aria-labelledby="t d">
-  <title id="t">stitch-skills</title>
+  <title id="t">Orthonym Skills</title>
   <desc id="d">Claude Code skills for measurement-driven chemistry development</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
@@ -24,7 +24,7 @@
   <rect width="1200" height="280" rx="18" fill="url(#grid)"/>
 
   <!-- wordmark -->
-  <text x="64" y="118" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="64" font-weight="700" fill="#f8fafc" letter-spacing="-1">stitch<tspan fill="url(#accent)">-</tspan>skills</text>
+  <text x="64" y="118" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="64" font-weight="700" fill="#f8fafc" letter-spacing="-1">Orthonym <tspan fill="url(#accent)">Skills</tspan></text>
   <text x="66" y="160" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="22" fill="#cbd5e1">Claude Code skills for measurement-driven chemistry development</text>
   <text x="66" y="206" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="18" font-style="italic" fill="#94a3b8">Decide from measurement, not from a confident guess.</text>
 
@@ -40,7 +40,7 @@
     <text x="427" y="246" text-anchor="middle">plugin-installable</text>
   </g>
 
-  <!-- the loop: measure -> diagnose -> fix -> gate, stitched -->
+  <!-- the loop: measure -> diagnose -> fix -> gate -->
   <g transform="translate(790 40)">
     <path d="M60 100 C 60 40, 150 20, 200 60 S 340 40, 340 100 S 250 180, 200 140 S 60 160, 60 100 Z"
           fill="none" stroke="url(#accent)" stroke-width="3" stroke-dasharray="10 8" stroke-linecap="round" opacity="0.9"/>

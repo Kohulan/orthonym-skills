@@ -1,7 +1,7 @@
 <div align="center">
 
-<a href="https://github.com/Kohulan/stitch-skills">
-  <img src="docs/assets/banner.svg" alt="stitch-skills — Claude Code skills for measurement-driven chemistry development" width="100%">
+<a href="https://github.com/Kohulan/orthonym-skills">
+  <img src="docs/assets/banner.svg" alt="Orthonym Skills — Claude Code skills for measurement-driven chemistry development" width="100%">
 </a>
 
 <br/><br/>
@@ -74,11 +74,11 @@ flowchart LR
 **As a plugin** — everything in two commands, inside Claude Code:
 
 ```text
-/plugin marketplace add Kohulan/stitch-skills
-/plugin install stitch-skills@stitch-skills
+/plugin marketplace add Kohulan/orthonym-skills
+/plugin install orthonym-skills@orthonym-skills
 ```
 
-You get all 20 skills (as `/stitch-skills:<name>`), the `reference-consult` agent, and the
+You get all 20 skills (as `/orthonym-skills:<name>`), the `reference-consult` agent, and the
 `block-git-add-all` hook. The `ask-gate` hook is opt-in — see [`hooks/README.md`](hooks/README.md).
 
 <details>
@@ -99,9 +99,9 @@ matches. Full options, hooks and agent setup: [`docs/INSTALL.md`](docs/INSTALL.m
 <summary><b>Clone and track upstream</b></summary>
 
 ```bash
-git clone https://github.com/Kohulan/stitch-skills.git ~/stitch-skills
-ln -s ~/stitch-skills/skills/spy-site ~/.claude/skills/spy-site
-git -C ~/stitch-skills pull      # update
+git clone https://github.com/Kohulan/orthonym-skills.git ~/orthonym-skills
+ln -s ~/orthonym-skills/skills/spy-site ~/.claude/skills/spy-site
+git -C ~/orthonym-skills pull      # update
 ```
 </details>
 
@@ -203,12 +203,12 @@ If these skills, hooks or the agent help your work, please cite the repository
 ([`CITATION.cff`](CITATION.cff) — GitHub's *Cite this repository* button reads it):
 
 ```bibtex
-@software{rajan_stitch_skills_2026,
+@software{rajan_orthonym_skills_2026,
   author    = {Rajan, Kohulan},
-  title     = {stitch-skills: Claude Code skills for measurement-driven chemistry development},
+  title     = {{Orthonym Skills}: {Claude Code} skills for measurement-driven chemistry development},
   year      = {2026},
   version   = {0.2.0},
-  url       = {https://github.com/Kohulan/stitch-skills},
+  url       = {https://github.com/Kohulan/orthonym-skills},
   license   = {MIT}
 }
 ```

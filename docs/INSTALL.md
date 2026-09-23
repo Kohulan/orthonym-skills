@@ -1,4 +1,4 @@
-# Installing stitch-skills into Claude Code
+# Installing Orthonym Skills into Claude Code
 
 Claude Code discovers *skills* from `SKILL.md` files under a `skills/` directory in two locations:
 
@@ -18,14 +18,14 @@ once as a plugin (Option 0).
 The repo is a Claude Code plugin marketplace with one plugin. In Claude Code:
 
 ```text
-/plugin marketplace add Kohulan/stitch-skills
-/plugin install stitch-skills@stitch-skills
+/plugin marketplace add Kohulan/orthonym-skills
+/plugin install orthonym-skills@orthonym-skills
 ```
 
-You get every skill (namespaced as `/stitch-skills:<name>`, e.g. `/stitch-skills:spy-site`), the
+You get every skill (namespaced as `/orthonym-skills:<name>`, e.g. `/orthonym-skills:spy-site`), the
 `reference-consult` agent, and the `block-git-add-all` hook. The `ask-gate` hook is **not** enabled by
 the plugin — it changes how Claude asks questions, so enable it per project (see "Hooks" below).
-Update with `/plugin update stitch-skills@stitch-skills`. Validate a checkout with
+Update with `/plugin update orthonym-skills@orthonym-skills`. Validate a checkout with
 `claude plugin validate .`.
 
 ## Option 1 — Per-project (recommended to start)
@@ -59,9 +59,9 @@ cp -r skills/fable-review  ~/.claude/skills/
 Keep the repo and pull updates; symlink the skills you use:
 
 ```bash
-git clone https://github.com/Kohulan/stitch-skills.git ~/stitch-skills
-ln -s ~/stitch-skills/skills/spy-site ~/.claude/skills/spy-site
-# `git -C ~/stitch-skills pull` to update
+git clone https://github.com/Kohulan/orthonym-skills.git ~/orthonym-skills
+ln -s ~/orthonym-skills/skills/spy-site ~/.claude/skills/spy-site
+# `git -C ~/orthonym-skills pull` to update
 ```
 
 Symlinks work as long as Claude Code can resolve them at read time. If your setup does not follow

@@ -15,7 +15,7 @@ at the file: *"read `opsin-reference.md` before proposing the name."*
 
 ## Why they're here
 
-Most of `stitch-skills` is chemistry-**general** — the skills work whether you build property models,
+Most of `orthonym-skills` is chemistry-**general** — the skills work whether you build property models,
 reaction predictors, docking pipelines, or naming engines. This pack is the exception on purpose: it
 shows what a *domain-specific* knowledge file looks like, so you can build your own for **your**
 sub-domain (e.g. a reactivity-rules doc, a force-field-parameter reference, an assay-protocol doc).
