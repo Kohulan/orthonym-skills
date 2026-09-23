@@ -1,74 +1,134 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 280" width="1200" height="280" role="img" aria-labelledby="t d">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 380" width="1200" height="380" role="img" aria-labelledby="t d">
   <title id="t">Orthonym Skills</title>
-  <desc id="d">Claude Code skills for measurement-driven chemistry development</desc>
+  <desc id="d">Claude Code skills, hooks and an agent for measurement-driven chemistry development. Decide from measurement, not from a confident guess.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0b1f2a"/>
-      <stop offset="0.55" stop-color="#0f3d4a"/>
-      <stop offset="1" stop-color="#1e1b4b"/>
+      <stop offset="0" stop-color="#07161f"/>
+      <stop offset="0.5" stop-color="#0c3340"/>
+      <stop offset="1" stop-color="#1a1845"/>
     </linearGradient>
     <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0" stop-color="#2dd4bf"/>
+      <stop offset="0.5" stop-color="#60a5fa"/>
       <stop offset="1" stop-color="#a78bfa"/>
     </linearGradient>
-    <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
-      <path d="M28 0H0V28" fill="none" stroke="#ffffff" stroke-opacity="0.045" stroke-width="1"/>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2dd4bf"/>
+      <stop offset="1" stop-color="#f472b6"/>
+    </linearGradient>
+    <radialGradient id="blobA" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#2dd4bf" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#2dd4bf" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="blobB" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#a78bfa" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#a78bfa" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#ffffff" stroke-opacity="0.04" stroke-width="1"/>
+    </pattern>
+    <pattern id="dots" width="32" height="32" patternUnits="userSpaceOnUse">
+      <circle cx="0" cy="0" r="1.2" fill="#ffffff" fill-opacity="0.10"/>
     </pattern>
     <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feGaussianBlur stdDeviation="5" result="b"/>
       <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
+    <clipPath id="card"><rect width="1200" height="380" rx="22"/></clipPath>
+    <path id="hex" d="M930 72 L1025.3 127 L1025.3 237 L930 292 L834.7 237 L834.7 127 Z"/>
   </defs>
 
-  <rect width="1200" height="280" rx="18" fill="url(#bg)"/>
-  <rect width="1200" height="280" rx="18" fill="url(#grid)"/>
+  <g clip-path="url(#card)">
+    <rect width="1200" height="380" fill="url(#bg)"/>
+    <rect width="1200" height="380" fill="url(#grid)"/>
+    <rect width="1200" height="380" fill="url(#dots)"/>
+    <circle cx="930" cy="182" r="260" fill="url(#blobA)"/>
+    <circle cx="1120" cy="40" r="220" fill="url(#blobB)"/>
+    <circle cx="120" cy="380" r="240" fill="url(#blobA)" opacity="0.6"/>
+    <rect x="0" y="0" width="1200" height="4" fill="url(#accent)"/>
+  </g>
+  <rect x="0.5" y="0.5" width="1199" height="379" rx="22" fill="none" stroke="#ffffff" stroke-opacity="0.08"/>
 
-  <!-- wordmark -->
-  <text x="64" y="118" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="64" font-weight="700" fill="#f8fafc" letter-spacing="-1">Orthonym <tspan fill="url(#accent)">Skills</tspan></text>
-  <text x="66" y="160" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="22" fill="#cbd5e1">Claude Code skills for measurement-driven chemistry development</text>
-  <text x="66" y="206" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="18" font-style="italic" fill="#94a3b8">Decide from measurement, not from a confident guess.</text>
-
-  <!-- chips -->
-  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#e2e8f0">
-    <rect x="66" y="228" width="92" height="26" rx="13" fill="#ffffff" fill-opacity="0.08" stroke="#2dd4bf" stroke-opacity="0.6"/>
-    <text x="112" y="246" text-anchor="middle">20 skills</text>
-    <rect x="168" y="228" width="84" height="26" rx="13" fill="#ffffff" fill-opacity="0.08" stroke="#a78bfa" stroke-opacity="0.6"/>
-    <text x="210" y="246" text-anchor="middle">2 hooks</text>
-    <rect x="262" y="228" width="80" height="26" rx="13" fill="#ffffff" fill-opacity="0.08" stroke="#f472b6" stroke-opacity="0.6"/>
-    <text x="302" y="246" text-anchor="middle">1 agent</text>
-    <rect x="352" y="228" width="150" height="26" rx="13" fill="#ffffff" fill-opacity="0.08" stroke="#fbbf24" stroke-opacity="0.6"/>
-    <text x="427" y="246" text-anchor="middle">plugin-installable</text>
+  <!-- eyebrow -->
+  <g font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="13" font-weight="600" letter-spacing="3">
+    <circle cx="70" cy="84" r="4" fill="#2dd4bf">
+      <animate attributeName="opacity" values="1;0.25;1" dur="2.4s" repeatCount="indefinite"/>
+    </circle>
+    <text x="84" y="89" fill="#5eead4">CLAUDE CODE PLUGIN · CHEMISTRY &amp; ML TOOLING</text>
   </g>
 
-  <!-- the loop: measure -> diagnose -> fix -> gate -->
-  <g transform="translate(790 40)">
-    <path d="M60 100 C 60 40, 150 20, 200 60 S 340 40, 340 100 S 250 180, 200 140 S 60 160, 60 100 Z"
-          fill="none" stroke="url(#accent)" stroke-width="3" stroke-dasharray="10 8" stroke-linecap="round" opacity="0.9"/>
-    <!-- nodes -->
+  <!-- wordmark -->
+  <text x="62" y="160" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="66" font-weight="800" fill="#f8fafc" letter-spacing="-2">Orthonym <tspan fill="url(#accent)">Skills</tspan></text>
+
+  <g font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif">
+    <text x="64" y="204" font-size="22" fill="#cbd5e1">Skills, hooks and an agent for Claude Code —</text>
+    <text x="64" y="234" font-size="22" fill="#cbd5e1">for <tspan fill="#f1f5f9" font-weight="600">measurement-driven</tspan> chemistry development.</text>
+    <rect x="64" y="258" width="3" height="24" rx="1.5" fill="#2dd4bf"/>
+    <text x="78" y="276" font-size="18" font-style="italic" fill="#94a3b8">Decide from measurement, not from a confident guess.</text>
+  </g>
+
+  <!-- chips -->
+  <g font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="13" font-weight="600" fill="#e2e8f0" text-anchor="middle">
+    <rect x="64" y="306" width="96" height="30" rx="15" fill="#2dd4bf" fill-opacity="0.12" stroke="#2dd4bf" stroke-opacity="0.7"/>
+    <text x="112" y="326">20 skills</text>
+    <rect x="170" y="306" width="88" height="30" rx="15" fill="#a78bfa" fill-opacity="0.12" stroke="#a78bfa" stroke-opacity="0.7"/>
+    <text x="214" y="326">2 hooks</text>
+    <rect x="268" y="306" width="84" height="30" rx="15" fill="#f472b6" fill-opacity="0.12" stroke="#f472b6" stroke-opacity="0.7"/>
+    <text x="310" y="326">1 agent</text>
+    <rect x="362" y="306" width="116" height="30" rx="15" fill="#fbbf24" fill-opacity="0.12" stroke="#fbbf24" stroke-opacity="0.7"/>
+    <text x="420" y="326">MIT · v0.2.0</text>
+  </g>
+
+  <!-- the loop as a benzene ring: six stages, one aromatic cycle -->
+  <g>
+    <use href="#hex" fill="#0b2530" fill-opacity="0.55" stroke="#ffffff" stroke-opacity="0.12" stroke-width="10" stroke-linejoin="round"/>
+    <use href="#hex" fill="none" stroke="url(#ring)" stroke-width="3" stroke-linejoin="round" stroke-dasharray="14 10">
+      <animate attributeName="stroke-dashoffset" from="0" to="-48" dur="1.6s" repeatCount="indefinite"/>
+    </use>
+    <!-- aromatic inner circle -->
+    <circle cx="930" cy="182" r="58" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="4 7">
+      <animateTransform attributeName="transform" type="rotate" from="0 930 182" to="360 930 182" dur="24s" repeatCount="indefinite"/>
+    </circle>
+    <text x="930" y="177" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="700" letter-spacing="2" fill="#94a3b8">THE</text>
+    <text x="930" y="195" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="700" letter-spacing="2" fill="#94a3b8">LOOP</text>
+
+    <!-- travelling pulse -->
+    <circle r="6" fill="#ffffff" filter="url(#glow)">
+      <animateMotion dur="7.2s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#hex"/>
+      </animateMotion>
+    </circle>
+
+    <!-- atoms -->
     <g filter="url(#glow)">
-      <circle cx="60" cy="100" r="16" fill="#2dd4bf"/>
-      <circle cx="200" cy="60" r="16" fill="#60a5fa"/>
-      <circle cx="340" cy="100" r="16" fill="#a78bfa"/>
-      <circle cx="200" cy="140" r="16" fill="#f472b6"/>
+      <circle cx="930" cy="72" r="13" fill="#2dd4bf"/>
+      <circle cx="1025.3" cy="127" r="13" fill="#38bdf8"/>
+      <circle cx="1025.3" cy="237" r="13" fill="#60a5fa"/>
+      <circle cx="930" cy="292" r="13" fill="#a78bfa"/>
+      <circle cx="834.7" cy="237" r="13" fill="#e879f9"/>
+      <circle cx="834.7" cy="127" r="13" fill="#f472b6"/>
     </g>
-    <!-- bonds between nodes, molecule-like -->
-    <g stroke="#ffffff" stroke-opacity="0.35" stroke-width="2">
-      <line x1="76" y1="100" x2="184" y2="62"/>
-      <line x1="216" y1="60" x2="324" y2="98"/>
-      <line x1="324" y1="102" x2="216" y2="140"/>
-      <line x1="184" y1="138" x2="76" y2="102"/>
-      <line x1="200" y1="76" x2="200" y2="124"/>
+    <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" font-weight="800" fill="#07161f" text-anchor="middle">
+      <text x="930" y="76">1</text><text x="1025.3" y="131">2</text><text x="1025.3" y="241">3</text>
+      <text x="930" y="296">4</text><text x="834.7" y="241">5</text><text x="834.7" y="131">6</text>
     </g>
-    <g font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="13" font-weight="600" fill="#e2e8f0" text-anchor="middle">
-      <text x="60" y="140">measure</text>
-      <text x="200" y="36">diagnose</text>
-      <text x="340" y="140">fix at root</text>
-      <text x="200" y="176">gate</text>
+
+    <!-- labels -->
+    <g font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#e2e8f0">
+      <text x="930" y="46" text-anchor="middle">measure</text>
+      <text x="1048" y="132">cluster</text>
+      <text x="1048" y="242">check target</text>
+      <text x="930" y="326" text-anchor="middle">spy the site</text>
+      <text x="812" y="242" text-anchor="end">fix at root</text>
+      <text x="812" y="132" text-anchor="end">gate</text>
     </g>
-    <!-- checkmark badge -->
-    <g transform="translate(300 8)">
-      <circle cx="0" cy="0" r="14" fill="#0b1f2a" stroke="#2dd4bf" stroke-width="2"/>
-      <path d="M-6 0 L-2 4 L7 -5" fill="none" stroke="#2dd4bf" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#64748b">
+      <text x="930" y="30" text-anchor="middle">run-eval</text>
+      <text x="1048" y="148">refusal-census</text>
+      <text x="1048" y="258">check-target</text>
+      <text x="930" y="342" text-anchor="middle">spy-site</text>
+      <text x="812" y="258" text-anchor="end">understand-before-merge</text>
+      <text x="812" y="148" text-anchor="end">run-gate</text>
     </g>
   </g>
 </svg>

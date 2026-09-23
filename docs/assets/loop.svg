@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 480" width="1200" height="480" role="img" aria-labelledby="t d">
+  <title id="t">The session loop</title>
+  <desc id="d">kickoff, run-eval, cluster-failures and refusal-census, check-target, spy-site, build at the root with understand-before-merge, run-gate, fable-review, handoff, then the next session starts again at kickoff. reuse-before-rerun fires before any measurement longer than a minute; watching-background-jobs fires while the gate runs.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07161f"/><stop offset="0.55" stop-color="#0c2a36"/><stop offset="1" stop-color="#171640"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2dd4bf"/><stop offset="0.5" stop-color="#60a5fa"/><stop offset="1" stop-color="#a78bfa"/>
+    </linearGradient>
+    <pattern id="dots" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="0" cy="0" r="1.2" fill="#fff" fill-opacity="0.08"/></pattern>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="card"><rect width="1200" height="480" rx="22"/></clipPath>
+    <path id="track" d="M230 180 H970 A88.0 88.0 0 0 1 970 356 H230 A88.0 88.0 0 0 1 230 180 Z"/>
+  </defs>
+  <g clip-path="url(#card)"><rect width="1200" height="480" fill="url(#bg)"/><rect width="1200" height="480" fill="url(#dots)"/></g>
+  <rect x="0.5" y="0.5" width="1199" height="479" rx="22" fill="none" stroke="#fff" stroke-opacity="0.08"/>
+  <text x="48" y="58" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="13" font-weight="600" letter-spacing="3" fill="#5eead4">THE SESSION LOOP</text>
+  <text x="48" y="92" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="24" font-weight="700" fill="#f8fafc">Measure, pick one real class, prove the site, fix at the root, <tspan fill="url(#accent)">gate.</tspan></text>
+
+  <use href="#track" fill="none" stroke="#fff" stroke-opacity="0.05" stroke-width="16"/>
+  <use href="#track" fill="none" stroke="url(#accent)" stroke-width="2.5" stroke-dasharray="10 8" opacity="0.9">
+    <animate attributeName="stroke-dashoffset" from="0" to="-36" dur="1.4s" repeatCount="indefinite"/>
+  </use>
+  <path d="M-4 -6 L4 0 L-4 6" transform="translate(322.5 180) rotate(0)" fill="none" stroke="#f8fafc" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M-4 -6 L4 0 L-4 6" transform="translate(507.5 180) rotate(0)" fill="none" stroke="#f8fafc" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M-4 -6 L4 0 L-4 6" transform="translate(692.5 180) rotate(0)" fill="none" stroke="#f8fafc" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M-4 -6 L4 0 L-4 6" transform="translate(877.5 180) rotate(0)" fill="none" stroke="#f8fafc" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M-4 -6 L4 0 L-4 6" transform="translate(846.5 356) rotate(180)" fill="none" stroke="#f8fafc" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M-4 -6 L4 0 L-4 6" transform="translate(600 356) rotate(180)" fill="none" stroke="#f8fafc" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M-4 -6 L4 0 L-4 6" transform="translate(353.5 356) rotate(180)" fill="none" stroke="#f8fafc" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M-4 -6 L4 0 L-4 6" transform="translate(1058.0 268.0) rotate(90)" fill="none" stroke="#f8fafc" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M-4 -6 L4 0 L-4 6" transform="translate(142.0 268.0) rotate(-90)" fill="none" stroke="#f8fafc" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="120.0" y="268.0" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="11" letter-spacing="1" fill="#94a3b8" text-anchor="middle" transform="rotate(-90 120.0 268.0)">next session</text>
+  <path d="M505 247.0 L415 211.0" stroke="#f472b6" stroke-opacity="0.7" stroke-width="1.5" stroke-dasharray="3 5"/>
+  <rect x="411" y="247.0" width="188" height="42" rx="21" fill="#f472b6" fill-opacity="0.09" stroke="#f472b6" stroke-opacity="0.6" stroke-dasharray="4 4"/>
+  <text x="505" y="265.0" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" fill="#fbcfe8">reuse-before-rerun</text>
+  <text x="505" y="281.0" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#f9a8d4" fill-opacity="0.85">before any run &gt; 1 min</text>
+  <path d="M760 289.0 L723 325.0" stroke="#f472b6" stroke-opacity="0.7" stroke-width="1.5" stroke-dasharray="3 5"/>
+  <rect x="642" y="247.0" width="237" height="42" rx="21" fill="#f472b6" fill-opacity="0.09" stroke="#f472b6" stroke-opacity="0.6" stroke-dasharray="4 4"/>
+  <text x="760" y="265.0" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" fill="#fbcfe8">watching-background-jobs</text>
+  <text x="760" y="281.0" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#f9a8d4" fill-opacity="0.85">while the gate runs</text>
+  <circle r="6" fill="#fff" filter="url(#glow)">
+    <animateMotion dur="12s" repeatCount="indefinite"><mpath href="#track"/></animateMotion>
+  </circle>
+  <g>
+    <rect x="150.0" y="149.0" width="160" height="62" rx="14" fill="#0b1d27"/>
+    <rect x="150.0" y="149.0" width="160" height="62" rx="14" fill="#94a3b8" fill-opacity="0.08" stroke="#94a3b8" stroke-opacity="0.8" stroke-width="1.5"/>
+    <circle cx="156.0" cy="155.0" r="11" fill="#94a3b8" stroke="#07161f" stroke-width="2"/>
+    <text x="156.0" y="159.0" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="11" font-weight="800" fill="#07161f">1</text>
+    <text x="230" y="177" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#f1f5f9">kickoff</text>
+    <text x="230" y="196" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#94a3b8">resume from the handoff</text>
+  </g>
+  <g>
+    <rect x="335.0" y="149.0" width="160" height="62" rx="14" fill="#0b1d27"/>
+    <rect x="335.0" y="149.0" width="160" height="62" rx="14" fill="#2dd4bf" fill-opacity="0.08" stroke="#2dd4bf" stroke-opacity="0.8" stroke-width="1.5"/>
+    <circle cx="341.0" cy="155.0" r="11" fill="#2dd4bf" stroke="#07161f" stroke-width="2"/>
+    <text x="341.0" y="159.0" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="11" font-weight="800" fill="#07161f">2</text>
+    <text x="415" y="177" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#f1f5f9">run-eval</text>
+    <text x="415" y="196" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#94a3b8">measure on a fixed split</text>
+  </g>
+  <g>
+    <rect x="520.0" y="149.0" width="160" height="62" rx="14" fill="#0b1d27"/>
+    <rect x="520.0" y="149.0" width="160" height="62" rx="14" fill="#38bdf8" fill-opacity="0.08" stroke="#38bdf8" stroke-opacity="0.8" stroke-width="1.5"/>
+    <circle cx="526.0" cy="155.0" r="11" fill="#38bdf8" stroke="#07161f" stroke-width="2"/>
+    <text x="526.0" y="159.0" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="11" font-weight="800" fill="#07161f">3</text>
+    <text x="600" y="177" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#f1f5f9">cluster-failures</text>
+    <text x="600" y="196" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#94a3b8">+ refusal-census</text>
+  </g>
+  <g>
+    <rect x="705.0" y="149.0" width="160" height="62" rx="14" fill="#0b1d27"/>
+    <rect x="705.0" y="149.0" width="160" height="62" rx="14" fill="#60a5fa" fill-opacity="0.08" stroke="#60a5fa" stroke-opacity="0.8" stroke-width="1.5"/>
+    <circle cx="711.0" cy="155.0" r="11" fill="#60a5fa" stroke="#07161f" stroke-width="2"/>
+    <text x="711.0" y="159.0" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="11" font-weight="800" fill="#07161f">4</text>
+    <text x="785" y="177" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#f1f5f9">check-target</text>
+    <text x="785" y="196" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#94a3b8">one real defect class</text>
+  </g>
+  <g>
+    <rect x="890.0" y="149.0" width="160" height="62" rx="14" fill="#0b1d27"/>
+    <rect x="890.0" y="149.0" width="160" height="62" rx="14" fill="#818cf8" fill-opacity="0.08" stroke="#818cf8" stroke-opacity="0.8" stroke-width="1.5"/>
+    <circle cx="896.0" cy="155.0" r="11" fill="#818cf8" stroke="#07161f" stroke-width="2"/>
+    <text x="896.0" y="159.0" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="11" font-weight="800" fill="#07161f">5</text>
+    <text x="970" y="177" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#f1f5f9">spy-site</text>
+    <text x="970" y="196" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#94a3b8">is the site on the path?</text>
+  </g>
+  <g>
+    <rect x="890.0" y="325.0" width="160" height="62" rx="14" fill="#0b1d27"/>
+    <rect x="890.0" y="325.0" width="160" height="62" rx="14" fill="#a78bfa" fill-opacity="0.08" stroke="#a78bfa" stroke-opacity="0.8" stroke-width="1.5"/>
+    <circle cx="896.0" cy="331.0" r="11" fill="#a78bfa" stroke="#07161f" stroke-width="2"/>
+    <text x="896.0" y="335.0" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="11" font-weight="800" fill="#07161f">6</text>
+    <text x="970" y="353" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#f1f5f9">build at root</text>
+    <text x="970" y="372" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#94a3b8">understand-before-merge</text>
+  </g>
+  <g>
+    <rect x="643.0" y="325.0" width="160" height="62" rx="14" fill="#0b1d27"/>
+    <rect x="643.0" y="325.0" width="160" height="62" rx="14" fill="#fbbf24" fill-opacity="0.08" stroke="#fbbf24" stroke-opacity="0.8" stroke-width="1.5"/>
+    <circle cx="649.0" cy="331.0" r="11" fill="#fbbf24" stroke="#07161f" stroke-width="2"/>
+    <text x="649.0" y="335.0" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="11" font-weight="800" fill="#07161f">7</text>
+    <text x="723" y="353" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#f1f5f9">run-gate</text>
+    <text x="723" y="372" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#94a3b8">structured verdict</text>
+  </g>
+  <g>
+    <rect x="397.0" y="325.0" width="160" height="62" rx="14" fill="#0b1d27"/>
+    <rect x="397.0" y="325.0" width="160" height="62" rx="14" fill="#fbbf24" fill-opacity="0.08" stroke="#fbbf24" stroke-opacity="0.8" stroke-width="1.5"/>
+    <circle cx="403.0" cy="331.0" r="11" fill="#fbbf24" stroke="#07161f" stroke-width="2"/>
+    <text x="403.0" y="335.0" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="11" font-weight="800" fill="#07161f">8</text>
+    <text x="477" y="353" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#f1f5f9">fable-review</text>
+    <text x="477" y="372" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#94a3b8">cross-model challenge</text>
+  </g>
+  <g>
+    <rect x="150.0" y="325.0" width="160" height="62" rx="14" fill="#0b1d27"/>
+    <rect x="150.0" y="325.0" width="160" height="62" rx="14" fill="#94a3b8" fill-opacity="0.08" stroke="#94a3b8" stroke-opacity="0.8" stroke-width="1.5"/>
+    <circle cx="156.0" cy="331.0" r="11" fill="#94a3b8" stroke="#07161f" stroke-width="2"/>
+    <text x="156.0" y="335.0" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="11" font-weight="800" fill="#07161f">9</text>
+    <text x="230" y="353" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" fill="#f1f5f9">handoff</text>
+    <text x="230" y="372" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#94a3b8">lessons into memory</text>
+  </g>
+  <circle cx="54" cy="436" r="6" fill="#2dd4bf"/><text x="68" y="440" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#94a3b8">measure &amp; diagnose</text>
+  <circle cx="264" cy="436" r="6" fill="#a78bfa"/><text x="278" y="440" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#94a3b8">build</text>
+  <circle cx="354" cy="436" r="6" fill="#fbbf24"/><text x="368" y="440" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#94a3b8">gate &amp; challenge</text>
+  <circle cx="534" cy="436" r="6" fill="#f472b6"/><text x="548" y="440" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#94a3b8">helper, fires beside the loop</text>
+</svg>
