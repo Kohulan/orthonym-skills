@@ -228,6 +228,6 @@ If these skills, hooks or the agent help your work, please cite the repository. 
 
 ---
 
-<sub>Made with ☕ by Kohulan Rajan at Beilstein-Institut X Steinbeck-Lab</sub>
+<p align="center"><img src="docs/assets/footer-made.svg" height="48" alt="Made with ☕ by"><a href="https://www.kohulanr.com/" title="Kohulan Rajan"><img src="docs/assets/footer-kohulan.svg" height="48" alt="Kohulan Rajan"></a><img src="docs/assets/footer-at.svg" height="48" alt="at"><a href="https://www.beilstein-institut.de/en/" title="Beilstein-Institut"><img src="docs/assets/footer-beilstein.svg" height="48" alt="Beilstein-Institut"></a><img src="docs/assets/footer-x.svg" height="48" alt="X"><a href="https://cheminf.uni-jena.de/" title="Steinbeck-Lab, Friedrich Schiller University Jena"><img src="docs/assets/footer-steinbeck.svg" height="48" alt="Steinbeck-Lab"></a></p>
 
 <sub><a href="#top">Back to top</a></sub>
