@@ -1,18 +1,18 @@
 ---
 name: watching-background-jobs
-description: Keeps a long-running background job watched from the main agent — a baseline and checkpoint, scheduled wake-ups that tell a stall from a quiet compute phase, a one-line progress report per wake-up, and a verdict-first alert on completion. Use when a long-running job (benchmark, regression gate, eval, test suite, build, batch run) is or will be running in the background and someone must notice completion, stalls, or crashes — triggers include "keep an eye on it", "ping me when it's done", "keep a cheap agent running to check", "is it still running?", "all done?", "why is this taking so long?", or launching anything expected to run over ~5 minutes.
+description: Keeps a long-running background job watched from the main agent — a baseline and checkpoint, scheduled wake-ups that tell a stall from a quiet compute phase, a one-line progress report per wake-up, and a verdict-first alert on completion. Use when a long-running job (benchmark, regression gate, eval, test suite, build, batch run) is or will be running in the background and someone must notice completion, stalls, or crashes — triggers include "keep an eye on it", "ping me when it's done", "keep a cheap agent running to check", "is it still running?", "all done?", "why is this taking so long?", or launching anything expected to run over ~5 minutes. Not for the regression gate recipe itself (use run-gate).
 ---
 
 # Watching background jobs
 
 ## Overview
 
-**Only the main agent can be re-woken on a schedule.** The harness sends a free task-notification
-when a background task *exits*, and a wake-up tool (`ScheduleWakeup` or `Monitor`, whichever this
-harness lists; probe with ToolSearch) re-invokes *you*. A watcher subagent gets none of that: it
-cannot sleep (foreground `sleep` is blocked), nothing wakes it on a schedule, its report reaches
-you only when its run ends, and a finished one runs again only when you message it. So it either
-returns before the job ends or goes quiet until it does. Own the watch loop yourself.
+**Only the main agent can report progress while the job runs.** The harness sends a free
+task-notification when a background task *exits*, and a wake-up tool (`Monitor`, or
+`ScheduleWakeup` inside a self-paced `/loop`; probe with ToolSearch) re-invokes *you*. A watcher
+subagent has no `ScheduleWakeup` and cannot sleep (foreground `sleep` is blocked); a `Monitor` or
+background command it starts can wake it, but its report reaches you only when its run ends. So it
+either returns before the job ends or goes quiet until it does. Own the watch loop yourself.
 
 **Skip this** only for short foreground commands, or a job whose internal timeout reliably makes
 it exit.
@@ -105,7 +105,7 @@ outlives the watchdog timeout, silently re-arm; never ping the user for "still r
 | Excuse | Reality |
 |---|---|
 | "Progress is not worth a message; I'll report at the end" | Silence is why the user polls. It is one line. Post it. |
-| "The user asked for a persistent watcher subagent" | It cannot wake itself, and its report arrives only when its run ends — the loop must live with you. Substitute and say so. |
+| "The user asked for a persistent watcher subagent" | Nothing wakes it on a schedule, and its report arrives only when its run ends — the loop must live with you. Substitute and say so. |
 | "The exit notification will cover it" | It covers *exit* only. A hung process never exits; stalls are invisible without the poll loop. |
 | "I'll poll every 60s to be safe" | 8 cache-burning wakes per quiet stretch. 240–270s in-cache, or commit to 1200s+. |
 | "Log is quiet — it's hung, restart it" | Check CPU first. Quiet ≠ dead, and restarting destroys evidence. Never restart unilaterally. |

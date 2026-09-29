@@ -47,7 +47,7 @@ otherwise slip through.
 
 ## The loop
 
-<img src="docs/assets/loop.svg" alt="The session loop. kickoff, then seven steps: measure with run-eval on a fixed, hashed split; cluster with cluster-failures and refusal-census; target one real defect class with check-target; spy with spy-site to check the site is on the path; fix at the root cause with understand-before-merge; gate with run-gate and its structured verdict; review with fable-review, a different model. Then handoff, and the next session starts again at kickoff. reuse-before-rerun fires before any run over a minute, at measure and at gate. watching-background-jobs fires while the gate runs." width="100%">
+<img src="docs/assets/loop.svg" alt="The session loop. kickoff, then seven steps: measure with run-eval on a fixed, hashed split; cluster with cluster-failures and refusal-census; target one real defect class with check-target; spy with spy-site to check the site is on the path; fix at the root cause with understand-before-merge; gate with run-gate and its structured verdict; review with fable-review, a different model family. Then handoff, and the next session starts again at kickoff. reuse-before-rerun fires before any run over a minute, at measure and at gate. watching-background-jobs fires while the gate runs." width="100%">
 
 <details>
 <summary><b>Same as text</b></summary>

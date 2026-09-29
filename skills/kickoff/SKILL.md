@@ -6,9 +6,9 @@ description: Starts or resumes a chemistry-dev work session by self-priming from
 # Session kickoff
 
 Self-prime from durable state instead of asking the user for context. Do all of this
-before any other action, then proceed with the work. Stop to ask only when the next step
-needs the user: a destructive or irreversible action, a real change of scope, or input
-only they can give.
+before any other action, then proceed with the work. If your project's standing directive is
+"research and decide", stop to ask only when the next step needs the user: a destructive
+or irreversible action, a real change of scope, or input only they can give.
 
 Wire this up: substitute your project's actual paths/files for the placeholders below (a
 handoff note, a roadmap/plan doc, a durable-memory store). If any of them don't exist
