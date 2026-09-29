@@ -41,28 +41,30 @@ of reviewers adds cost, not independence.
 > job is to REFUTE, not to agree. Read `<DOC PATH>` (and any files/commits it cites). This is
 > `<describe your chemistry tool, e.g. a deterministic structure→name namer, a property-prediction
 > pipeline, a reaction-outcome predictor>`; the dominant failure mode here is a confident-but-wrong
-> PREMISE that passes every gate because gates verify code, not reasoning.
+> premise that passes every gate because gates verify code, not reasoning.
 >
 > Read your project's fix-methodology / engineering-log doc for its standing invariants — at
 > minimum: spy-before-you-code, verify-your-harness-actually-ran, VERIFIED-vs-ASSUMED tagging on
 > load-bearing claims, rank-by-sole-blocker (not touched-count), and any bounded-goal
-> satisfiability rule. For EACH load-bearing claim in the plan:
+> satisfiability rule. For every load-bearing claim in the plan, not only the first few:
 > 1. Is it tagged VERIFIED (with a command/citation-incl-section-heading) or ASSUMED? An ASSUMED
 >    claim may not justify deleting a guard or sizing a fix.
-> 2. Could the measurement be right but the DIAGNOSIS wrong? Name a concrete alternative cause.
+> 2. Could the measurement be right but the diagnosis wrong? Name a concrete alternative cause.
 > 3. Is any reachability/yield/size number derived from static inspection or a warm-cache/batch
 >    run rather than a fresh-process measurement over the target rows?
 > 4. Does any proposed fix touch a correctness-sensitive path without a full-gate/regression plan,
 >    or pair a coverage floor with a byte-identity/total-proof requirement (a classic unsatisfiable-
 >    goal trap — see the `bounded-goals` skill)?
-> 5. Is a "central decision point" named as the fix site without a spy proving it is ON the path?
+> 5. Is a "central decision point" named as the fix site without a spy proving it is on the path?
 >
-> Output: a numbered list of CONCRETE refutations or gaps, each tagged [BLOCKER] / [RISK] /
-> [NIT], each with the exact check that would settle it. If you find nothing, say so and name the
-> single claim you are least able to verify. Do NOT restate the plan. Do NOT rewrite code.
+> Output: a numbered list of every concrete refutation or gap you find, each tagged [BLOCKER] /
+> [RISK] / [NIT], each with the exact check that would settle it; the tags carry severity, so
+> report low-confidence gaps too. If you find nothing, say so and name the single claim you are
+> least able to verify. Return only this list: leave the plan unrestated and the code unchanged.
 
 ## After the review
 
-Treat findings the way good code review should be received — verify each with rigour, don't
-performatively agree, don't blindly implement. A [BLOCKER] must be resolved (or explicitly
-refuted with evidence) before the plan ships. Record durable outcomes in the finding doc.
+The reviewer reports everything it finds; the filtering is yours. Check each finding against
+the evidence before acting on it: accept it or refute it with a result, rather than agreeing
+by default or implementing it unexamined. A [BLOCKER] must be resolved (or explicitly refuted
+with evidence) before the plan ships. Record durable outcomes in the finding doc.

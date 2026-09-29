@@ -7,7 +7,7 @@ description: Proves that a code site named as the place to fix actually runs for
 
 **A documented "central decision point" is often off the execution path until a spy says
 otherwise.** In one project's history this was 5-for-5: every site named in a plan as the
-place to fix was called **zero** times for the outputs it was meant to fix:
+place to fix was called zero times for the outputs it was meant to fix:
 
 | Site | Named in | Reality |
 |---|---|---|
@@ -25,7 +25,8 @@ The cost of skipping this is a whole task spent editing code that never runs.
 trying to fix".
 
 **2. Monkeypatch a counter.** In a worker subprocess so the production import path is
-unchanged:
+unchanged, and in a fresh process per target row (or with caches cleared), because a warm
+cache can answer a repeated input without reaching the site and record a false zero:
 
 ```python
 import yourpkg.ranking.candidate_pool as cp
@@ -51,16 +52,16 @@ ran before trusting its zero. A `-k` selector matching no test exits 5 and looks
 
 ## Refusal conditions
 
-Report **REFUTED** and stop if:
+Report **REFUTED** and stop editing that site if:
 
-- the site records **0 calls** for the target rows — the fix cannot land there
-- the spy did not register on **≥2** known positives — the spy is untrustworthy
+- the site records 0 calls for the target rows — the fix cannot land there
+- the spy did not register on ≥2 known positives — the spy is untrustworthy
 - the site is reached but the value it computes is discarded downstream (check what the
   caller does with the return, not just that the call happened)
 
-On REFUTED: **record the refutation in the task brief or `eval/LOG.md`**, then locate the real
-site by measurement. Only a *guess* about where the code is — never a measured refutation — is
-grounds to stop the task.
+On REFUTED, record the refutation in the task brief or your project's eval log, then locate
+the real site by measurement. Only a *guess* about where the code is — never a measured
+refutation — is grounds to stop the task.
 
 ## Finding the real site after a refutation
 

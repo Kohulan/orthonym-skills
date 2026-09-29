@@ -6,16 +6,16 @@ description: Tests whether a failure pattern named as "the thing to fix" is one 
 # Check the target before you propose a fix
 
 **A signature that matches passing rows is a lead, not a defect.** This skill exists because
-one project's review named a naming-output pattern (`unlocanted_prefix`) as the top fix
+one project's review named a naming-output pattern (a prefix emitted without its locant) as the top fix
 target, and measurement then showed:
 
 - **30 hits, 29 failures** — the 30th row already round-tripped correctly in the shipped
   config, so the flagged construction is *legal* in one sub-family
 - **three unrelated causes**, not one: missing-locant on an acyl chain (~15), a
   glycosidic-oxygen case (~13), a raw input string emitted verbatim as output (2)
-- the glycosidic sub-case is a **double-counted feature** — the parent structure was named as
-  if a substituted oxygen were a free hydroxyl, so **a locant-only fix would leave the output
-  wrong**
+- the glycosidic sub-case is a double-counted feature — the parent structure was named as
+  if a substituted oxygen were a free hydroxyl, so a locant-only fix would leave the output
+  wrong
 
 The lesson generalizes past naming: a whole iteration was scoped against "one defect" that was
 three, one of which was not a defect at all.
@@ -39,8 +39,9 @@ counterexamples — a clustering script that only iterates failing rows has exac
 | **precision = failures / hits** | <1.0 means passing rows match too |
 | non-failing hits | list them explicitly — these are the counterexamples |
 
-**4. Decompose by cause.** Inspect the actual names. If the matched rows split into groups with
-different mechanisms, the target is **N targets** and must be re-scoped before any fix.
+**4. Decompose by cause.** Inspect the actual outputs (names, labels, values). If the matched
+rows split into groups with different mechanisms, the target is N targets and must be re-scoped
+before any fix.
 
 **5. Check the outcome spread.** A single defect class does not usually span
 `parse_fail` + `wrong_structure` + `exact_match`. Spread across outcome types is evidence of
@@ -56,16 +57,16 @@ Report **NOT A SINGLE DEFECT** and stop if:
 - the hits **decompose into ≥2 mechanisms** — re-scope to the largest single mechanism and
   re-run this check on it.
 - the hits span **≥3 outcome types** — almost certainly multiple causes.
-- the signature is a **string pattern on the emitted name** and no structural cause has been
+- the signature is a **string pattern on the emitted output** and no structural cause has been
   identified. Output patterns are symptoms; the same wrong output arises from unrelated causes.
 
-## Do not skip to sizing from a tag
+## Size from the named inputs, not from a tag
 
-Never size a defect class by counting rows that match a tag or substring. Projects
-repeatedly over-count **15–50×** doing exactly that: a curated "~100 candidate defects" list
-that turns out to have 2 genuine instances on re-derivation; a static sweep's "12 live
-defects" that turns out to be 4 once each case is traced. **Name the actual inputs**, don't
-trust the tag.
+Size a defect class only from the actual inputs, each traced to its cause; a count of rows
+that match a tag or substring is not a size. Projects repeatedly over-count 15–50× by
+counting tags: a curated "~100 candidate defects" list that turns out to have 2 genuine
+instances on re-derivation; a static sweep's "12 live defects" that turns out to be 4 once
+each case is traced.
 
 ## Related
 

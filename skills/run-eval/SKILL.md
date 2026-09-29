@@ -97,6 +97,8 @@ terms — cluster the gates-off run, report the shipped one.
 
 ## Before you run
 
+- For any split that takes more than a minute, look for an existing run of the same split,
+  config and commit first (`reuse-before-rerun`).
 - **You may run alongside other measurement or gate work**, provided nothing writes to
   the same output artifact concurrently. If your eval spawns concurrent worker
   processes that contend over a shared external resource (a license, a GPU, an

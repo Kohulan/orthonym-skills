@@ -17,7 +17,7 @@ forbids progress.
 ## Why this exists
 
 A naming-system project documented the failure directly: under the unbounded
-multi-objective form, the agent reverted **any** change that regressed **any**
+multi-objective form, the agent reverted any change that regressed any
 metric, and froze. Rewritten as one maximized metric with relaxable bounds, the
 runtime ceiling was deliberately loosened 3.7 → 5.0 → 6.2 → 20.6 ms to let
 accuracy move, then optimized back down to 10.2 ms at the end. Accuracy went
@@ -61,7 +61,7 @@ trying harder:
 1. Check whether a bound is doing the blocking, and whether it is relaxable.
 2. Check whether the metric can still move at all — is there headroom, or is the
    remaining failure mass a class the current architecture cannot express?
-3. If neither, hand off: a reviewer defines a new objective, and a **fresh**
+3. If neither, hand off: a reviewer defines a new objective, and a fresh
    context implements it. Accumulated context is part of what plateaued.
 
 ## Red flags

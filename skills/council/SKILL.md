@@ -8,7 +8,7 @@ description: Answers a strategy or judgment-call question by re-deriving its loa
 ## Overview
 
 A strategy question is not answered from what you already know. It is answered by
-**searching first, then convening a council of distinct expert voices, then making one call.**
+searching first, then convening a council of distinct expert voices, then making one call.
 
 Core principle: **every load-bearing number or claim — in the question, the handoff,
 memory, or a planning note — is a hypothesis until you re-derive it from ground truth
@@ -16,7 +16,7 @@ this turn.** A single well-reasoned voice is exactly how a false premise ships. 
 council exists so that one voice attacks another before the answer reaches the user.
 
 Why this is a hard rule: "concentrated ROI" pools in chemistry projects routinely
-over-count **15–50×** (e.g. a curated list of "~100 candidate defects" that turns out to
+over-count 15–50× (e.g. a curated list of "~100 candidate defects" that turns out to
 have 2 genuine instances on re-derivation; "124 flagged structures" that turns out to be
 ~6 genuine). A baseline test of this exact skill's absence: three capable agents given one
 strategy question produced three different recommendations, one built entirely on an
@@ -26,21 +26,22 @@ unvalidated number. Search + council makes the answer convergent instead of a co
 
 ### 1. Search before you weigh — validate the premise
 
-- Extract every load-bearing claim from the question **and** from your loaded context
+- Extract every load-bearing claim from the question and from your loaded context
   (handoff, memory, planning notes). Treat each as a claim to test, not a fact.
-- Fan out **parallel investigators** — a `Workflow`, or parallel `Agent` calls — one per
-  independent facet. The standard three facets for a "should we do X?" question:
+- Give each independent facet its own investigator, run in parallel (parallel `Agent` calls,
+  or a `Workflow`); check a facet you can settle in a handful of tool calls inline. The
+  standard three facets for a "should we do X?" question:
   1. **Validate the headline number** for X (re-derive the reachable win from ground truth).
   2. **Size the alternative** (what does the road-not-taken actually offer?).
   3. **Assess X's risk** (blast radius, determinism/regression surface, effort).
 - In your project, ground truth = your evaluation corpus/benchmark results, your run
-  ledger, and **the pipeline probed directly** (any shortcuts/caches off, reproduce-first),
-  **not** the tag/heuristic count in a note.
+  ledger, and the pipeline probed directly (any shortcuts/caches off, reproduce-first),
+  not the tag/heuristic count in a note.
 
 ### 2. Convene the council — at least three named voices
 
-After the evidence is in, give the decision **three or more distinct voices**, each
-reasoning **only from the evidence just gathered**, each free to disagree:
+After the evidence is in, give the decision three or more distinct voices, each
+reasoning only from the evidence just gathered, each free to disagree:
 
 - 🛠️ **Senior Engineer** — feasibility, blast radius, determinism/regression risk, effort,
   root-cause vs band-aid, does it fit the codebase's grain.
@@ -51,7 +52,7 @@ reasoning **only from the evidence just gathered**, each free to disagree:
 - ➕ Add a **domain expert** or **user-advocate** voice when the decision turns on one.
 
 Each voice is 1–3 sentences with its own read and may reach a different conclusion.
-**Surface real disagreement — never manufacture consensus.**
+Surface real disagreement rather than manufacturing consensus.
 
 ### 3. The chair synthesizes — the answer the user reads
 
@@ -63,14 +64,15 @@ Produce, in this order, leading with the verdict:
    asked to see the options; show them.
 4. **What would flip the call** — the one observation that would change the answer.
 
-The council voices and the search sit above the call as support; the verdict is not buried.
+The search and the council voices follow the call as its support, so the verdict is the first
+thing the user reads.
 
 ## Scale to the stakes
 
 | Decision | Search | Council |
 |---|---|---|
 | Small / easily reversible | inline parallel probes | brief 3-voice, terse |
-| Milestone / expensive / hard to reverse | full `Workflow` fan-out | 3–4 voices, explicit disagreement |
+| Milestone / expensive / hard to reverse | one parallel investigator per facet | 3–4 voices, explicit disagreement |
 
 ## Rules
 
@@ -80,7 +82,7 @@ The council voices and the search sit above the call as support; the verdict is 
 - **Make the call.** "It depends" / "both are fine" is not an answer. State the call and the
   condition that would change it.
 
-## Rationalizations — STOP if you catch one
+## Rationalizations — stop if you catch one
 
 | Excuse | Reality |
 |---|---|
@@ -90,23 +92,16 @@ The council voices and the search sit above the call as support; the verdict is 
 | "They're clearly leaning toward X." | Steering to the expected answer defeats the point. Weigh the evidence, then be willing to tell them they're wrong. |
 | "It depends / both are viable." | Non-answer. Make the call, then state what would flip it. |
 
-## Red flags — you are about to fail
-
-- Weighing options using a number from a note/memory you have not re-derived this turn.
-- Your recommendation has exactly one voice.
-- Every voice agrees and you never looked for the counter-argument.
-- Your answer is "it depends" with no call and no flip-condition.
-
 ## Worked example (illustrative)
 
 **Q:** "Fix the low-confidence-prediction cluster, or ship the pending featurizer
 refactor — your call?" The handoff said the cluster = "~100 rows, one root cause."
-**Search (3 parallel investigators):** corpus scan → genuine reachable wins from a
-targeted cluster fix = **2** (most tagged rows are out-of-domain scaffolds the model was
-never trained on); ledger → the featurizer refactor's smaller sub-fix = **~45 low-risk
-wins**; code trace → the cluster fix un-masks a determinism defect in a shared
+**Call:** ship the featurizer refactor first, targeting its low-risk sub-fix. **Flips if:**
+the cluster turns out to gate a future model family — then build the contained half only.
+**Search (3 parallel investigators):** a corpus scan finds **2** genuine reachable wins from
+a targeted cluster fix (most tagged rows are out-of-domain scaffolds the model was never
+trained on); the ledger shows **~45 low-risk wins** from the featurizer refactor's smaller
+sub-fix; a code trace shows the cluster fix un-masks a determinism defect in a shared
 normalization step (moderate+ risk).
 **Council:** 🛠️ "2 wins behind a determinism-sensitive guard is a bad trade." 📊 "2 vs ~45
-reachable — not close." 🔬 "The ~100 was another over-counted pool." **Call:** ship the
-featurizer refactor first, targeting its low-risk sub-fix. **Flips if:** the cluster turns
-out to gate a future model family — then build the contained half only.
+reachable — not close." 🔬 "The ~100 was another over-counted pool."

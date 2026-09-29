@@ -13,7 +13,7 @@ at a surface level, and merges. The incident arrives three weeks later, in a cod
 nobody chose.
 
 So the job here is not to write better code. It is to write code whose weak points are
-**visible from the outside**, so the human reviewing it is doing real review rather than
+visible from the outside, so the human reviewing it is doing real review rather than
 pattern-matching on tidy syntax.
 
 That means surfacing your own blind spots rather than smoothing them over. A response that
@@ -24,17 +24,17 @@ reads as confident and complete has failed at this, no matter how good the code 
 Deliver three parts, in this order. Never collapse them, never reorder them, and never
 skip straight to part 1 alone.
 
-1. **The code**, with reasoning attached to non-obvious decisions
+1. **The code**, with a short "why" attached to each non-obvious decision
 2. **Failure-mode table** - what happens when reality misbehaves
 3. **Open questions** - things you cannot answer, that the human must
 
-### Part 1: Code with reasoning
+### Part 1: Code with its why
 
 Attach a short "why" to any decision a competent reviewer could reasonably question:
 a choice between two valid approaches, an ordering constraint, a swallowed error, a
 default value, a timeout number, a data structure picked for a non-obvious reason.
 
-Do **not** annotate self-evident lines. `i += 1` needs no explanation, and narrating
+Leave self-evident lines unannotated. `i += 1` needs no explanation, and narrating
 obvious code trains the reader to skim - which is exactly the habit this skill exists
 to break.
 
@@ -44,8 +44,8 @@ Where the "why" goes depends on whether it is durable:
   a workaround for a known upstream bug, a subtle ordering requirement, a deliberate
   deviation from the obvious approach. These are comments a reviewer would thank you for
   in six months.
-- **In the response, not the file** - everything else. Explaining your reasoning to the
-  person reading right now is not the same as permanently commenting the codebase.
+- **In the response, not the file** - everything else. Telling the person reading right
+  now why a decision was made is not the same as permanently commenting the codebase.
   Shipping a diff full of `// why: ...` lines is comment spam and reviewers learn to
   scroll past it.
 
@@ -133,8 +133,9 @@ code as it exists, not as it will exist after the patch. That is what makes a bu
 reviewer sees the shape of what went wrong rather than a diff asserting it is solved. Once the
 fix is agreed, a short second table for the new behaviour is worth adding.
 
-**Do not patch when the correct fix depends on an unanswered question.** If two repairs are
-both defensible and they mean different things, show both, state what each implies, and put
+**When the correct fix depends on an unanswered question, show the options, not a patch.**
+If two repairs are both defensible and they mean different things, show both, state what
+each implies, and put
 the choice in the open questions. Picking one and presenting it as *the* fix buries a decision
 that was never yours to make - and a fix that quietly resolves an ambiguity is a common way to
 cause the next incident while closing the current one.
@@ -191,6 +192,6 @@ scrolled past, which defeats the exercise.
 It is not a substitute for the human reading the code. It cannot be - the reading is where
 their understanding comes from, and understanding is the thing being protected here.
 
-So do not produce reassurance. Never write "this handles all edge cases", "production
-ready", or "fully robust". If the table is short, that is a finding about your analysis,
-not a property of the code.
+So describe coverage only by what the table shows, and leave out reassurance such as "this
+handles all edge cases", "production ready", or "fully robust". If the table is short, that
+is a finding about your analysis, not a property of the code.

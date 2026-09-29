@@ -12,7 +12,7 @@ One iteration = one failure cluster. Stop after a small fixed number of iteratio
 run eval  ->  cluster failures  ->  fix ONE cluster  ->  re-run  ->  check goals  ->  log
 ```
 
-**Your goals/bounds file must be ENFORCED, not read by eye.** After a re-run, evaluate
+**Enforce your goals/bounds file mechanically, not by eye.** After a re-run, evaluate
 the bounded contract with an enforcer script (or, at minimum, a checklist you actually
 run through every time) that derives every hard and relaxable bound from the run + gate
 artifacts and fails loudly on any hard-bound violation:
@@ -54,15 +54,12 @@ large because a totally different layer fails on inputs that merely happen to sh
 one surface feature (same scaffold class, same ring system, same functional group) —
 sharing that feature doesn't mean sharing a cause.
 
-Then locate the actual code site by **measurement, not by reading the code and
-guessing**. A documented "central decision point" named in a comment, a roadmap, or an
-old design doc is not evidence it's on the execution path — repeatedly, in real
-projects, a function named as "the place that decides X" turns out to be called zero
-times for the cases it was meant to fix, because an earlier stage never produces more
-than one candidate for it to choose between. Spy on the site with a counter
-(monkeypatch a call counter, add a temporary log line) and validate the spy against
-**two or more** known positive cases before trusting a zero-calls reading — a single
-positive can itself be misleadingly wrong (e.g. served from a warm cache).
+Then locate the actual code site by measurement, with the `spy-site` skill (or
+equivalent): a site named in a comment, roadmap, or design doc is often called zero
+times for the cases it was meant to fix. Count calls on the site for the target rows,
+and validate the counter against two or more known positives before trusting a
+zero-calls reading, because a single positive can mislead (for example, one served
+from a warm cache).
 
 **3. Fix at the root.** Follow your project's fix-methodology doc if you have one (the
 governing rule, restated: build the whole class of cases correctly, or fail closed on
@@ -101,17 +98,14 @@ line on what actually changed. Log a negative result too — an iteration that m
 nothing is one of the most useful entries in the log, because it stops the next session
 from repeating the same attempt.
 
-## Bounded objectives — maximise ONE, bound the rest
+## Bounded objectives — maximise one, bound the rest
 
-Do not optimise several metrics at once. This is a documented failure mode of
-LLM-driven iterative-improvement agents generally: one such agent, per its own
-published account, *"struggled to optimise multiple objectives in parallel… would
-implement a change but immediately revert it if any metrics regressed, preventing
-necessary trade-offs."* The fix that worked was to **bound every metric except one, and
-maximise only that one**, relaxing a bound deliberately (and visibly) only when it
-truly had to move.
+Per iteration, declare one objective and hold every other tracked number as a bound,
+relaxing a bound only deliberately and visibly. Optimising several metrics at once
+stalls the loop, because any change that regresses any metric gets reverted and no
+necessary trade-off is ever made (the `bounded-goals` skill covers writing that
+contract).
 
-Per iteration, declare one objective and hold every other tracked number as a bound.
 Example table (substitute your project's actual metrics — a property predictor might
 use MAE-on-holdout as the objective with calibration/coverage as bounds; a
 retrosynthesis model might use top-k accuracy as the objective with route-validity as a
@@ -125,26 +119,19 @@ bound):
 | bound | output size/length/complexity ≤ current mean | **a bound, never an objective** |
 | bound | runtime/inference cost ≤ current | relax deliberately, and say so |
 
-**A cheap-to-compute proxy like output length must never become an objective.** The
-same documented agent adopted mean output length as a quality proxy and drove it down
-sharply — the same pressure that shortens names also truncates them into wrong ones
-(e.g. `caffein` instead of caffeine, or a truncated systematic name for a simple
-structure), and its correctness on a held-out set came out an order of magnitude below
-a project that never optimised length. Bound proxies like this to stop degenerate
-drift; never reward them directly.
+**Bound a cheap proxy like output length; never make it an objective.** Pressure that
+shortens outputs also truncates them into wrong ones (e.g. `caffein` instead of
+caffeine, or a truncated systematic name for a simple structure) that can still pass a
+validity check. An agent that rewarded shorter outputs this way scored an order of
+magnitude lower on held-out correctness than a project that only bounded length.
 
 ## Plateau trigger — hand it to a fresh agent
 
-On an iteration that moves the objective by zero, do **not** keep iterating in the same
-context. The same documented multi-agent protocol handles this: *"When the agent
-appeared unable to find further improvements, the reviewer agent was used to analyse
-the codebase and create a detailed improvement plan, as a markdown file, which was
-given to a fresh implementation agent."*
-
-Concretely: a reviewer role writes a plan file, and a **fresh** implementer executes it
-— not the same context that just plateaued. The reviewer role should also hold sole
-authority to edit your goals/bounds file and this loop's own rules; an implementer that
-can move its own goalposts mid-iteration is not measurable.
+On an iteration that moves the objective by zero, hand the next step to a fresh context
+instead of iterating in the one that plateaued: a reviewer role analyses the code and
+writes an improvement plan to a file, and a fresh implementer executes it. The reviewer
+role should also hold sole authority to edit your goals/bounds file and this loop's own
+rules; an implementer that can move its own goalposts mid-iteration is not measurable.
 
 A zero-movement iteration on your headline objective is not automatically a failure —
 check which bound the work actually targeted. A batch of fixes that holds the headline

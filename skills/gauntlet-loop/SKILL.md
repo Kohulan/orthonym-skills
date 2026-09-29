@@ -5,7 +5,7 @@ description: Writes one short, paste-ready prompt that makes a fresh agent loop 
 
 # Gauntlet Loop
 
-The user gives a goal. You give back ONE short prompt they can paste into a fresh agent session.
+The user gives a goal. You give back one short prompt they can paste into a fresh agent session.
 
 You are not doing the work. You are writing the prompt that makes another agent grind on the work until it beats a real reference.
 

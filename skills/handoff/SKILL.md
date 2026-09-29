@@ -33,12 +33,13 @@ memory (a memory file, a wiki page, a project-notes doc).
    separate topic note (rather than inlining everything into one file) is fine — that's
    composition, not trimming.
 
-2b. **Capture every session lesson into BOTH memory layers.** A lesson = anything the next
+2b. **Capture every session lesson into both memory layers.** A lesson = anything the next
    session must not re-learn: a refuted premise, a spy that changed a plan, a corpus error,
    a working-style correction, a measured ceiling. Write each into **(a)** its durable note,
    with **Why** + **How to apply**, and **(b)** your project's semantic memory tool, if it
    has one, so `kickoff`'s searchable layer has it. Notes are the source of truth; never
-   leave one only in a task report or gitignored ledger.
+   leave one only in a task report or gitignored ledger. Add to the existing note on a
+   topic rather than creating a duplicate.
 3. **Write your project's handoff note** (overwrite; keep it short, roughly ≤30 lines)
    from this template:
 
@@ -60,6 +61,6 @@ memory (a memory file, a wiki page, a project-notes doc).
    rules live, so the next session inherits them even if they're also wired into
    `kickoff` directly — a named pointer survives a session boundary better than an
    assumption that it will be re-derived from scratch.
-6. **Tell the user** exactly this: notes verified, the handoff note written — next
-   session can start with `kickoff` or "continue"; no hand-written prompt needed. Do
-   not generate a long starter prompt unless the user still asks for one.
+6. **Tell the user** in a few lines: which notes you updated, the handoff note's path
+   and commit, and that the next session can start with `kickoff` or "continue" with no
+   hand-written prompt. Write a long starter prompt only if the user still asks for one.

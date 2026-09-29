@@ -57,7 +57,7 @@ Ship the change if the reasoning is sound, but:
 - Say in the commit message which values are machine-confirmed and which are not.
 - Add a comment at the assertion recording what it rests on.
 - Write the open item somewhere durable, with the check that would settle it.
-- Never let a summary describe reasoning-backed values as verified.
+- In every summary, describe reasoning-backed values as unverified.
 
 ## Red flags
 

@@ -18,7 +18,7 @@ all into one bucket. If your project has such logs and a parser for the codes in
 this skill connects the two. If it doesn't yet, build the parser first — usually a small
 regex/groupby over structured log lines, not new instrumentation.
 
-A reference project's own development loop has an equivalent step (its "audit" stage):
+Many development loops have an equivalent step (an "audit" stage):
 distinguishing **candidate-availability failures** (nothing valid was ever generated) from
 **candidate-selection failures** (a valid candidate existed but the wrong one, or none,
 was picked) — a small dedicated script, not a large system. This generalizes past naming:
@@ -78,16 +78,18 @@ Report **UNUSABLE** and stop if:
   not transfer to another — re-measure on the target split before sizing any build
   against it.
 
-## Do not size a build from another corpus's census
+## Cite where every census number came from
 
-Numbers do not transfer between corpora, tiers, or commits. Cite the corpus, the tier (or
-mode/config), the commit, and the row count with every figure you report.
+Cite the corpus, the tier (or mode/config), the commit, and the row count with every figure
+you report, so no one sizes a build from another corpus's census.
 
 ## Related
 
 - `check-target` — validate the class before scoping it.
 - `spy-site` — prove the site is actually on the execution path before editing it.
 - `cluster-failures` — the structural feature clusters to cross-tab against.
+- `reuse-before-rerun` — look for an existing census of the same corpus, tier and commit
+  before capturing a new one.
 - Your project's own fix-methodology / engineering-log doc — verify the capture/harness
   actually ran before trusting any percentage (a silently-broken capture reports a fake
   100% or a fake 0% just as convincingly as a real one).

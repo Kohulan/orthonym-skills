@@ -34,14 +34,14 @@ or progress is unmeasurable) · `<verdict-file>` — the sentinel written *only*
 **2. Arm the watchdog:**
 - Persist a checkpoint (`{lines, log_mtime, launch_ts}`) to disk — each wake-up is a fresh turn.
 - Schedule the next check: 240–270s while watching something fast-changing (stays inside the
-  5-min prompt cache), or 1200s+ as a slow heartbeat for multi-hour jobs. **Never 300s** (worst
-  of both), never 60s polling (burns cache for nothing).
+  5-min prompt cache), or 1200s+ as a slow heartbeat for multi-hour jobs. Avoid 300s (worst
+  of both) and 60s polling (burns cache for nothing).
 - Completion needs no polling — the exit notification is free and re-invokes you.
 
 **3. Each wake-up:**
 - Re-stat log/output against the checkpoint.
 - Progress since last check → update the checkpoint, re-arm, and end the wake-up with **the
-  progress line** below. That one line IS the wake-up's output; nothing else.
+  progress line** below. That one line is the wake-up's whole output.
 - Flat for ≥ the stall threshold → **check CPU before crying stall** (`ps -o %cpu` on the
   worker): a busy process with a quiet log is a compute phase, not a hang. Wedged = 0% CPU +
   frozen log + no verdict.
@@ -52,7 +52,7 @@ or progress is unmeasurable) · `<verdict-file>` — the sentinel written *only*
 - Read the verdict file, verify its mtime postdates the launch, grab the log tail.
 - Notify verdict-first — numbers in the alert, full reconciliation in the chat:
   `"Gate PASS — 843 golds (+3 vs 840), 0 new regressions, 1h12m"` *(example from a SMILES→IUPAC
-  namer)*. Use `PushNotification` **only if it is in this harness's tool list** (probe with
+  namer)*. Use `PushNotification` only if it is in this harness's tool list (probe with
   ToolSearch — it is not universal); with no push tool, the verdict is your next chat message.
   Never claim a push you did not send.
 - Disarm: don't re-schedule; delete the checkpoint file.
@@ -84,8 +84,9 @@ outlives the watchdog timeout, silently re-arm; never ping the user for "still r
 
 ## Hard rules
 
-- The watch is **read-only**. While it runs, never start a second heavy job, test suite, or
-  git-mutating agent.
+- The watch is read-only. While it runs, start no second heavy job, test suite, or
+  git-mutating agent: they compete with the job for cores and memory, and a git mutation can
+  change files the job is reading.
 - If the user asks for "a cheap agent that keeps checking": honor the **intent** (cheap,
   continuous monitoring), not the letter. Own the schedule loop; optionally delegate each
   *single* health-check to a one-shot cheap subagent that returns one verdict line from the log

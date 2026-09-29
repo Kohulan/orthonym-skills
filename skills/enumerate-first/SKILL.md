@@ -14,15 +14,11 @@ reason from the design you intended rather than the code you have.
 
 ## Why this exists
 
-A code review flagged a tie that could be resolved by input order. The argument
-was that it was narrow and probably unreachable. Fuzzing 35,888 generated cases
-found **1207 violations across three distinct defect classes** — none of them the
-one that had been hypothesised, and most in a component the argument had
-dismissed entirely.
-
-Separately: a 625-configuration grid search was run to tune a selector that
-executes zero times, and a tie-break line compared an array element with itself
-and had been dead since it was written. Both were one measurement away.
+A tie that a code review called narrow and probably unreachable produced 1207
+violations in three defect classes when 35,888 generated cases were fuzzed: none was the
+hypothesised one, and most sat in a component the argument had dismissed. A
+625-configuration grid search once tuned a selector that executed zero times. Each was
+one measurement away.
 
 ## Procedure
 
@@ -51,7 +47,8 @@ determines how many times you look.
 
 ## Before tuning anything
 
-Confirm the decision point executes. Instrument it and count invocations.
+Confirm the decision point executes. Instrument it and count invocations for the target
+inputs (the `spy-site` skill has the method).
 Documented central logic being called zero times is common, not exotic — check
 before spending effort on its behaviour.
 

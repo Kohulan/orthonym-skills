@@ -26,12 +26,9 @@ change that makes a cluster pass without making the underlying model/rule/logic 
 A fix must be a change to structure perception, a rule/model, or a renderer/decoder — the
 same standard as your project's fix-methodology doc, which this skill does not supersede.
 
-Why it is stated here rather than trusted to memory: a reference project's own
-development contract needed this identical clause after its agent tried "compacting the
-output using string rewrites" to move the metric (its published write-up documents this).
-If your project already has a "never post-process the output" invariant, this is likely
-why — a clustering tool is exactly the input that makes row-specific fixes look
-attractive.
+It is stated here, not left to memory, because a clustering tool is exactly the input that
+makes row-specific fixes look attractive: agents under metric pressure have moved the number
+by rewriting output strings.
 
 ## Cluster on the input, not the output
 

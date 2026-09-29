@@ -23,7 +23,7 @@ full session.
 
 The section actually reads: *"The priority numbers on one of the ligands are
 **arbitrarily** primed."* No selection rule at all. The governing rule lived one
-section away in IR-9.3.3.4 and **maximizes**. Thirty minutes with the PDF
+section away in IR-9.3.3.4 and maximizes. Thirty minutes with the PDF
 dissolved the blocker.
 
 ## Procedure
@@ -55,5 +55,6 @@ dissolved the blocker.
 ## Output
 
 State the rule, the verbatim quote, and the section. If a prior document
-contradicts the source, correct that document in the same change — an
-uncorrected paraphrase will be inherited again.
+contradicts the source, correct that document in the same change (or, where you
+cannot edit it, name the file and line to correct) — an uncorrected paraphrase will
+be inherited again.
