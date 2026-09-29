@@ -17,6 +17,5 @@
     "chemistry",
     "ml",
     "measurement"
-  ],
-  "hooks": "./hooks/hooks.json"
+  ]
 }
