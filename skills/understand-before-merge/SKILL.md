@@ -21,8 +21,8 @@ reads as confident and complete has failed at this, no matter how good the code 
 
 ## Output contract
 
-Deliver three parts, in this order. Never collapse them, never reorder them, and never
-skip straight to part 1 alone.
+Deliver three parts, in this order and kept separate; the code alone is not the deliverable
+("Scaling to the task" below says when parts 2 and 3 shrink or drop).
 
 1. **The code**, with a short "why" attached to each non-obvious decision
 2. **Failure-mode table** - what happens when reality misbehaves

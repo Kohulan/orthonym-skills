@@ -51,10 +51,11 @@ gate is never sufficient to ship — it skips whatever the full gate additionall
    ```bash
    <your-gate-command>          # logs stream to <gate-log-file> (line-buffered)
    ```
-3. **Wait on the sentinel file, never `pgrep`, never a sleep-loop.** Have the gate
+3. **Wait on the sentinel file, never on `pgrep` or a foreground sleep-loop.** Have the gate
    delete `<gate-verdict-file>` at start and write it only on completion, then either:
    - take the background-task-completion notification your harness gives you, or
-   - poll with a proper wait primitive on `test -f <gate-verdict-file>`.
+   - run `until test -f <gate-verdict-file>; do sleep 30; done` as a background command
+     (the Bash tool's `run_in_background`), which notifies you once when it exits.
    No watchdog subagents — the sentinel file makes them unnecessary, and `pgrep`
    self-matches and can't tell you how many are running or whether the one you care
    about finished. For progress lines and stall detection while it runs, follow

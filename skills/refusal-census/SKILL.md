@@ -43,19 +43,21 @@ deliberately, seen to matter in practice:
   question is "how many inputs does this site block", not "how often does it fire" —
   un-deduplicated counts mis-rank the build order.
 
-**3. Report two rankings, not one.**
+**3. Rank by sole blocker; report the other two rankings beside it.**
 
 | ranking | meaning |
 |---|---|
+| **sole_blocker** | inputs where this was the *only* code that fired (after deduplication) — what fixing this site alone flips. **This ranking sets the build order.** |
 | **first_refusal_site** | the code that fired *first* for each input — the proximate blocker |
 | **touched_sites** | every code that fired for the input — total exposure |
 
 These differ substantially and answer different questions. (Illustrative shape from a
 real census: one site was the first-fired blocker on roughly 55% of failing inputs and
 touched about 68% of them; a second site touched more inputs overall — about 64% — but
-led on far fewer.) Fix the leader ranked by first-refusal count; the touched count tells
-you what else will still block those same inputs afterwards, so it sets expectations, not
-build order.
+led on far fewer.) Build in sole-blocker order, because only those inputs flip when that
+one site is fixed. Keep first_refusal_site and touched_sites as extra information: the
+first-refusal count names the proximate blocker, and the touched count tells you what else
+will still block those same inputs afterwards, so both set expectations, not build order.
 
 **4. Cross-tab against the structural feature clusters** from `cluster-failures` —
 scaffold class, charge state, stereocenter count, size band, functional-group class. A
@@ -64,8 +66,9 @@ them.
 
 **5. Report the mean codes per failing input.** If it's, say, 3–4 (median 4), most
 failures are blocked at several sites simultaneously, so fixing the leader alone will not
-flip most of them to success. Ranking without this number over-promises the win — say it
-up front, before anyone commits to a build order.
+flip most of them to success (its sole-blocker count is how many it does flip). Ranking
+without this number over-promises the win — say it up front, before anyone commits to a
+build order.
 
 ## Refusal conditions
 

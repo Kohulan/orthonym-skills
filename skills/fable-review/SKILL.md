@@ -7,25 +7,25 @@ description: Gets one adversarial review of a load-bearing plan, diagnosis, or f
 
 A common failure mode in chemistry-tool development is a **confident-but-wrong premise** — a
 diagnosis that reads as solid, is repeated across sessions, and turns out wrong on
-re-derivation (this recurs often enough in practice that it deserves a standing check).
-Automated correctness gates — a round-trip/canonicalizer check, a regression suite, an
-atom/mass-balance certificate — all verify *code*, not *reasoning*. This skill borrows the one
-useful idea from the fable-advisor architect pattern — an **independent, different-model review
-before shipping** — and scopes it to challenging the DIAGNOSIS, which is where complex projects
-bleed. It does NOT delegate implementation: a non-Claude model reviewing a diagnosis is fine; a
-non-Claude model as a parallel implementer touching the same files is not (see your project's own
-rules on parallel work, and never trust a fresh model to carry project-specific invariants it
-hasn't read).
+re-derivation. Automated correctness gates — a round-trip/canonicalizer check, a regression
+suite, an atom/mass-balance certificate — all verify *code*, not *reasoning*. This skill gets
+an **independent review from a different model family before shipping**, aimed at the
+diagnosis. The reviewer reads and reports; it does not implement. A different-family model
+reviewing a diagnosis is fine; one working as a parallel implementer on the same files is not
+(see your project's own rules on parallel work), because a fresh model has not read your
+project-specific invariants.
 
 ## How to run
 
-Spawn ONE reviewer on **Fable** via the Agent tool (Fable is a different model family from Opus →
-catches blind spots a same-family reviewer shares):
+Spawn one reviewer via the Agent tool on a model family other than the session's: `fable` by
+default, `opus` when the session itself runs on Fable. A same-family reviewer shares the
+author's blind spots, and an alias for the session's own family resolves to the session's exact
+model, so it would not be a second opinion.
 
 ```
 Agent(
   subagent_type: "claude",   # catch-all agent type
-  model: "fable",            # Fable 5 — the cross-model reviewer
+  model: "fable",            # alias, follows the newest Fable; "opus" if the session is on Fable
   description: "Fable review of <plan>",
   prompt: <the review brief below, with the doc path(s) filled in>,
 )
@@ -35,10 +35,14 @@ Run it in the **background** (async) when the user wants to continue other work 
 for it when the plan is blocking a commit. One reviewer, not a fan-out — an oversized fan-out
 of reviewers adds cost, not independence.
 
+If your organization's model allowlist permits no version of the requested family, Claude Code
+runs the reviewer on the session's own model and shows a warning; check the model named on the
+reviewer's row in `/tasks` before counting the review as cross-model.
+
 ## The review brief (fill in the doc path)
 
-> You are an adversarial reviewer on Fable, a DIFFERENT model family from the author (Opus). Your
-> job is to REFUTE, not to agree. Read `<DOC PATH>` (and any files/commits it cites). This is
+> You are an adversarial reviewer on a different model family from the author. Your job is to
+> refute, not to agree. Read `<DOC PATH>` (and any files/commits it cites). This is
 > `<describe your chemistry tool, e.g. a deterministic structure→name namer, a property-prediction
 > pipeline, a reaction-outcome predictor>`; the dominant failure mode here is a confident-but-wrong
 > premise that passes every gate because gates verify code, not reasoning.

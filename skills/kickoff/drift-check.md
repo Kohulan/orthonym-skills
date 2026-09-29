@@ -47,8 +47,8 @@ project doesn't keep a formal roadmap doc, this check degrades gracefully to ste
 DRIFT CHECK — <PASS | DRIFT | STALE-ANCHOR>
 Current phase: <phase id + title from roadmap>
 Next task (handoff note): <one line>
-Verdict: <PASS = aligned; DRIFT = names the conflicting locked-decision/phase; STALE = git≠anchor>
-If DRIFT/STALE: the ONE correction to make before working.
+Verdict: <PASS = aligned; DRIFT = names the conflicting locked decision or phase; STALE-ANCHOR = the note's last commit or phase does not match git log>
+If DRIFT/STALE-ANCHOR: the one correction to make before working, citing the roadmap line (file:line) or commit hash it rests on.
 ```
 
 Keep it to the verdict — do not summarize the whole roadmap. If PASS, one line is enough.

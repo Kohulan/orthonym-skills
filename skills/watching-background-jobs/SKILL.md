@@ -7,11 +7,12 @@ description: Keeps a long-running background job watched from the main agent —
 
 ## Overview
 
-**Only the main agent can be re-woken.** The harness sends a free task-notification when a
-background task *exits*, and a wake-up primitive (`ScheduleWakeup` / `Monitor`) re-invokes
-*you* — but nothing can re-enter a finished subagent. A watcher subagent cannot sleep (foreground
-`sleep` is blocked), cannot be rescheduled, and dies at the end of its single turn: a zombie by
-construction. Own the watch loop yourself.
+**Only the main agent can be re-woken on a schedule.** The harness sends a free task-notification
+when a background task *exits*, and a wake-up tool (`ScheduleWakeup` or `Monitor`, whichever this
+harness lists; probe with ToolSearch) re-invokes *you*. A watcher subagent gets none of that: it
+cannot sleep (foreground `sleep` is blocked), nothing wakes it on a schedule, its report reaches
+you only when its run ends, and a finished one runs again only when you message it. So it either
+returns before the job ends or goes quiet until it does. Own the watch loop yourself.
 
 **Skip this** only for short foreground commands, or a job whose internal timeout reliably makes
 it exit.
@@ -25,8 +26,10 @@ or progress is unmeasurable) · `<verdict-file>` — the sentinel written *only*
 ## The pattern
 
 **1. Baseline (immediately, one Bash call):**
-- Confirm the process is alive (`pgrep -fa <job>`); if already dead, go straight to the crash
-  path — never arm a watchdog on a corpse.
+- Confirm the process is alive: by PID when you have one (`ps -p <pid>`), else with one letter
+  bracketed (`pgrep -fa '[m]yjob'`, with the plain name nowhere else in that command line),
+  because a plain `pgrep -fa <job>` also matches the shell running the check. If already dead,
+  go straight to the crash path — never arm a watchdog on a corpse.
 - Record progress markers: log size / line count + mtime.
 - If the job writes a sentinel/verdict file, check for a **stale one from a prior run** and
   record its mtime — "done" later means *mtime newer than launch*, not *file exists*.
@@ -37,6 +40,9 @@ or progress is unmeasurable) · `<verdict-file>` — the sentinel written *only*
   5-min prompt cache), or 1200s+ as a slow heartbeat for multi-hour jobs. Avoid 300s (worst
   of both) and 60s polling (burns cache for nothing).
 - Completion needs no polling — the exit notification is free and re-invokes you.
+- If `Monitor` is your wake-up tool, make its filter emit on failure lines (`Traceback|Error|Killed`)
+  as well as on progress, because a progress-only filter stays silent through a crash or hang;
+  re-arm it each time it expires.
 
 **3. Each wake-up:**
 - Re-stat log/output against the checkpoint.
@@ -99,7 +105,7 @@ outlives the watchdog timeout, silently re-arm; never ping the user for "still r
 | Excuse | Reality |
 |---|---|
 | "Progress is not worth a message; I'll report at the end" | Silence is why the user polls. It is one line. Post it. |
-| "The user asked for a persistent watcher subagent" | It ends with its first turn — the loop must live with you. Substitute and say so. |
+| "The user asked for a persistent watcher subagent" | It cannot wake itself, and its report arrives only when its run ends — the loop must live with you. Substitute and say so. |
 | "The exit notification will cover it" | It covers *exit* only. A hung process never exits; stalls are invisible without the poll loop. |
 | "I'll poll every 60s to be safe" | 8 cache-burning wakes per quiet stretch. 240–270s in-cache, or commit to 1200s+. |
 | "Log is quiet — it's hung, restart it" | Check CPU first. Quiet ≠ dead, and restarting destroys evidence. Never restart unilaterally. |

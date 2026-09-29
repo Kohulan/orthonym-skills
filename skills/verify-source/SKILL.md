@@ -22,7 +22,7 @@ and the maintainer's own reference values that blocked correctness work for a
 full session.
 
 The section actually reads: *"The priority numbers on one of the ligands are
-**arbitrarily** primed."* No selection rule at all. The governing rule lived one
+arbitrarily primed."* No selection rule at all. The governing rule lived one
 section away in IR-9.3.3.4 and maximizes. Thirty minutes with the PDF
 dissolved the blocker.
 
@@ -30,10 +30,11 @@ dissolved the blocker.
 
 1. **Name the primary source.** The published standard, the paper of record, the
    RFC — not a wiki, not a tutorial, not a previous analysis.
-2. **Fetch it.** `WebFetch`, or `curl` it to the scratchpad. Cache it; you will
-   read it more than once.
+2. **Fetch it.** `curl` it to the scratchpad and cache it; you will read it more
+   than once. WebFetch answers a prompt about the page with a small model rather than
+   returning its text, so use it only to find where the text lives.
 3. **Extract text you can grep.** For PDFs: `pdftotext -layout file.pdf out.txt`.
-   WebFetch summaries of PDFs are lossy — do not quote from them.
+   Quote only from text you extracted yourself.
 4. **Locate and read around it.** `grep -n` the section number and the operative
    phrases (`"highest"`, `"lowest"`, `"shall"`, `"arbitrarily"`), then read the
    surrounding lines. Governing rules are often one section away from where you

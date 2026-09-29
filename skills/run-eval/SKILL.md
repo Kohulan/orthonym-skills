@@ -108,7 +108,8 @@ terms — cluster the gates-off run, report the shipped one.
   you how many slots are actually free.
 - Check what your run's logs look like at scale before relying on grep-based
   filtering. Verbose per-row warnings can make a large run's output unreadable; filter
-  them (e.g. `2>&1 | grep -v "WARNING:"`) rather than losing signal in noise.
+  them from what you read, keeping the full log on disk (e.g.
+  `2>&1 | tee <run>.log | grep -v "WARNING:"`), because `refusal-census` parses those warnings.
 
 ## Output
 

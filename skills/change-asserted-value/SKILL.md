@@ -7,8 +7,10 @@ description: "Requires three artifacts before a committed expected value moves (
 
 ## The rule
 
-**Three artifacts before the value moves. If you cannot produce all three, do
-not change it — record it as unverified and say so plainly.**
+**Three artifacts before the value moves. If you cannot produce all three, the
+new value is unverified: change it only when it is marked unverified in the commit
+message, at the assertion and in a durable note ("When you only have weak evidence"
+below), and say so plainly.**
 
 Updating an assertion to match new output is the single easiest way to convert a
 bug into a specification.
@@ -52,10 +54,10 @@ before the change ships, not after.
 
 ## When you only have weak evidence
 
-Ship the change if the reasoning is sound, but:
+Ship the change with honest labels, if the reasoning is sound:
 
-- Say in the commit message which values are machine-confirmed and which are not.
-- Add a comment at the assertion recording what it rests on.
+- Say in the commit message which values are machine-confirmed and which are unverified.
+- Add a comment at the assertion marking it unverified and recording what it rests on.
 - Write the open item somewhere durable, with the check that would settle it.
 - In every summary, describe reasoning-backed values as unverified.
 

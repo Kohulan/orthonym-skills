@@ -78,9 +78,9 @@ Plain sentences. No bullet lists inside the prompt. It should read like someone 
 
 ## Portability
 
-`/loop` and `ultracode` are Claude Code features. `/loop` reruns the prompt on an interval or lets the model pace itself. `ultracode` opts the turn into multi-agent orchestration.
+`/loop` and `ultracode` are Claude Code features. `/loop` reruns the prompt on an interval or lets the model pace itself. The keyword `ultracode` in a prompt a person types or pastes makes Claude run that task as a workflow (multi-agent orchestration); a `-p` prompt or a scheduled task does not trigger it, and `/effort ultracode` turns it on for a whole session.
 
-For any other agent, swap the last two lines for: "Keep looping until the critic picks ours. Run the builders and critics as parallel subagents." The structure carries over unchanged.
+For any other agent, swap the `/loop` line and the last line for: "Keep looping until the critic picks ours. Run the builders and critics as parallel subagents." The structure carries over unchanged.
 
 ## Two filled examples
 
