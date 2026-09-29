@@ -19,6 +19,7 @@ authors:
     email: kohulan.rajan@uni-jena.de
     affiliation: "Beilstein-Institut, Frankfurt am Main, Germany; Friedrich Schiller University Jena, Jena, Germany"
 version: 0.2.1 # x-release-please-version
+doi: 10.5281/zenodo.23039311
 license: MIT
 repository-code: "https://github.com/Kohulan/orthonym-skills"
 url: "https://github.com/Kohulan/orthonym-skills"

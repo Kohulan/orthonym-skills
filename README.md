@@ -8,6 +8,7 @@
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-ece8de.svg?labelColor=161618&color=ece8de&style=flat-square)](LICENSE)
 [![Version](https://img.shields.io/static/v1?label=version&message=0.2.1&labelColor=161618&color=ece8de&style=flat-square)](.claude-plugin/plugin.json) <!-- x-release-please-version -->
+[![DOI](https://zenodo.org/badge/1338145083.svg)](https://doi.org/10.5281/zenodo.23039311)
 [![Part of: Orthonym](https://img.shields.io/badge/part%20of-Orthonym-ece8de.svg?labelColor=161618&color=ece8de&style=flat-square&logo=github)](https://github.com/Steinbeck-Lab/Orthonym)
 [![ORCID](https://img.shields.io/badge/ORCID-0000--0003--1066--7792-ece8de.svg?labelColor=161618&color=ece8de&style=flat-square)](https://orcid.org/0000-0003-1066-7792)
 
@@ -222,6 +223,7 @@ If these skills, hooks or the agent help your work, please cite the repository. 
   title     = {{Orthonym Skills}: {Claude Code} skills for measurement-driven chemistry development},
   year      = {2026},
   version   = {0.2.1},
+  doi       = {10.5281/zenodo.23039311},
   url       = {https://github.com/Kohulan/orthonym-skills},
   license   = {MIT}
 }
