@@ -1,7 +1,8 @@
 # hooks
 
 Two `PreToolUse` hooks for standing instructions the model forgets by mid-session. Both **fail
-open**: odd input or a crash exits 0 silently, so a guard bug can never block real work.
+open**: odd input or a crash never blocks the tool call (a crash in `ask-gate.py` exits 1, which
+Claude Code shows as a non-blocking hook error), so a guard bug can never block real work.
 
 ## `ask-gate.py` — matcher `AskUserQuestion`
 
@@ -23,6 +24,10 @@ Denies `git add -A` / `--all` / `.` and `git commit -a` / `-am` anywhere in the 
 the `.py` only on a hit.
 
 ## Install
+
+With the plugin installed, `block-git-add-all` is already on. To add `ask-gate`, copy only
+`ask-gate.py` and paste only its `AskUserQuestion` entry below; a project copy of the Bash guard
+would run on every Bash call next to the plugin's. Without the plugin, copy all three files:
 
 ```bash
 mkdir -p /path/to/your/project/.claude/hooks

@@ -85,7 +85,7 @@ The files in `reference-docs/` are **not** Skill-tool-invocable (they have no `S
 domain-knowledge files. Use one by pointing Claude at it:
 
 ```
-Read reference-docs/iupac-naming-rules.md before proposing the fix.
+Read reference-docs/examples-iupac-naming/iupac-naming-rules.md before proposing the fix.
 ```
 
 or copy it next to your project docs and reference it from your own `CLAUDE.md`.
@@ -111,12 +111,22 @@ The reasoning is the reusable part; the placeholders mark exactly what is yours 
 
 ## Hooks
 
-Two PreToolUse guards live in [`hooks/`](../hooks/). Copy the folder into your project and paste the
-`hooks` block from [`hooks/README.md`](../hooks/README.md) into `.claude/settings.json`:
+Two PreToolUse guards live in [`hooks/`](../hooks/). With the plugin installed (Option 0),
+`block-git-add-all` is already on. To add `ask-gate`, copy only `ask-gate.py` and paste only its
+`AskUserQuestion` entry from [`hooks/README.md`](../hooks/README.md) into `.claude/settings.json`; a
+project copy of the Bash guard would run on every Bash call next to the plugin's:
 
 ```bash
 mkdir -p /path/to/your/project/.claude/hooks
-cp hooks/*.py hooks/*.sh /path/to/your/project/.claude/hooks/
+cp hooks/ask-gate.py /path/to/your/project/.claude/hooks/
+```
+
+Without the plugin, copy all three files and paste the whole `hooks` block from the same README:
+
+```bash
+mkdir -p /path/to/your/project/.claude/hooks
+cp hooks/ask-gate.py hooks/block-git-add-all.py hooks/block-git-add-all.sh \
+   /path/to/your/project/.claude/hooks/
 ```
 
 Test each hook with the one-line pipe commands in the same README before relying on it. Open `/hooks`
