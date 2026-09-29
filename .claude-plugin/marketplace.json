@@ -1,18 +1,27 @@
 {
   "name": "orthonym-skills",
-  "owner": { "name": "Kohulan Rajan", "email": "kohulan.rajan@uni-jena.de" },
+  "owner": {
+    "name": "Kohulan Rajan",
+    "email": "kohulan.rajan@uni-jena.de"
+  },
   "metadata": {
     "description": "Claude Code skills for measurement-driven chemistry development",
-    "version": "0.2.0"
+    "version": "0.2.1"
   },
   "plugins": [
     {
       "name": "orthonym-skills",
       "source": "./",
       "description": "20 skills, 2 hooks and 1 agent for measurement-driven chemistry / ML tool development",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "category": "development",
-      "keywords": ["chemistry", "cheminformatics", "ml", "measurement", "regression-gate"]
+      "keywords": [
+        "chemistry",
+        "cheminformatics",
+        "ml",
+        "measurement",
+        "regression-gate"
+      ]
     }
   ]
 }
