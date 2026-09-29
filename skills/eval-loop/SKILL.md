@@ -1,6 +1,6 @@
 ---
 name: eval-loop
-description: Use when the user says "improve accuracy", "work the loop", "run the eval loop", "what should we fix next", or wants measurable progress on a chemistry model or pipeline across iterations. Also use when an accuracy push has no stated objective and no bounds, or when an iteration moved the headline number by zero and the next step is unclear.
+description: Runs a bounded improvement loop on a chemistry model or pipeline (measure, cluster failures, fix one cluster at the root, re-measure, gate, log), maximising one metric while every other stays a bound. Use when the user says "improve accuracy", "work the loop", "run the eval loop", "what should we fix next", or wants measurable progress across iterations. Also use when an accuracy push has no stated objective and no bounds, or when an iteration moved the headline number by zero and the next step is unclear. Not for a single before/after measurement (use run-eval) or a goal judged against a named reference (use gauntlet-loop).
 ---
 
 # The evaluation loop

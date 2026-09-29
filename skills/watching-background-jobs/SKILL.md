@@ -1,6 +1,6 @@
 ---
 name: watching-background-jobs
-description: Use when a long-running job (benchmark, regression gate, eval, test suite, build, batch run) is or will be running in the background and someone must notice completion, stalls, or crashes — triggers include "keep an eye on it", "ping me when it's done", "keep a cheap agent running to check", "is it still running?", "all done?", "why is this taking so long?", or launching anything expected to run over ~5 minutes.
+description: Keeps a long-running background job watched from the main agent — a baseline and checkpoint, scheduled wake-ups that tell a stall from a quiet compute phase, a one-line progress report per wake-up, and a verdict-first alert on completion. Use when a long-running job (benchmark, regression gate, eval, test suite, build, batch run) is or will be running in the background and someone must notice completion, stalls, or crashes — triggers include "keep an eye on it", "ping me when it's done", "keep a cheap agent running to check", "is it still running?", "all done?", "why is this taking so long?", or launching anything expected to run over ~5 minutes.
 ---
 
 # Watching background jobs

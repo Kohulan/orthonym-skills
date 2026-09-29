@@ -1,6 +1,6 @@
 ---
 name: council
-description: Use when the user asks a strategy, prioritization, or judgment-call question — which option, what to work on next, is X worth it, should we do A or B, your call, show me the options, what's the best move, is this the right approach — or any decision that rests on a number, estimate, or recommendation you would otherwise take on trust.
+description: Answers a strategy or judgment-call question by re-deriving its load-bearing numbers first, then weighing the options through three or more distinct expert voices, then making one call with the condition that would flip it. Use when the user asks a strategy, prioritization, or judgment-call question — which option, what to work on next, is X worth it, should we do A or B, your call, show me the options, what's the best move, is this the right approach — or any decision that rests on a number, estimate, or recommendation that would otherwise be taken on trust. Not for ranking an eval run's failure classes (use cluster-failures) or for a second opinion on a finished plan before it ships (use fable-review).
 ---
 
 # Council

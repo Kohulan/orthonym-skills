@@ -1,6 +1,6 @@
 ---
 name: kickoff
-description: Start/resume a chemistry-dev work session. Use at session start, or when the user says "continue", "resume", "kickoff", or pastes no context. Replaces a hand-written resume prompt — self-primes from your project's handoff note + durable memory/notes + git.
+description: Starts or resumes a chemistry-dev work session by self-priming from the project's handoff note, durable memory/notes and git, with a drift check against the roadmap before the next task begins, in place of a hand-written resume prompt. Use when a session starts, or when the user says "continue", "resume", "kickoff", "where were we", or opens a session without giving a task. Not for wrapping up a session (use handoff).
 ---
 
 # Session kickoff

@@ -1,6 +1,6 @@
 ---
 name: run-eval
-description: Use whenever the question is "did that change help", "what is our accuracy now", or "run the eval/benchmark" — and before and after any fix to a chemistry model or pipeline. Triggers on quoting an accuracy number with no run id, on a hand-rolled measurement loop in a scratchpad, on a single headline rate quoted alone, and on any request to measure against a held-out split.
+description: Runs the project's committed eval harness on a named split and reads a headline correctness rate together with emit/coverage and precision-on-emitted, citing the run id. Use when the question is "did that change help", "what is our accuracy now", or "run the eval/benchmark" — and before and after any fix to a chemistry model or pipeline. Triggers on quoting an accuracy number with no run id, on a hand-rolled measurement loop in a scratchpad, on a single headline rate quoted alone, and on any request to measure against a held-out split. Not for planning a multi-iteration accuracy push (use eval-loop).
 ---
 
 # Run the evaluation

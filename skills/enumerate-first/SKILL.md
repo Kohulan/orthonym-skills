@@ -1,6 +1,6 @@
 ---
 name: enumerate-first
-description: "Use when about to argue whether a case is reachable, likely, rare, or worth fixing — triggers on 'probably unreachable', 'edge case', 'in practice this can't happen', 'unlikely to matter', or deciding whether a reported defect is real. Also use before optimizing or tuning any decision point, to confirm it executes at all. Not for cases where a reproduction already exists."
+description: "Replaces a reachability or likelihood argument with a seeded, generated sample of the input space and a failure count. Use when about to argue whether a case is reachable, likely, rare, or worth fixing — triggers on 'probably unreachable', 'edge case', 'in practice this can't happen', 'unlikely to matter', or deciding whether a reported defect is real. Also use before optimizing or tuning any decision point, to confirm it executes at all. Not for cases where a reproduction already exists."
 ---
 
 # enumerate-first

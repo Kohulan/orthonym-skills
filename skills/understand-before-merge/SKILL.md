@@ -1,6 +1,6 @@
 ---
 name: understand-before-merge
-description: Use when writing, refactoring, or reviewing code the user intends to ship, merge, or run against real data — bug fixes, API endpoints, data pipelines, migrations, background jobs, and any script touching a network, database, filesystem, or user input. Triggers even on a bare "write me a function" or "fix this bug". Not for code the user has said is throwaway or exploratory.
+description: Delivers code with the why of each non-obvious decision, a failure-mode table of what the code does when reality misbehaves, and open questions only the human can answer, so the reviewer does real review before merging. Use when writing, refactoring, or reviewing code the user intends to ship, merge, or run against real data — bug fixes, API endpoints, data pipelines, migrations, background jobs, and any script touching a network, database, filesystem, or user input. Triggers even on a bare "write me a function" or "fix this bug". Not for code the user has said is throwaway or exploratory.
 ---
 
 # Understand Before Merge

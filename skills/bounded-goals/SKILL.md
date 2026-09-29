@@ -1,6 +1,6 @@
 ---
 name: bounded-goals
-description: "Use when writing or revising the success criteria of an optimization or evaluation loop — goals.json, acceptance thresholds, benchmark targets, or agent objectives — especially with more than one metric. Also use when an iteration loop has stalled and every proposed change is being rejected for regressing something."
+description: "Writes the success criteria of an optimization or evaluation loop as one maximized metric, relaxable bounds on every other metric, and a written trade licence. Use when writing or revising goals.json, acceptance thresholds, benchmark targets, or agent objectives, especially with more than one metric, and when an iteration loop has stalled because every proposed change is rejected for regressing something. Not for running the iterations themselves (use eval-loop)."
 ---
 
 # bounded-goals

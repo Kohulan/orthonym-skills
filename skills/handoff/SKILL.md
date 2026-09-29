@@ -1,6 +1,6 @@
 ---
 name: handoff
-description: End-of-session handoff for a chemistry-dev project. Use when the user wants to wrap up, clear, or "start a new session", or asks "is everything stored in memory?" / "give me a prompt for the next session". Verifies memory/notes are up to date + writes a handoff note so the next session needs no hand-written prompt.
+description: Ends a chemistry-dev work session by verifying that memory/notes are up to date and writing a handoff note, so the next session needs no hand-written prompt. Use when the user wants to wrap up, clear, or "start a new session", or asks "is everything stored in memory?" / "give me a prompt for the next session". Not for resuming at the start of a session (use kickoff).
 ---
 
 # Session handoff

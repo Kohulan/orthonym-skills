@@ -1,6 +1,6 @@
 ---
 name: verify-source
-description: "Use before stating what a specification, standard, RFC, paper, or datasheet requires — including when a project doc, research note, prior session, or another agent already asserts the rule. Triggers on 'the spec says', 'per IUPAC/RFC/ISO', 'the standard requires', citing a section number, or resolving a disagreement between an implementation and a claimed rule. Not for ordinary code reading."
+description: "Checks what a specification, standard, RFC, paper, or datasheet actually requires against the primary source, and states the rule with a verbatim quote and its section number. Use when about to state what such a source requires — including when a project doc, research note, prior session, or another agent already asserts the rule. Triggers on 'the spec says', 'per IUPAC/RFC/ISO', 'the standard requires', citing a section number, or resolving a disagreement between an implementation and a claimed rule. Not for ordinary code reading."
 ---
 
 # verify-source

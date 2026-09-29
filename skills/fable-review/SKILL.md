@@ -1,6 +1,6 @@
 ---
 name: fable-review
-description: Use before shipping a load-bearing plan, diagnosis, or finding — anything whose premise, if wrong, wastes the next iteration. Triggers on "fable-review", "review the plan with fable", "get a second opinion", a diagnosis about to size or scope a build, and any claim repeated across sessions without being re-derived. Not for ordinary line-by-line code review.
+description: Gets one adversarial review of a load-bearing plan, diagnosis, or finding from a reviewer on a different model family (fable by default), told to refute its premise. Use when a plan, diagnosis, or finding is about to ship and its premise, if wrong, would waste the next iteration. Triggers on "fable-review", "review the plan with fable", "get a second opinion", a diagnosis about to size or scope a build, and any claim repeated across sessions without being re-derived. Not for ordinary line-by-line code review.
 ---
 
 # Fable review — independent cross-model challenge of a plan/diagnosis

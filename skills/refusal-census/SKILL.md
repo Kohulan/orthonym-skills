@@ -1,6 +1,6 @@
 ---
 name: refusal-census
-description: Use when the question is "why did we abstain/fail on these", "which site is blocking the most inputs", or "what should we build to raise coverage" — and before scoping any coverage work. Triggers on a run whose failures all carry one undifferentiated reason code, and on a build order ranked by touched-count instead of measured sole-blocker count.
+description: Attributes each abstention or failure in a run to the internal code site that refused it, from per-input refusal logs, and ranks those sites by sole-blocker count (the inputs that only one site blocks) to set the build order. Use when the question is "why did we abstain/fail on these", "which site is blocking the most inputs", or "what should we build to raise coverage" — and before scoping any coverage work. Triggers on a run whose failures all carry one undifferentiated reason code, and on a build order ranked by touched-count instead of measured sole-blocker count. Not for grouping failures by a structural feature of the input (use cluster-failures, which this cross-tabs against).
 ---
 
 # Census the refusals

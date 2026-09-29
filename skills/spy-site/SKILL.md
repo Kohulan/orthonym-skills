@@ -1,6 +1,6 @@
 ---
 name: spy-site
-description: Use before any fix that names a function, method, or module as "the place to change", and whenever a plan, roadmap, audit doc, or review points at a central decision point. Triggers on "the fix goes in X", "X is where this is decided", and any code site inherited from a document rather than from a measurement.
+description: Proves that a code site named as the place to fix actually runs for the target inputs, by counting its calls with a spy validated on at least two known positives, before any edit lands there. Use when a fix names a function, method, or module as "the place to change", and when a plan, roadmap, audit doc, or review points at a central decision point. Triggers on "the fix goes in X", "X is where this is decided", and any code site inherited from a document rather than from a measurement. Not for judging whether a defect class is real (use check-target) or whether an input case is reachable (use enumerate-first).
 ---
 
 # Spy the site before you code

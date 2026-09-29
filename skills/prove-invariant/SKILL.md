@@ -1,6 +1,6 @@
 ---
 name: prove-invariant
-description: "Use when adding or reviewing tests for correctness-critical output, when a suite passes but you are not confident the values are right, or when stored expectations (golden files, snapshots, asserted labels) are the only oracle. Triggers on 'all tests pass but', 'is this actually correct', regression suites for scientific/algorithmic output, and before trusting any new test you wrote."
+description: "Derives a property the output must satisfy by necessity (symmetry, invariance, counting, an algebraic identity), gates the output on it, and mutation-tests the gate. Use when adding or reviewing tests for correctness-critical output, when a suite passes but the values may still be wrong, or when stored expectations (golden files, snapshots, asserted labels) are the only oracle. Triggers on 'all tests pass but', 'is this actually correct', regression suites for scientific or algorithmic output, and before trusting any newly written test. Not for changing an existing expected value (use change-asserted-value)."
 ---
 
 # prove-invariant

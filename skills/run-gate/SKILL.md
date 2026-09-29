@@ -1,6 +1,6 @@
 ---
 name: run-gate
-description: Run your project's regression gate correctly (protected-regression-set + determinism, or whatever your gate checks). Use whenever a change needs gating, before shipping a phase, or when the user says "run the gate". Encodes the full recipe - fast pre-gate, background launch, sentinel watching, reconciliation - so it is not retyped in prompts.
+description: Runs a project's regression gate (a protected regression set plus a determinism check, or whatever the gate checks) by its full recipe — fast pre-gate while iterating, background launch, waiting on a sentinel verdict file, and reconciling the verdict's fields against a current baseline. Use when a change needs gating, before shipping a phase, or when the user says "run the gate". Not for measuring accuracy on an eval split (use run-eval) or for keeping watch over some other long job (use watching-background-jobs).
 ---
 
 # Phase gate recipe

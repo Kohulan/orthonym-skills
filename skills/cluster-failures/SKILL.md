@@ -1,6 +1,6 @@
 ---
 name: cluster-failures
-description: Use after an eval or benchmark run, and whenever the question is "what should I work on", "where are we losing", or "what is the biggest failure class" — also before scoping any accuracy work. Triggers on failures bucketed by what the output looked like rather than by a structural feature of the input molecule. Analysis only — it ranks build order, it never licenses a per-molecule special case or a string rewrite on the output.
+description: Ranks the failures of an eval or benchmark run by a structural feature of the input (ring system, charge state, stereocenter count, size, functional group) to set the build order. Use when an eval or benchmark run has finished, when the question is "what should I work on", "where are we losing", or "what is the biggest failure class", and before scoping any accuracy work. Triggers on failures bucketed by what the output looked like rather than by a structural feature of the input molecule. Analysis only — it never licenses a per-molecule special case or a string rewrite on the output. Not for attributing abstentions to the site that blocked them (use refusal-census), for validating a target already named (use check-target), or for choosing between strategic options (use council).
 ---
 
 # Cluster the failures

@@ -1,6 +1,6 @@
 ---
 name: reuse-before-rerun
-description: Use before launching any measurement over a minute long — benchmark, failure census, spy over many rows, head-to-head against another engine, determinism eval, shard generator, full gate, large-corpus run — and whenever the user asks for a number, a table, or "the run from <date>". Also use the moment you think "let me re-measure", "fresh spy", or "quick sanity run", or when a prior result cannot be found.
+description: Searches the results ledger, the repo, scratch directories and notes in one sweep for an existing result, then gives a three-line REUSE / EXTEND / RERUN verdict before anything expensive runs. Use when about to launch any measurement over a minute long — benchmark, failure census, spy over many rows, head-to-head against another engine, determinism eval, shard generator, full gate, large-corpus run — and when the user asks for a number, a table, or the run from a given date. Also use on the thought "let me re-measure", "fresh spy", or "quick sanity run", and when a prior result cannot be found. Not for running the measurement itself (use run-eval or run-gate after it).
 ---
 
 # Reuse before rerun

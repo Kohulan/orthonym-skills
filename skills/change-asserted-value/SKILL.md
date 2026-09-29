@@ -1,6 +1,6 @@
 ---
 name: change-asserted-value
-description: "Use whenever a change would alter a committed expected value — a golden file, snapshot, asserted label, reference output, or benchmark expectation — including when the new value looks obviously right or the old one looks obviously wrong. Triggers on updating a failing assertion to match current output, 'the test expectation is stale', or a fix that moves reference data."
+description: "Requires three artifacts before a committed expected value moves (a primary-source quote, an independent check that does not use the code under test, and a mutation test) and records anything weaker as unverified. Use when a change would alter a golden file, snapshot, asserted label, reference output, or benchmark expectation, including when the new value looks obviously right or the old one looks obviously wrong. Triggers on updating a failing assertion to match current output, 'the test expectation is stale', or a fix that moves reference data. Not for writing new tests (use prove-invariant)."
 ---
 
 # change-asserted-value

@@ -1,6 +1,6 @@
 ---
 name: check-target
-description: Use when a cluster, tell, signature, or failure pattern has been named as "the thing to fix" — before proposing, scoping, or starting any fix. Triggers on "the biggest failure class is X", on a fix target inherited from a handoff note, roadmap, or review, and on sizing a defect class by counting rows that match a tag or substring.
+description: Tests whether a failure pattern named as "the thing to fix" is one real defect class, by recomputing its signature over all rows (passing ones included), reporting hits, failures, precision and counterexamples, and splitting the hits by cause. Use when a cluster, tell, signature, or failure pattern has been named as the fix target — before proposing, scoping, or starting any fix. Triggers on "the biggest failure class is X", on a fix target inherited from a handoff note, roadmap, or review, and on sizing a defect class by counting rows that match a tag or substring. Not for producing the candidate targets (use cluster-failures) or for locating the code site to change (use spy-site).
 ---
 
 # Check the target before you propose a fix
