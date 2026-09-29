@@ -1,0 +1,142 @@
+name: zenodo-release
+
+# Archives a release on Zenodo through the Zenodo REST API: the source zip of the
+# release tag, with the metadata of CITATION.cff, as a new version of the existing
+# Zenodo record, so the concept DOI 10.5281/zenodo.23039311 stays the same for all
+# versions. release-please.yml calls this job for each release it creates (a release
+# made with the built-in token starts no other workflow by itself).
+#
+# Setup (repository settings):
+#   secret   ZENODO_TOKEN        a Zenodo personal access token with the scopes
+#                                deposit:write and deposit:actions
+#   variable ZENODO_ENABLED=true switches the job on for releases
+#   variable ZENODO_RECORD_ID    the record id of any published version
+#
+# Manual run (Actions -> zenodo-release -> Run workflow): publish=false makes a
+# Zenodo draft from the chosen tag or branch, prints it and deletes it again, which
+# checks the token, the upload and the metadata without making a DOI.
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        type: string
+        required: true
+      publish:
+        type: string
+        required: false
+        default: 'true'
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: tag or branch to archive
+        required: true
+        default: master
+      publish:
+        description: publish on Zenodo (false = make a draft and delete it)
+        required: true
+        default: 'false'
+
+permissions:
+  contents: read
+
+jobs:
+  zenodo:
+    if: vars.ZENODO_ENABLED == 'true' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --quiet requests pyyaml
+      - name: Archive on Zenodo
+        env:
+          ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
+          RECORD_ID: ${{ vars.ZENODO_RECORD_ID }}
+          REPO: ${{ github.repository }}
+          REF: ${{ inputs.ref }}
+          RELEASE_URL: ''
+          RELEASE_DATE: ''
+          PUBLISH: ${{ inputs.publish }}
+        run: |
+          python - <<'PY'
+          import datetime, os, sys, requests, yaml
+
+          api = "https://zenodo.org/api"
+          token = os.environ["ZENODO_TOKEN"]
+          if not token:
+              sys.exit("ZENODO_TOKEN is not set")
+          auth = {"Authorization": f"Bearer {token}"}
+          repo, ref = os.environ["REPO"], os.environ["REF"]
+          publish = os.environ["PUBLISH"].strip().lower() == "true"
+
+          def check(r, what):
+              if r.status_code >= 300:
+                  sys.exit(f"{what} failed: HTTP {r.status_code}: {r.text[:800]}")
+              return r.json() if r.content else {}
+
+          # The metadata comes from CITATION.cff at the archived ref.
+          cff = yaml.safe_load(open("CITATION.cff", encoding="utf-8"))
+          creators = []
+          for a in cff["authors"]:
+              c = {"name": f'{a["family-names"]}, {a["given-names"]}'}
+              if a.get("orcid"):
+                  c["orcid"] = a["orcid"].rsplit("/", 1)[-1]
+              if a.get("affiliation"):
+                  c["affiliation"] = a["affiliation"]
+              creators.append(c)
+          date = (os.environ.get("RELEASE_DATE") or datetime.date.today().isoformat())[:10]
+          notes = os.environ.get("RELEASE_URL") or (f"https://github.com/{repo}/releases/tag/{ref}" if ref.startswith("v") else f"https://github.com/{repo}/tree/{ref}")
+          metadata = {
+              "upload_type": "software",
+              "title": cff["title"],
+              "creators": creators,
+              "description": f'<p>{cff["abstract"].strip()}</p><p>Release notes: <a href="{notes}">{notes}</a></p>',
+              "access_right": "open",
+              "license": "mit",
+              "keywords": cff.get("keywords", []),
+              "version": ref,
+              "publication_date": date,
+              "related_identifiers": [{"relation": "isSupplementTo", "scheme": "url",
+                                       "identifier": f"https://github.com/{repo}/tree/{ref}"}],
+          }
+
+          # The source zip of the ref, as GitHub serves it for a release.
+          kind = "tags" if ref.startswith("v") else "heads"
+          zip_url = f"https://github.com/{repo}/archive/refs/{kind}/{ref}.zip"
+          archive = requests.get(zip_url, timeout=300)
+          if archive.status_code != 200:
+              sys.exit(f"download of {zip_url} failed: HTTP {archive.status_code}")
+          file_name = f'{repo.split("/")[1]}-{ref}.zip'
+
+          anchor = os.environ.get("RECORD_ID", "").strip()
+          if anchor:
+              # A new version: start from the latest version of the record family
+              # (Zenodo redirects this request to it).
+              latest = check(requests.get(f"{api}/records/{anchor}/versions/latest", headers=auth, timeout=60), "latest version")
+              draft = check(requests.post(f'{api}/deposit/depositions/{latest["id"]}/actions/newversion', headers=auth, timeout=60), "new version")
+              draft = check(requests.get(draft["links"]["latest_draft"], headers=auth, timeout=60), "new version draft")
+              for f in check(requests.get(draft["links"]["files"], headers=auth, timeout=60), "draft files"):
+                  check(requests.delete(f["links"]["self"], headers=auth, timeout=60), "remove the previous file")
+          else:
+              draft = check(requests.post(f"{api}/deposit/depositions", headers=auth, json={}, timeout=60), "new record")
+          dep = draft["id"]
+          print(f"draft {dep} for {repo} {ref}")
+
+          check(requests.put(f'{draft["links"]["bucket"]}/{file_name}', headers=auth, data=archive.content, timeout=600), "upload")
+          check(requests.put(f"{api}/deposit/depositions/{dep}", headers=auth, json={"metadata": metadata}, timeout=60), "metadata")
+
+          if not publish:
+              check(requests.delete(f"{api}/deposit/depositions/{dep}", headers=auth, timeout=60), "delete the test draft")
+              print(f"test only: draft {dep} made with {file_name} ({len(archive.content)} bytes) and the metadata, then deleted")
+              sys.exit(0)
+
+          rec = check(requests.post(f"{api}/deposit/depositions/{dep}/actions/publish", headers=auth, timeout=120), "publish")
+          print(f'published: DOI {rec.get("doi")}, concept DOI {rec.get("conceptdoi")}, record {rec.get("id")}')
+          if not anchor:
+              print(f'set the repository variable ZENODO_RECORD_ID to {rec.get("id")}')
+          PY
