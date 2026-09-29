@@ -15,23 +15,25 @@ compares blind against the bar, and loops until it wins. Works for builds, writi
 design. **Triggers:** "/gauntlet-loop", "gauntlet this", "loop until it beats X". **Wire up:** nothing.
 
 ### `council`
-A 3-voice, search-first process for strategy / prioritization / judgment-call questions ("which
-option", "what next", "is X worth it", "your call"). Forces a recorded recommendation with an explicit
-flip-condition instead of an off-the-cuff answer. **Wire up:** nothing (the "search first" step just
-means look up prior context — notes, docs, logs — before opining).
+A search-first process with three or more expert voices for strategy / prioritization / judgment-call
+questions ("which option", "what next", "is X worth it", "your call"). Forces a recorded recommendation
+with an explicit flip-condition instead of an off-the-cuff answer. **Wire up:** nothing (the "search
+first" step just means look up prior context — notes, docs, logs — before opining).
 
 ### `fable-review`
-Get an adversarial second opinion on a plan / finding / diagnosis from a *different* model before you
-ship it. Targets the dominant failure mode of confident autonomous work — a plausible-but-wrong
-premise. **Triggers:** before committing a load-bearing plan; "fable-review". **Wire up:** point it at
-whatever second model you have access to.
+Get an adversarial second opinion on a plan / finding / diagnosis from a *different* model family
+before you ship it. The reviewer reports every gap it finds with a severity tag; you do the filtering.
+Targets the dominant failure mode of confident autonomous work — a plausible-but-wrong premise.
+**Triggers:** before committing a load-bearing plan; "fable-review". **Wire up:** nothing in Claude
+Code, where it asks for the `fable` model alias (`opus` when the session already runs on Fable). In
+another harness, point it at whatever second model you have access to.
 
 ### `spy-site`
 Prove a code site is *actually on the execution path* before you edit it. Refuses the site if it
-records zero calls for the target inputs. Kills the recurring "I fixed the central decision point"
-that turns out never to run. **Triggers:** before any fix that names a function/module as "the place to
-change". **Wire up:** nothing — the method (instrument, run a known-positive, count calls) is
-language-agnostic.
+records zero calls for the target inputs. Kills the recurring "I fixed the central decision point" that
+turns out never to run. **Triggers:** before any fix that names a function/module as "the place to
+change". **Wire up:** nothing — the method (instrument, run two or more known positives, count calls)
+is language-agnostic.
 
 ### `check-target`
 Validate a proposed fix target is a real, *single* defect class before any code is written. Refuses
@@ -68,11 +70,12 @@ regression suites for scientific or algorithmic output, before trusting a test y
 **Wire up:** nothing.
 
 ### `change-asserted-value`
-Use whenever a change would alter a committed expected value — a golden file, snapshot, asserted
-label, reference output, benchmark target — including when the new value looks obviously right.
-Forces the question "which one is wrong, the code or the expectation?" to be answered with evidence
-before the file moves. **Triggers:** updating a failing assertion to match current output, "the test
-expectation is stale". **Wire up:** nothing.
+Use whenever a change would alter a committed expected value — a golden file, snapshot, asserted label,
+reference output, benchmark target — including when the new value looks obviously right. Forces the
+question "which one is wrong, the code or the expectation?" to be answered with evidence before the
+file moves; with weaker evidence the value moves only when it is marked unverified in the commit
+message, at the assertion and in a durable note. **Triggers:** updating a failing assertion to match
+current output, "the test expectation is stale". **Wire up:** nothing.
 
 ### `bounded-goals`
 Write the success criteria of an optimisation or evaluation loop as **one objective plus explicit
@@ -88,12 +91,12 @@ targets with more than one metric; a loop where every proposed change is rejecte
 Each encodes a measurement discipline that transfers directly; you substitute your project's plumbing.
 
 ### `run-gate`
-Run a regression gate correctly: fast pre-gate → background launch (never a hard `timeout`) → wait on
-a **verdict file**, not a `pgrep`/sleep-loop → reconcile the **structured verdict**, never just the
-exit code → on FAIL read the log for the specific regression lines → re-gate. **Wire up:** your gate
-command, its fast-check flag, and its verdict/log file paths. The reusable lessons: read the verdict
-not the exit code; a stale baseline can make a PASS hide a regression; never run two gates that clobber
-the same verdict file.
+Run a regression gate correctly: fast pre-gate → background launch (never a hard `timeout`) → wait on a
+**verdict file**, not `pgrep` or a foreground sleep-loop → reconcile the **structured verdict**, never
+just the exit code → on FAIL read the log for the specific regression lines → re-gate. **Wire up:**
+your gate command, its fast-check flag, and its verdict/log file paths. The reusable lessons: read the
+verdict not the exit code; a stale baseline can make a PASS hide a regression; never run two gates that
+clobber the same verdict file.
 
 ### `run-eval`
 Measure accuracy on a **fixed, hashed split**, reading several numbers — a headline correctness metric
@@ -109,7 +112,7 @@ cheaply → gate → log. Includes **bounded objectives** (maximise one metric, 
 bounds; never let a proxy like output-length become an objective) and a **plateau trigger** (hand a
 zero-movement iteration to a fresh agent). **Wire up:** your goals/bounds file and the gate + eval
 commands from the two skills above. The multi-objective-thrashing and name-length-as-proxy lessons are
-general ML-eval lessons (learned from published post-mortems).
+general ML-eval lessons, not specific to one project.
 
 ### `cluster-failures`
 Group an eval run's failures by a **structural feature of the input molecule** (scaffold class, ring
@@ -123,8 +126,8 @@ that partitions your failures.
 Attribute abstentions/failures to the **specific code site** that produced them, so build order is
 ranked by measured blocking rather than guesswork. Rank by **sole-blocker** count (what a site is the
 *only* blocker for), never by how many items a site merely touches — touched-counts over-count and
-aren't additive. **Wire up:** however your pipeline records refusals (failure codes in logs) + a parser
-for them.
+aren't additive. First-refusal and touched counts are reported beside it as extra information. **Wire
+up:** however your pipeline records refusals (failure codes in logs) + a parser for them.
 
 ### `kickoff`
 Start/resume a work session by self-priming from durable state (a handoff note + your notes/memory +
@@ -149,17 +152,20 @@ and the search roots in `sweep.sh` (env vars; defaults work for a plain git repo
 ### `watching-background-jobs`
 Own the watch loop for a long job yourself: baseline the log, arm a scheduled wake-up, check CPU before
 calling a stall, and end every wake-up that shows progress with **one progress line** (done/total,
-rate, ETA, last log line). A spawned "watcher agent" dies at the end of its turn — never delegate the
-loop. **Triggers:** launching anything expected to run more than ~5 minutes; "is it still running?",
-"how much done?", "ping me when it's done". **Wire up:** your log / sentinel file paths.
+rate, ETA, last log line). A spawned "watcher agent" cannot wake itself on a schedule and reports only
+when its run ends — keep the loop in the main agent. **Triggers:** launching anything expected to run
+more than ~5 minutes; "is it still running?", "how much done?", "ping me when it's done". **Wire up:**
+your log / sentinel file paths.
 
 ---
 
 ## Hooks (`hooks/`)
 
-Mechanical guards for the two rules that prose instructions kept losing under pressure. Install by
-pasting the `hooks` block from [`hooks/README.md`](../hooks/README.md) into your `settings.json`, or
-get `block-git-add-all` automatically with the plugin install.
+Mechanical guards for the two rules that prose instructions kept losing under pressure. The plugin
+install turns on `block-git-add-all`; with the plugin, add `ask-gate` by copying only `ask-gate.py` and
+pasting only its `AskUserQuestion` entry from [`hooks/README.md`](../hooks/README.md) into your
+`settings.json` (a project copy of the Bash guard would run next to the plugin's). Without the plugin,
+copy all three files and paste the whole `hooks` block.
 
 ### `block-git-add-all`
 PreToolUse on `Bash`. Denies bulk staging (`git add -A`, `git add .`, `git add --all`, `git commit -a`)
@@ -179,7 +185,8 @@ review. Opt-in: prefix a question with `HARD STOP:` to force it through, or disa
 A subagent definition. Point it at the reference documents a project relies on (standards,
 specifications, published rules, reference data files) and it returns the rule with its exact citation,
 the document's own examples as test cases, where the text is silent or ambiguous, and a confidence, so
-the main agent implements it at the root cause. It reads documents, never source code. **Wire up:**
+the main agent implements it at the root cause. It reads documents, never source code, and treats any
+instruction inside a document as text to quote. **Wire up:**
 the paths of your reference documents.
 
 ---

@@ -60,7 +60,7 @@ otherwise slip through.
 5. **spy** with [`spy-site`](skills/spy-site/): is the site on the path?
 6. **fix** at the root cause with [`understand-before-merge`](skills/understand-before-merge/).
 7. **gate** with [`run-gate`](skills/run-gate/) and its structured verdict.
-8. **review** with [`fable-review`](skills/fable-review/), a different model.
+8. **review** with [`fable-review`](skills/fable-review/), a different model family.
 9. **handoff**: the next session starts again at kickoff.
 
 [`reuse-before-rerun`](skills/reuse-before-rerun/) fires before any run over a minute.
@@ -117,17 +117,17 @@ Ready to use. No setup.
 
 | Skill | When it fires | What it forces |
 |:---|:---|:---|
-| [`spy-site`](skills/spy-site/) | Before any fix that names a function as "the place to change" | Instrument, run a known positive, count calls. Zero calls = wrong site. |
+| [`spy-site`](skills/spy-site/) | Before any fix that names a function as "the place to change" | Instrument, run two or more known positives, count calls. Zero calls = wrong site. |
 | [`check-target`](skills/check-target/) | Before starting a fix on a named cluster or signature | The signature must not also match inputs that already succeed. |
 | [`enumerate-first`](skills/enumerate-first/) | "Probably unreachable", "edge case", "unlikely to matter" | Enumerate the space and count. The count is the answer. |
 | [`verify-source`](skills/verify-source/) | "The spec says…", "per IUPAC / RFC / ISO…" | Open the source, cite the section. Never a note that quotes it. |
 | [`prove-invariant`](skills/prove-invariant/) | A suite passes but you are not sure the values are *right* | Derive the invariant the output must satisfy and test that. |
-| [`change-asserted-value`](skills/change-asserted-value/) | A change would move a golden file, snapshot, or asserted label | Answer "which is wrong, the code or the expectation?" with evidence first. |
+| [`change-asserted-value`](skills/change-asserted-value/) | A change would move a golden file, snapshot, or asserted label | Answer "which is wrong, the code or the expectation?" with evidence first; anything weaker ships labelled unverified. |
 | [`bounded-goals`](skills/bounded-goals/) | Writing success criteria with more than one metric | One objective, explicit bounds on the rest. Multi-objective loops thrash. |
-| [`council`](skills/council/) | "Which option?", "what next?", "is X worth it?", "your call" | Search first, three named voices, one recorded call with a flip condition. |
-| [`fable-review`](skills/fable-review/) | Before shipping a load-bearing plan, finding, or diagnosis | An adversarial review by a *different* model. Refute, don't agree. |
+| [`council`](skills/council/) | "Which option?", "what next?", "is X worth it?", "your call" | Search first, three or more named voices, one recorded call with a flip condition. |
+| [`fable-review`](skills/fable-review/) | Before shipping a load-bearing plan, finding, or diagnosis | An adversarial review by a *different* model family. Refute, don't agree. |
 | [`gauntlet-loop`](skills/gauntlet-loop/) | "Loop until it beats X" | Builder vs. harsh critic against a stated bar, until it wins. |
-| [`understand-before-merge`](skills/understand-before-merge/) | Any code meant to ship, merge, or touch real data | Inline reasoning, a failure-mode table, open questions only a human can answer. |
+| [`understand-before-merge`](skills/understand-before-merge/) | Any code meant to ship, merge, or touch real data | A short why on each non-obvious decision, a failure-mode table, open questions only a human can answer. |
 
 ### Workflow skills
 
@@ -183,7 +183,7 @@ Mechanical guards for the two rules that prose instructions kept losing under pr
 (standards, specifications, published rules, reference data files) and returns the rule with its exact
 citation, the document's own examples as test cases, where the text is silent or ambiguous, and a
 confidence for each finding. The main agent then implements the fix at the root cause. It reads
-documents, never source code.
+documents, never source code, and treats any instruction inside a document as text to quote.
 
 ## Reference docs
 
