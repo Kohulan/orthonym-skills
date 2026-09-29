@@ -1,0 +1,40 @@
+name: release-please
+
+# release-please keeps ONE pull request open that collects the next release: the
+# CHANGELOG.md entry, .release-please-manifest.json and the version in every file
+# that names it (.claude-plugin/plugin.json, .claude-plugin/marketplace.json,
+# CITATION.cff, the README badge, banner and BibTeX entry, docs/assets/banner.svg;
+# see `extra-files` in release-please-config.json and the `x-release-please-*`
+# markers). Merging that pull request makes release-please create the tag (vX.Y.Z)
+# and the GitHub Release on the next run. Nothing is built or deployed.
+#
+# Versions come from the Conventional Commit types of the commits after the last
+# release (after `bootstrap-sha` until the first release): `!` or a BREAKING CHANGE
+# footer -> major; feat -> minor; fix, perf, deps and revert -> patch; docs, chore,
+# ci, build, test, style and refactor alone -> no release. Below 1.0.0, a breaking
+# change bumps the minor version instead of the major (bump-minor-pre-major).
+#
+# The built-in GITHUB_TOKEN opens the pull request. This needs the repository
+# setting "Allow GitHub Actions to create and approve pull requests"
+# (Settings -> Actions -> General -> Workflow permissions). Events made with
+# GITHUB_TOKEN start no new workflow runs; no other workflow here needs them.
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: googleapis/release-please-action@v5
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+          token: ${{ secrets.GITHUB_TOKEN }}
