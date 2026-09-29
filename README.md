@@ -7,7 +7,7 @@
 <br/>
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-ece8de.svg?labelColor=161618&color=ece8de&style=flat-square)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.2.0-ece8de.svg?labelColor=161618&color=ece8de&style=flat-square)](.claude-plugin/plugin.json) <!-- x-release-please-version -->
+[![Version](https://img.shields.io/static/v1?label=version&message=0.2.0&labelColor=161618&color=ece8de&style=flat-square)](.claude-plugin/plugin.json) <!-- x-release-please-version -->
 [![Part of: Orthonym](https://img.shields.io/badge/part%20of-Orthonym-ece8de.svg?labelColor=161618&color=ece8de&style=flat-square&logo=github)](https://github.com/Steinbeck-Lab/Orthonym)
 [![ORCID](https://img.shields.io/badge/ORCID-0000--0003--1066--7792-ece8de.svg?labelColor=161618&color=ece8de&style=flat-square)](https://orcid.org/0000-0003-1066-7792)
 
