@@ -18,8 +18,7 @@ authors:
     orcid: "https://orcid.org/0000-0003-1066-7792"
     email: kohulan.rajan@uni-jena.de
     affiliation: "Beilstein-Institut, Frankfurt am Main, Germany; Friedrich Schiller University Jena, Jena, Germany"
-version: 0.2.0
-date-released: 2026-09-02
+version: 0.2.0 # x-release-please-version
 license: MIT
 repository-code: "https://github.com/Kohulan/orthonym-skills"
 url: "https://github.com/Kohulan/orthonym-skills"

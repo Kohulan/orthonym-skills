@@ -1,17 +1,21 @@
 <a id="top"></a>
 
 <a href="https://github.com/Kohulan/orthonym-skills">
-  <img src="docs/assets/banner.svg" alt="Orthonym Skills. Decide from measurement, not from a confident guess. Claude Code plugin: 20 skills, 2 hooks, 1 agent, v0.2.0. Seven spectral lines on a nanometre scale stand for the loop: measure, cluster, target, spy, fix, gate, review." width="100%">
+  <img src="docs/assets/banner.svg" alt="Orthonym Skills. Decide from measurement, not from a confident guess. Claude Code plugin: 20 skills, 2 hooks, 1 agent, v0.2.0. Seven spectral lines on a nanometre scale stand for the loop: measure, cluster, target, spy, fix, gate, review." width="100%"><!-- x-release-please-version -->
 </a>
 
 <br/>
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-ece8de.svg?labelColor=161618&color=ece8de&style=flat-square)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.2.0-ece8de.svg?labelColor=161618&color=ece8de&style=flat-square)](.claude-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/version-0.2.0-ece8de.svg?labelColor=161618&color=ece8de&style=flat-square)](.claude-plugin/plugin.json) <!-- x-release-please-version -->
+[![Part of: Orthonym](https://img.shields.io/badge/part%20of-Orthonym-ece8de.svg?labelColor=161618&color=ece8de&style=flat-square&logo=github)](https://github.com/Steinbeck-Lab/Orthonym)
 [![ORCID](https://img.shields.io/badge/ORCID-0000--0003--1066--7792-ece8de.svg?labelColor=161618&color=ece8de&style=flat-square)](https://orcid.org/0000-0003-1066-7792)
 
-Skills, hooks and an agent for [Claude Code](https://docs.claude.com/en/docs/claude-code), hardened on a
-real deterministic cheminformatics engine. For anyone who builds chemistry software or ML tools:
+**Part of the [Orthonym](https://github.com/Steinbeck-Lab/Orthonym) project.** These are the skills, hooks and agent that the
+Orthonym engine (checked IUPAC names for chemical structures) was built with.
+
+Skills, hooks and an agent for [Claude Code](https://docs.claude.com/en/docs/claude-code), hardened on
+[Orthonym](https://github.com/Steinbeck-Lab/Orthonym), a real deterministic cheminformatics engine. For anyone who builds chemistry software or ML tools:
 property prediction, structure-to-name, reaction and retrosynthesis prediction, docking and QSAR,
 molecular generation, cheminformatics pipelines.
 
@@ -211,6 +215,7 @@ failure, then a run with it that shows compliance. Bring both to the PR.
 If these skills, hooks or the agent help your work, please cite the repository. GitHub's
 *Cite this repository* button reads [`CITATION.cff`](CITATION.cff).
 
+<!-- x-release-please-start-version -->
 ```bibtex
 @software{rajan_orthonym_skills_2026,
   author    = {Rajan, Kohulan},
@@ -221,6 +226,7 @@ If these skills, hooks or the agent help your work, please cite the repository. 
   license   = {MIT}
 }
 ```
+<!-- x-release-please-end -->
 
 ## License
 
