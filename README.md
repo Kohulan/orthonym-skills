@@ -72,12 +72,19 @@ would otherwise rest on trust.
 
 ## Install
 
-Inside Claude Code:
+Inside Claude Code, run these two commands one at a time.
 
-```text
-/plugin marketplace add Kohulan/orthonym-skills
-/plugin install orthonym-skills@orthonym-skills
-```
+1. Add the marketplace:
+
+   ```text
+   /plugin marketplace add Kohulan/orthonym-skills
+   ```
+
+2. Install the plugin:
+
+   ```text
+   /plugin install orthonym-skills@orthonym-skills
+   ```
 
 You get all 21 skills (as `/orthonym-skills:<name>`), the `reference-consult` agent, and the
 `block-git-add-all` hook. The `ask-gate` hook is opt-in: see [`hooks/README.md`](hooks/README.md).
