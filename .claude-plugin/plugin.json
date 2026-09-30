@@ -1,7 +1,7 @@
 {
   "name": "orthonym-skills",
   "displayName": "Orthonym Skills",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Claude Code skills, hooks and an agent for measurement-driven chemistry / ML tool development: decide from measurement, prove a code site is on the path before editing, reuse results before re-running, get an adversarial second opinion before shipping.",
   "author": {
     "name": "Kohulan Rajan",

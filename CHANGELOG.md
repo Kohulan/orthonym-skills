@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.3.0](https://github.com/Kohulan/orthonym-skills/compare/v0.2.2...v0.3.0) (2026-09-30)
+
+
+### Features
+
+* **skills:** promo-video ([3cad840](https://github.com/Kohulan/orthonym-skills/commit/3cad8403627ff233ab02ef7ba15826d24386d2ac))
+* **skills:** promo-video, promo and explainer videos rendered from code ([137fc43](https://github.com/Kohulan/orthonym-skills/commit/137fc43322f00036d556d121799aa83a93236e11))
+
+
+### Bug Fixes
+
+* install steps one by one, and drop the release-as pin ([0f12922](https://github.com/Kohulan/orthonym-skills/commit/0f1292206974b59c5f300b53ad8fb5bf4dc088d7))
+
+
+### Documentation
+
+* install commands as two separate steps ([43655ab](https://github.com/Kohulan/orthonym-skills/commit/43655abbdbca0bf1f89faa78ac1dc2574a95e196))
+
 ## [0.2.2](https://github.com/Kohulan/orthonym-skills/compare/v0.2.1...v0.2.2) (2026-09-29)
 
 

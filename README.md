@@ -1,13 +1,13 @@
 <a id="top"></a>
 
 <a href="https://github.com/Kohulan/orthonym-skills">
-  <img src="docs/assets/banner.svg" alt="Orthonym Skills. Decide from measurement, not from a confident guess. Claude Code plugin: 21 skills, 2 hooks, 1 agent, v0.2.2. Seven spectral lines on a nanometre scale stand for the loop: measure, cluster, target, spy, fix, gate, review." width="100%"><!-- x-release-please-version -->
+  <img src="docs/assets/banner.svg" alt="Orthonym Skills. Decide from measurement, not from a confident guess. Claude Code plugin: 21 skills, 2 hooks, 1 agent, v0.3.0. Seven spectral lines on a nanometre scale stand for the loop: measure, cluster, target, spy, fix, gate, review." width="100%"><!-- x-release-please-version -->
 </a>
 
 <br/>
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-ece8de.svg?labelColor=161618&color=ece8de&style=flat-square)](LICENSE)
-[![Version](https://img.shields.io/static/v1?label=version&message=0.2.2&labelColor=161618&color=ece8de&style=flat-square)](.claude-plugin/plugin.json) <!-- x-release-please-version -->
+[![Version](https://img.shields.io/static/v1?label=version&message=0.3.0&labelColor=161618&color=ece8de&style=flat-square)](.claude-plugin/plugin.json) <!-- x-release-please-version -->
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23039311.svg)](https://doi.org/10.5281/zenodo.23039311)
 [![Part of: Orthonym](https://img.shields.io/badge/part%20of-Orthonym-ece8de.svg?labelColor=161618&color=ece8de&style=flat-square&logo=github)](https://github.com/Steinbeck-Lab/Orthonym)
 [![ORCID](https://img.shields.io/badge/ORCID-0000--0003--1066--7792-ece8de.svg?labelColor=161618&color=ece8de&style=flat-square)](https://orcid.org/0000-0003-1066-7792)
@@ -237,7 +237,7 @@ If these skills, hooks or the agent help your work, please cite the repository. 
   author    = {Rajan, Kohulan},
   title     = {{Orthonym Skills}: {Claude Code} skills for measurement-driven chemistry development},
   year      = {2026},
-  version   = {0.2.2},
+  version   = {0.3.0},
   doi       = {10.5281/zenodo.23039311},
   url       = {https://github.com/Kohulan/orthonym-skills},
   license   = {MIT}
