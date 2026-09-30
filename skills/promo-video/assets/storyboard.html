@@ -1,0 +1,96 @@
+<!doctype html>
+<!--
+  STORYBOARD -- Level 2. One still per shot with its start time and what happens.
+  Click a still to pin a comment; "Copy all comments" gives one list to paste back.
+  Data: board-data.js next to this file:
+    window.BOARD = { title, format: '1080x1350', duration, shots: [
+      { id: '01', t: 0.0, img: 'board/t0.60.png', title: 'Logo reveal', desc: 'ink blooms, the mark rises', sound: 'sub impact' } ] }
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Storyboard</title>
+<style>
+  :root { --bg: #f4f3f1; --card: #fff; --ink: #16171a; --muted: #6b6f78; --line: #e3e1dd; --pin: #e0284a; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #111215; --card: #1b1d22; --ink: #eceef2; --muted: #9aa0ab; --line: #2b2e35; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.45 system-ui, sans-serif; }
+  header { position: sticky; top: 0; z-index: 5; display: flex; gap: 16px; align-items: center; justify-content: space-between;
+    padding: 14px 24px; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  h1 { font-size: 18px; margin: 0; } header span { color: var(--muted); font-size: 13px; }
+  button { font: inherit; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; }
+  button.primary { background: var(--pin); border-color: var(--pin); color: #fff; }
+  main { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; padding: 24px; }
+  .shot { background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .frame { position: relative; cursor: crosshair; }
+  .frame img { display: block; width: 100%; }
+  .pin { position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; background: var(--pin);
+    color: #fff; font: 700 12px/22px system-ui; text-align: center; box-shadow: 0 0 0 3px #fff8; }
+  .meta { padding: 12px 14px; } .meta b { font-variant-numeric: tabular-nums; }
+  .meta p { margin: 4px 0 0; color: var(--muted); } .sound { font-size: 13px; }
+  .notes { list-style: none; margin: 8px 0 0; padding: 0; font-size: 13px; }
+  .notes li { display: flex; gap: 8px; padding: 6px 0; border-top: 1px dashed var(--line); }
+  .notes li button { padding: 0 6px; margin-left: auto; font-size: 12px; }
+  dialog { border: 1px solid var(--line); border-radius: 12px; background: var(--card); color: var(--ink); width: min(420px, 92vw); }
+  textarea { width: 100%; min-height: 90px; font: inherit; padding: 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
+  @media (max-width: 600px) { main { padding: 16px; grid-template-columns: 1fr; } header { padding: 12px 16px; } }
+</style>
+</head>
+<body>
+<header><div><h1 id="title">Storyboard</h1><span id="sub"></span></div>
+  <div><button id="clear">Clear</button> <button class="primary" id="copy">Copy all comments</button></div></header>
+<main id="grid"></main>
+<dialog id="dlg"><form method="dialog"><p id="where" style="margin-top:0;color:var(--muted)"></p>
+  <textarea id="txt" placeholder="What should change here?"></textarea>
+  <p style="text-align:right;margin-bottom:0"><button value="cancel">Cancel</button> <button class="primary" value="ok">Pin comment</button></p></form></dialog>
+<script src="board-data.js"></script>
+<script>
+const B = window.BOARD || { title: 'Storyboard', shots: [] };
+const KEY = 'board:' + B.title;
+let notes = []; try { notes = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(notes)); } catch {} };
+document.getElementById('title').textContent = B.title;
+document.getElementById('sub').textContent = [B.format, B.duration && B.duration + ' s', B.shots.length + ' shots'].filter(Boolean).join(' · ');
+const fmt = n => `Shot ${n.shot}, ${n.t.toFixed(2)}s, pin at ${n.x}% across, ${n.y}% down: ${n.text}`;
+
+function draw() {
+  const g = document.getElementById('grid'); g.replaceChildren();
+  B.shots.forEach(s => {
+    const card = document.createElement('article'); card.className = 'shot';
+    const fr = document.createElement('div'); fr.className = 'frame';
+    const img = document.createElement('img'); img.src = s.img; img.alt = s.title || ''; fr.append(img);
+    const mine = notes.filter(n => n.shot === s.id);
+    mine.forEach((n, i) => { const p = document.createElement('div'); p.className = 'pin';
+      p.style.left = n.x + '%'; p.style.top = n.y + '%'; p.textContent = i + 1; fr.append(p); });
+    fr.onclick = e => { const r = img.getBoundingClientRect();
+      ask(s, Math.round((e.clientX - r.left) / r.width * 100), Math.round((e.clientY - r.top) / r.height * 100)); };
+    const m = document.createElement('div'); m.className = 'meta';
+    const h = document.createElement('div'); const b = document.createElement('b');
+    b.textContent = `${s.id} · ${(+s.t).toFixed(2)}s`; h.append(b, document.createTextNode('  ' + (s.title || '')));
+    const d = document.createElement('p'); d.textContent = s.desc || '';
+    m.append(h, d);
+    if (s.sound) { const snd = document.createElement('p'); snd.className = 'sound'; snd.textContent = '♪ ' + s.sound; m.append(snd); }
+    const ul = document.createElement('ul'); ul.className = 'notes';
+    mine.forEach((n, i) => { const li = document.createElement('li'); li.textContent = `${i + 1}. ${n.text}`;
+      const x = document.createElement('button'); x.textContent = '×'; x.title = 'Delete';
+      x.onclick = () => { notes.splice(notes.indexOf(n), 1); save(); draw(); }; li.append(x); ul.append(li); });
+    m.append(ul); card.append(fr, m); g.append(card);
+  });
+}
+function ask(s, x, y) {
+  const dlg = document.getElementById('dlg'), txt = document.getElementById('txt');
+  document.getElementById('where').textContent = `Shot ${s.id} at ${(+s.t).toFixed(2)}s, ${x}% across, ${y}% down`;
+  txt.value = ''; dlg.showModal(); txt.focus();
+  dlg.onclose = () => { if (dlg.returnValue === 'ok' && txt.value.trim()) { notes.push({ shot: s.id, t: +s.t, x, y, text: txt.value.trim() }); save(); draw(); } };
+}
+document.getElementById('copy').onclick = async e => {
+  const text = notes.length ? notes.slice().sort((a, b) => a.t - b.t).map(fmt).join('\n') : 'No comments: the storyboard is approved.';
+  try { await navigator.clipboard.writeText(text); e.target.textContent = 'Copied ✓'; } catch { prompt('Copy this:', text); }
+  setTimeout(() => (e.target.textContent = 'Copy all comments'), 1600);
+};
+document.getElementById('clear').onclick = () => { if (confirm('Delete every comment on this board?')) { notes = []; save(); draw(); } };
+draw();
+</script>
+</body>
+</html>

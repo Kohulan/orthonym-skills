@@ -159,6 +159,19 @@ your log / sentinel file paths.
 
 ---
 
+## Media skills
+
+### `promo-video`
+Makes promo, launch and explainer videos as code. A video is an HTML stage where every frame is a
+pure function of time; `scripts/render.mjs` screenshots each frame into ffmpeg and muxes a
+soundtrack composed in code (`assets/score.js`) or a track the user supplies. It interviews first,
+shows a storyboard of stills for comments, films the real product with `scripts/capture.mjs`, and
+ships a review page where the user pins notes to moments. Includes three.js and a WebGL2 fluid
+solver (`assets/fluid.js`). **Needs:** Node, Chrome and ffmpeg; `scripts/setup.sh` finds them or
+fetches playwright-core and Chrome for Testing into the skill's own `.tools/`.
+
+---
+
 ## Hooks (`hooks/`)
 
 Mechanical guards for the two rules that prose instructions kept losing under pressure. The plugin

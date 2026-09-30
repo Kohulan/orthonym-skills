@@ -1,0 +1,142 @@
+<!doctype html>
+<!--
+  STAGE TEMPLATE -- copy to <job>/stage.html and replace the three scenes.
+  Contract with scripts/render.mjs:
+    window.STAGE = { width, height, fps, duration }
+    window.stageReady   (optional promise: models, textures, fonts)
+    async window.renderFrame(t)   -- a pure function of t; called in ascending order
+    async window.renderAudio()    -- optional, returns base64 WAV (Score.render())
+  Kit (stage-kit.js), Fluid (fluid.js) and Score (score.js) sit next to this file;
+  copy them in with the stage (the SKILL.md setup step does).
+  Layers, back to front: #bg (CSS), #fluid (WebGL2 ink), #gl (three.js), DOM text.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@500&display=block" rel="stylesheet">
+<style>
+  :root { --bg: #07080b; --ink: #f4f5f7; --muted: rgba(244,245,247,.6); --accent: #ff4d6a; --accent2: #4d8dff; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1080px; height: 1350px; overflow: hidden; background: var(--bg); }
+  #stage { position: relative; width: 100%; height: 100%; overflow: hidden; color: var(--ink); font-family: Inter, sans-serif; }
+  .abs { position: absolute; }
+  #bg { inset: 0; background:
+      radial-gradient(900px 700px at 20% 10%, rgba(255,77,106,.20), transparent 70%),
+      radial-gradient(800px 800px at 90% 95%, rgba(77,141,255,.18), transparent 70%), var(--bg); }
+  #grain { inset: 0; opacity: .06; background-image: radial-gradient(#fff 1px, transparent 1.3px); background-size: 24px 24px; }
+  #fluid, #gl { inset: 0; width: 100%; height: 100%; }
+  #fluid { mix-blend-mode: screen; }
+  .kick { font: 500 20px 'JetBrains Mono', monospace; letter-spacing: .28em; text-transform: uppercase; color: var(--accent); }
+  .head { font: 800 96px/.95 Inter, sans-serif; letter-spacing: -.035em; }
+  .head em { font-style: normal; color: var(--accent); }
+  #s1 { left: 80px; right: 80px; top: 520px; }
+  #s2cap { left: 80px; right: 80px; top: 90px; }
+  #s3 { inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; text-align: center; }
+  #s3 .head { font-size: 120px; }
+  .pill { padding: 22px 44px; border-radius: 999px; background: var(--accent); font: 600 36px 'JetBrains Mono', monospace; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg" class="abs"></div>
+  <canvas id="fluid" class="abs" width="1080" height="1350"></canvas>
+  <canvas id="gl" class="abs" width="1080" height="1350"></canvas>
+  <div id="grain" class="abs"></div>
+
+  <div id="s1" class="abs"><div class="kick">01 · Introducing</div><div class="head" style="margin-top:22px">Motion that<br>feels <em>alive</em>.</div></div>
+  <div id="s2cap" class="abs"><div class="kick">02 · In three dimensions</div><div class="head" style="margin-top:22px;font-size:80px">Every atom,<br><em>in its place</em>.</div></div>
+  <div id="s3" class="abs"><div class="head">Your product</div><div class="pill">your.site</div></div>
+</div>
+
+<script src="stage-kit.js"></script>
+<script src="fluid.js"></script>
+<script src="score.js"></script>
+<script type="importmap">{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }</script>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+const { tween, lerp, prog, ease, riseLines, stepper, timeline, css, rng } = Kit;
+
+const FPS = window.RENDER_FPS || 30;
+const T = timeline([
+  { id: 'intro', dur: 3.6 },
+  { id: 'three', dur: 4.6 },
+  { id: 'outro', dur: 3.8 },
+]);
+window.STAGE = { width: 1080, height: 1350, fps: 30, duration: T.duration };
+const at = id => T.get(id).at;
+
+// ---- fluid: ink bursts on the beats of the intro and the outro ----------------
+const fx = Fluid.create(document.getElementById('fluid'), { simRes: 128, dyeRes: 768, curl: 30, densityDissipation: .9, shading: .8 });
+const splats = [];                                        // [time, x, y, dx, dy, color, radius]
+const R = rng(11);
+for (let i = 0; i < 6; i++) splats.push([.15 + i * .12, .15 + R() * .7, .3 + R() * .4, (R() - .5) * 2400, (R() - .5) * 2400, i % 2 ? [.9, .15, .3] : [.25, .45, 1], .5]);
+for (let i = 0; i < 5; i++) splats.push([at('outro') + .1 + i * .1, .5, .5, Math.cos(i * 1.26) * 2600, Math.sin(i * 1.26) * 2600, [1, .3, .42], .35]);
+const sim = stepper((dt, now) => { for (const s of splats) if (s[0] >= now && s[0] < now + dt) fx.splat(...s.slice(1)); fx.step(dt); }, FPS);
+
+// ---- three.js: a molecule you can swap for real 3D coordinates ------------------
+const gl = new THREE.WebGLRenderer({ canvas: document.getElementById('gl'), alpha: true, antialias: true, preserveDrawingBuffer: true });
+gl.setPixelRatio(1); gl.setSize(1080, 1350, false); gl.toneMapping = THREE.ACESFilmicToneMapping;
+const scene = new THREE.Scene();
+scene.environment = new THREE.PMREMGenerator(gl).fromScene(new RoomEnvironment(), .04).texture;
+const cam = new THREE.PerspectiveCamera(32, 1080 / 1350, .1, 100);
+const key = new THREE.DirectionalLight(0xffffff, 2.2); key.position.set(3, 4, 5); scene.add(key);
+const rim = new THREE.DirectionalLight(0xff4d6a, 3); rim.position.set(-4, -1, -3); scene.add(rim);
+// caffeine-like heavy atoms (x, y, z, element). Real molecules: RDKit ETKDG coords, see references/3d-and-fluids.md
+const atoms = [[0,1.4,0,'C'],[1.2,.7,.1,'N'],[1.2,-.7,0,'C'],[0,-1.4,-.1,'C'],[-1.2,-.7,0,'N'],[-1.2,.7,.1,'C'],
+  [2.5,1.1,0,'C'],[3.2,0,.1,'N'],[2.4,-1.1,0,'N'],[0,2.7,.2,'O'],[-2.4,1.3,0,'O'],[-2.4,-1.4,-.2,'C'],[0,-2.8,-.1,'C']];
+const bonds = [[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[1,6],[6,7],[7,8],[8,2],[0,9],[5,10],[4,11],[3,12]];
+const col = { C: 0x2b2f38, N: 0x3f6bff, O: 0xff3b55 };
+const mol = new THREE.Group(); scene.add(mol);
+const balls = atoms.map(([x, y, z, e]) => { const m = new THREE.Mesh(new THREE.SphereGeometry(e === 'C' ? .42 : .48, 48, 32),
+  new THREE.MeshPhysicalMaterial({ color: col[e], roughness: .25, metalness: .1, clearcoat: 1, clearcoatRoughness: .15 }));
+  m.position.set(x, y, z); mol.add(m); return m; });
+const bondMat = new THREE.MeshPhysicalMaterial({ color: 0xdfe3ea, roughness: .35, clearcoat: .6 });
+const sticks = bonds.map(([i, j]) => { const a = balls[i].position, b = balls[j].position, d = b.clone().sub(a);
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(.12, .12, d.length(), 20), bondMat);
+  m.position.copy(a).add(d.multiplyScalar(.5)); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize());
+  mol.add(m); return m; });
+mol.position.set(-.5, -1.6, 0);
+
+// ---- soundtrack -------------------------------------------------------------------
+const S = Score.create({ bpm: 112, duration: T.duration, key: 'D', seed: 4 });
+S.pad(0, at('three'), S.prog('i')[0], { gain: .07 });
+S.impact(.15); S.whoosh(at('three') - .35, .6);
+S.groove({ from: at('three'), to: at('outro'), chords: S.prog('i-VI-III-VII'), drums: 'half', arp: true });
+S.riser(at('outro') - 1.6, 1.6); S.impact(at('outro') + .05); S.sparkle(at('outro') + .6);
+S.pad(at('outro'), T.duration - at('outro'), S.prog('VI')[0], { gain: .08 });
+window.renderAudio = () => S.render();
+
+// ---- the frame ----------------------------------------------------------------------
+window.renderFrame = async t => {
+  sim.to(t, () => fx.reset()); fx.render();
+
+  // scene 1: headline rises through a mask, leaves upward
+  css(document.getElementById('s1'), { display: t < at('three') + .2 ? 'block' : 'none' });
+  riseLines(document.querySelector('#s1 .head'), t, .5, at('three') - .5);
+  css(document.querySelector('#s1 .kick'), { opacity: tween(t, .3, .8) * (1 - tween(t, at('three') - .5, at('three') - .2)) });
+
+  // scene 2: the molecule flies in, turns, the camera dollies
+  const k = prog(t, at('three') - .3, at('outro') + .4);
+  mol.visible = k > 0 && k < 1;
+  const inK = ease.outQuint(prog(t, at('three') - .3, at('three') + .9)), outK = ease.in(prog(t, at('outro') - .4, at('outro') + .3));
+  mol.rotation.set(.35 + .2 * Math.sin(t * .7), t * .9, .1);
+  mol.scale.setScalar(lerp(.2, 1, inK) * (1 - outK * .8));
+  cam.position.set(0, .3, lerp(21, 16, ease.inOut(k))); cam.lookAt(0, -.9, 0);
+  gl.render(scene, cam);
+  css(document.getElementById('s2cap'), { display: t > at('three') - .1 && t < at('outro') + .1 ? 'block' : 'none' });
+  riseLines(document.querySelector('#s2cap .head'), t, at('three') + .25, at('outro') - .45);
+  css(document.querySelector('#s2cap .kick'), { opacity: tween(t, at('three') + .1, at('three') + .5) * (1 - tween(t, at('outro') - .45, at('outro') - .2)) });
+
+  // scene 3: outro title + URL pop
+  const o = t - at('outro');
+  css(document.getElementById('s3'), { opacity: tween(o, .15, .7), transform: `scale(${lerp(.94, 1, tween(o, .15, 1.2, 'outQuint'))})` });
+  const pk = prog(o, .7, 1.2);
+  css(document.querySelector('#s3 .pill'), { transform: `scale(${pk ? ease.back(pk) : 0})` });
+};
+window.stageReady = Promise.resolve();
+</script>
+</body>
+</html>

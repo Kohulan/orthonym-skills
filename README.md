@@ -1,7 +1,7 @@
 <a id="top"></a>
 
 <a href="https://github.com/Kohulan/orthonym-skills">
-  <img src="docs/assets/banner.svg" alt="Orthonym Skills. Decide from measurement, not from a confident guess. Claude Code plugin: 20 skills, 2 hooks, 1 agent, v0.2.2. Seven spectral lines on a nanometre scale stand for the loop: measure, cluster, target, spy, fix, gate, review." width="100%"><!-- x-release-please-version -->
+  <img src="docs/assets/banner.svg" alt="Orthonym Skills. Decide from measurement, not from a confident guess. Claude Code plugin: 21 skills, 2 hooks, 1 agent, v0.2.2. Seven spectral lines on a nanometre scale stand for the loop: measure, cluster, target, spy, fix, gate, review." width="100%"><!-- x-release-please-version -->
 </a>
 
 <br/>
@@ -79,7 +79,7 @@ Inside Claude Code:
 /plugin install orthonym-skills@orthonym-skills
 ```
 
-You get all 20 skills (as `/orthonym-skills:<name>`), the `reference-consult` agent, and the
+You get all 21 skills (as `/orthonym-skills:<name>`), the `reference-consult` agent, and the
 `block-git-add-all` hook. The `ask-gate` hook is opt-in: see [`hooks/README.md`](hooks/README.md).
 Claude picks up a skill from its description when your task matches it.
 
@@ -144,6 +144,14 @@ Wire in your project's commands once. The [catalog](docs/skills-catalog.md) says
 | [`run-gate`](skills/run-gate/) | Before shipping a phase | Background launch, wait on the verdict file, read the *structured* verdict, never the exit code. |
 | [`watching-background-jobs`](skills/watching-background-jobs/) | Anything running longer than ~5 minutes | Own the watch loop; one progress line per wake-up; CPU check before calling a stall. |
 | [`handoff`](skills/handoff/) | Wrapping up a session | Lessons into both memory layers; a resume note; never trim durable notes. |
+
+### Media skills
+
+Need Node, and Chrome and ffmpeg (`scripts/setup.sh` finds them or fetches what is missing).
+
+| Skill | When it fires | What it forces |
+|:---|:---|:---|
+| [`promo-video`](skills/promo-video/) | "Make a video", a launch or explainer video, "something to post" | Interview first, a storyboard of stills before anything moves, then a review page; every caption from real facts and real UI. Frame-exact MP4 from HTML, with 3D, fluid ink and a composed or supplied soundtrack. |
 
 ### Output
 
