@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.0](https://github.com/Kohulan/orthonym-skills/compare/v0.3.0...v0.4.0) (2026-09-30)
+
+
+### Features
+
+* **skills:** test-gate ([f9803be](https://github.com/Kohulan/orthonym-skills/commit/f9803be3f9083200f1cb799bce826e15cd8db34d))
+* **skills:** test-gate, a test must fail on some wrong code ([e5a1a65](https://github.com/Kohulan/orthonym-skills/commit/e5a1a6591120c5676825380630fcbee46fa302e6))
+
 ## [0.3.0](https://github.com/Kohulan/orthonym-skills/compare/v0.2.2...v0.3.0) (2026-09-30)
 
 
