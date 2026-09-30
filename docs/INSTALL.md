@@ -44,7 +44,7 @@ Scope stays local, and you can adapt a project-derived skill's paths without aff
 ## Option 2 — User-global (available everywhere)
 
 Best for the **process** skills (`gauntlet-loop`, `council`, `fable-review`, `spy-site`,
-`check-target`, `enumerate-first`, `verify-source`, `prove-invariant`, `change-asserted-value`,
+`check-target`, `enumerate-first`, `verify-source`, `prove-invariant`, `test-gate`, `change-asserted-value`,
 `bounded-goals`) that need no setup and are useful in any codebase:
 
 ```bash
