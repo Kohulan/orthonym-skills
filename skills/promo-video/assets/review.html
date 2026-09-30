@@ -1,0 +1,152 @@
+<!doctype html>
+<!--
+  REVIEW -- Level 3. Play the real video (1x / 2x), click the picture to pin a
+  comment at that time and spot, add sound notes at the moment you hear them,
+  and move a scene's start or end to the playhead. "Copy all" gives one list.
+  Data: review-data.js next to this file:
+    window.REVIEW = { title, video: 'promo.mp4', scenes: [{ id: '01', title: 'Logo', start: 0, end: 3.6 }] }
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Review</title>
+<style>
+  :root { --bg: #f4f3f1; --card: #fff; --ink: #16171a; --muted: #6b6f78; --line: #e3e1dd; --pin: #e0284a; --snd: #2f6fe0; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #111215; --card: #1b1d22; --ink: #eceef2; --muted: #9aa0ab; --line: #2b2e35; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.45 system-ui, sans-serif; }
+  .wrap { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 20px; padding: 20px 24px; max-width: 1500px; margin: auto; }
+  h1 { font-size: 18px; margin: 0 0 12px; }
+  .player { position: relative; background: #000; border-radius: 12px; overflow: hidden; }
+  video { display: block; width: 100%; max-height: 74vh; margin: auto; cursor: crosshair; }
+  .pin { position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; background: var(--pin); color: #fff;
+    font: 700 12px/22px system-ui; text-align: center; box-shadow: 0 0 0 3px #fff8; pointer-events: none; }
+  .bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 12px 0; }
+  button { font: inherit; padding: 7px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; }
+  button.on, button.primary { background: var(--pin); border-color: var(--pin); color: #fff; }
+  .time { font-variant-numeric: tabular-nums; color: var(--muted); margin-left: auto; }
+  .tl { position: relative; height: 46px; border-radius: 8px; background: var(--card); border: 1px solid var(--line); cursor: pointer; overflow: hidden; }
+  .seg { position: absolute; top: 0; bottom: 0; border-right: 1px solid var(--line); font-size: 11px; padding: 4px 6px; color: var(--muted); white-space: nowrap; overflow: hidden; }
+  .seg:nth-child(odd) { background: color-mix(in srgb, var(--ink) 5%, transparent); }
+  .mark { position: absolute; top: 28px; width: 8px; height: 12px; margin-left: -4px; border-radius: 3px; }
+  .head { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--pin); pointer-events: none; }
+  aside { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px; max-height: calc(100vh - 40px); overflow: auto; }
+  aside h2 { font-size: 14px; margin: 14px 0 6px; } aside h2:first-child { margin-top: 0; }
+  ol { margin: 0; padding-left: 20px; font-size: 13px; } li { padding: 4px 0; } li button { padding: 0 6px; font-size: 12px; margin-left: 6px; }
+  li a { color: inherit; cursor: pointer; text-decoration: underline dotted; }
+  .scene { display: grid; grid-template-columns: 1fr auto auto; gap: 6px; align-items: center; font-size: 13px; padding: 5px 0; border-top: 1px dashed var(--line); }
+  .scene .moved { color: var(--pin); font-weight: 600; }
+  dialog { border: 1px solid var(--line); border-radius: 12px; background: var(--card); color: var(--ink); width: min(420px, 92vw); }
+  textarea { width: 100%; min-height: 90px; font: inherit; padding: 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
+  @media (max-width: 1000px) { .wrap { grid-template-columns: 1fr; padding: 16px; } aside { max-height: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section>
+    <h1 id="title">Review</h1>
+    <div class="player" id="player"><video id="v" playsinline preload="auto"></video></div>
+    <div class="bar">
+      <button id="play">Play</button><button id="s1" class="on">1×</button><button id="s2">2×</button>
+      <button id="snd">♪ Sound note here</button>
+      <span class="time" id="time">0.00 / 0.00 s</span>
+    </div>
+    <div class="tl" id="tl"><div class="head" id="head"></div></div>
+    <p style="color:var(--muted);font-size:13px">Click the picture to pin a note at that moment and spot. Space plays and pauses, ← → step one frame.</p>
+  </section>
+  <aside>
+    <h2>Notes</h2><ol id="notes"></ol>
+    <h2>Scenes and cuts</h2><div id="scenes"></div>
+    <p style="margin-top:16px"><button class="primary" id="copy">Copy all</button> <button id="clear">Clear</button></p>
+  </aside>
+</div>
+<dialog id="dlg"><form method="dialog"><p id="where" style="margin-top:0;color:var(--muted)"></p>
+  <textarea id="txt"></textarea>
+  <p style="text-align:right;margin-bottom:0"><button value="cancel">Cancel</button> <button class="primary" value="ok">Add note</button></p></form></dialog>
+<script src="review-data.js"></script>
+<script>
+const R = window.REVIEW || { title: 'Review', video: 'promo.mp4', scenes: [] };
+const v = document.getElementById('v'); v.src = R.video;
+document.getElementById('title').textContent = R.title;
+const KEY = 'review:' + R.title + ':' + R.video;
+let st = { notes: [], trims: {} }; try { st = JSON.parse(localStorage.getItem(KEY)) || st; } catch {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch {} };
+const FPS = R.fps || 30;
+// The picture inside the <video> box: letterboxing adds bars, and a pin must be measured on the picture.
+function pic() { const r = v.getBoundingClientRect(), vw = v.videoWidth || r.width, vh = v.videoHeight || r.height;
+  const k = Math.min(r.width / vw, r.height / vh), w = vw * k, h = vh * k;
+  return { left: r.left + (r.width - w) / 2, top: r.top + (r.height - h) / 2, width: w, height: h }; }
+const sceneAt = t => R.scenes.find(s => t >= s.start && t < s.end) || R.scenes[R.scenes.length - 1];
+
+function line(n) {
+  const s = n.scene ? ` (shot ${n.scene})` : '';
+  return n.kind === 'sound' ? `${n.t.toFixed(2)}s${s}, sound: ${n.text}` : `${n.t.toFixed(2)}s${s}, picture at ${n.x}% across, ${n.y}% down: ${n.text}`;
+}
+function draw() {
+  const P = document.getElementById('player'); P.querySelectorAll('.pin').forEach(p => p.remove());
+  st.notes.forEach((n, i) => { if (n.kind !== 'pic' || Math.abs(n.t - v.currentTime) > .5) return;
+    const p = document.createElement('div'); p.className = 'pin'; p.textContent = i + 1;
+    const r = pic(), pr = P.getBoundingClientRect();
+    p.style.left = (r.left - pr.left + r.width * n.x / 100) + 'px'; p.style.top = (r.top - pr.top + r.height * n.y / 100) + 'px'; P.append(p); });
+  const ol = document.getElementById('notes'); ol.replaceChildren();
+  st.notes.forEach((n, i) => { const li = document.createElement('li'); const a = document.createElement('a');
+    a.textContent = line(n); a.onclick = () => { v.currentTime = n.t; v.pause(); };
+    const x = document.createElement('button'); x.textContent = '×'; x.onclick = () => { st.notes.splice(i, 1); save(); draw(); };
+    li.append(a, x); ol.append(li); });
+  const tl = document.getElementById('tl'), D = v.duration || R.scenes.at(-1)?.end || 1;
+  tl.querySelectorAll('.seg,.mark').forEach(e => e.remove());
+  R.scenes.forEach(s => { const tr = st.trims[s.id] || {}, a = tr.start ?? s.start, b = tr.end ?? s.end;
+    const d = document.createElement('div'); d.className = 'seg'; d.style.left = a / D * 100 + '%'; d.style.width = (b - a) / D * 100 + '%';
+    d.textContent = `${s.id} ${s.title || ''}`; tl.prepend(d); });
+  st.notes.forEach(n => { const m = document.createElement('div'); m.className = 'mark'; m.style.left = n.t / D * 100 + '%';
+    m.style.background = n.kind === 'sound' ? 'var(--snd)' : 'var(--pin)'; tl.append(m); });
+  const box = document.getElementById('scenes'); box.replaceChildren();
+  R.scenes.forEach(s => { const tr = st.trims[s.id] || {}, row = document.createElement('div'); row.className = 'scene';
+    const lab = document.createElement('span'); const a = tr.start ?? s.start, b = tr.end ?? s.end;
+    lab.textContent = `${s.id} ${s.title || ''}  ${a.toFixed(2)}–${b.toFixed(2)}s`; if (tr.start != null || tr.end != null) lab.className = 'moved';
+    const bs = document.createElement('button'); bs.textContent = 'Start here'; bs.title = 'Move this scene\'s start to the playhead';
+    bs.onclick = () => { (st.trims[s.id] ||= {}).start = +v.currentTime.toFixed(2); save(); draw(); };
+    const be = document.createElement('button'); be.textContent = 'End here'; be.title = 'Move this scene\'s end to the playhead';
+    be.onclick = () => { (st.trims[s.id] ||= {}).end = +v.currentTime.toFixed(2); save(); draw(); };
+    row.append(lab, bs, be); box.append(row); });
+}
+function ask(kind, x, y) {
+  v.pause(); const t = +v.currentTime.toFixed(2), sc = sceneAt(t);
+  const dlg = document.getElementById('dlg'), txt = document.getElementById('txt');
+  document.getElementById('where').textContent = kind === 'sound' ? `Sound at ${t.toFixed(2)}s` : `${t.toFixed(2)}s, ${x}% across, ${y}% down`;
+  txt.placeholder = kind === 'sound' ? 'What should the sound do here?' : 'What should change here?';
+  txt.value = ''; dlg.showModal(); txt.focus();
+  dlg.onclose = () => { if (dlg.returnValue === 'ok' && txt.value.trim()) {
+    st.notes.push({ kind, t, x, y, scene: sc && sc.id, text: txt.value.trim() }); st.notes.sort((a, b) => a.t - b.t); save(); draw(); } };
+}
+v.onclick = e => { const r = pic(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+  if (x < 0 || x > 1 || y < 0 || y > 1) return;               // a click on the bars is not on the picture
+  ask('pic', Math.round(x * 100), Math.round(y * 100)); };
+document.getElementById('snd').onclick = () => ask('sound');
+const play = document.getElementById('play');
+play.onclick = () => (v.paused ? v.play() : v.pause());
+v.onplay = () => (play.textContent = 'Pause'); v.onpause = () => { play.textContent = 'Play'; draw(); };
+for (const [id, r] of [['s1', 1], ['s2', 2]]) document.getElementById(id).onclick = () => { v.playbackRate = r;
+  document.getElementById('s1').classList.toggle('on', r === 1); document.getElementById('s2').classList.toggle('on', r === 2); };
+v.ontimeupdate = () => { const D = v.duration || 1; document.getElementById('time').textContent = `${v.currentTime.toFixed(2)} / ${D.toFixed(2)} s`;
+  document.getElementById('head').style.left = v.currentTime / D * 100 + '%'; };
+v.onloadedmetadata = draw; v.onseeked = draw;
+document.getElementById('tl').onclick = e => { const r = e.currentTarget.getBoundingClientRect(); v.currentTime = (e.clientX - r.left) / r.width * (v.duration || 0); };
+addEventListener('keydown', e => { if (document.getElementById('dlg').open) return;
+  if (e.key === ' ') { e.preventDefault(); play.click(); }
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { v.pause(); v.currentTime += (e.key === 'ArrowRight' ? 1 : -1) / FPS; } });
+document.getElementById('copy').onclick = async e => {
+  const out = st.notes.map(line);
+  R.scenes.forEach(s => { const tr = st.trims[s.id]; if (!tr) return;
+    if (tr.start != null) out.push(`Trim shot ${s.id}${s.title ? ' "' + s.title + '"' : ''}: start ${s.start.toFixed(2)}s -> ${tr.start.toFixed(2)}s`);
+    if (tr.end != null) out.push(`Trim shot ${s.id}${s.title ? ' "' + s.title + '"' : ''}: end ${s.end.toFixed(2)}s -> ${tr.end.toFixed(2)}s`); });
+  const text = out.length ? out.join('\n') : 'No notes: this version is approved.';
+  try { await navigator.clipboard.writeText(text); e.target.textContent = 'Copied ✓'; } catch { prompt('Copy this:', text); }
+  setTimeout(() => (e.target.textContent = 'Copy all'), 1600);
+};
+document.getElementById('clear').onclick = () => { if (confirm('Delete every note and trim?')) { st = { notes: [], trims: {} }; save(); draw(); } };
+addEventListener('resize', draw); draw();
+</script>
+</body>
+</html>

@@ -12,7 +12,7 @@
     {
       "name": "orthonym-skills",
       "source": "./",
-      "description": "20 skills, 2 hooks and 1 agent for measurement-driven chemistry / ML tool development",
+      "description": "21 skills, 2 hooks and 1 agent for measurement-driven chemistry / ML tool development",
       "version": "0.2.2",
       "category": "development",
       "keywords": [
