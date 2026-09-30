@@ -15,7 +15,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 <text x="56" y="146" font-family="'OS Sans', 'Helvetica Neue', Arial, sans-serif" font-size="78" font-weight="800" letter-spacing="-3" fill="#ece8de">Orthonym</text>
 <text x="56" y="222" font-family="'OS Sans', 'Helvetica Neue', Arial, sans-serif" font-size="78" font-weight="400" letter-spacing="-3" fill="#ece8de">Skills</text>
 <text x="58" y="276" font-family="'OS Sans', 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="500" fill="#b9b4a8">Decide from measurement, not from a confident guess.</text>
-<text x="58" y="312" font-family="'OS Mono', ui-monospace, Menlo, Consolas, monospace" font-size="11.5" fill="#8f8a7f">Claude Code plugin · 21 skills · 2 hooks · 1 agent · v0.2.2</text><!-- x-release-please-version -->
+<text x="58" y="312" font-family="'OS Mono', ui-monospace, Menlo, Consolas, monospace" font-size="11.5" fill="#8f8a7f">Claude Code plugin · 21 skills · 2 hooks · 1 agent · v0.3.0</text><!-- x-release-please-version -->
 <line x1="580" y1="300" x2="1144" y2="300" stroke="#ece8de" stroke-opacity="0.6"/>
 <line x1="580.0" y1="300" x2="580.0" y2="304" stroke="#ece8de" stroke-opacity="0.5"/>
 <line x1="598.2" y1="300" x2="598.2" y2="309" stroke="#ece8de" stroke-opacity="0.5"/>

@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "Claude Code skills for measurement-driven chemistry development",
-    "version": "0.2.2"
+    "version": "0.3.0"
   },
   "plugins": [
     {
       "name": "orthonym-skills",
       "source": "./",
       "description": "21 skills, 2 hooks and 1 agent for measurement-driven chemistry / ML tool development",
-      "version": "0.2.2",
+      "version": "0.3.0",
       "category": "development",
       "keywords": [
         "chemistry",
