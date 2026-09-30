@@ -69,6 +69,15 @@ law, a canonical form) and test that. **Triggers:** "all tests pass but…", "is
 regression suites for scientific or algorithmic output, before trusting a test you just wrote.
 **Wire up:** nothing.
 
+### `test-gate`
+A test earns its place only if some wrong code makes it fail. Before a new test lands it must name
+the behaviour it protects, the bug that breaks it, why existing tests miss that bug, and any
+test-only seam it needs. In review, each test gets the cheap wrong versions of its code run against
+it: always refuse and always allow for a guard, empty output for a check that loops over outputs, no
+lock with overlapping callers for concurrency. **Triggers:** "add a test for", "review these tests",
+"is this test enough", fail-closed guards, concurrency tests, mocks or fixtures that already hold the
+answer. **Wire up:** nothing.
+
 ### `change-asserted-value`
 Use whenever a change would alter a committed expected value — a golden file, snapshot, asserted label,
 reference output, benchmark target — including when the new value looks obviously right. Forces the

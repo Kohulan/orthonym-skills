@@ -1,7 +1,7 @@
 <a id="top"></a>
 
 <a href="https://github.com/Kohulan/orthonym-skills">
-  <img src="docs/assets/banner.svg" alt="Orthonym Skills. Decide from measurement, not from a confident guess. Claude Code plugin: 21 skills, 2 hooks, 1 agent, v0.3.0. Seven spectral lines on a nanometre scale stand for the loop: measure, cluster, target, spy, fix, gate, review." width="100%"><!-- x-release-please-version -->
+  <img src="docs/assets/banner.svg" alt="Orthonym Skills. Decide from measurement, not from a confident guess. Claude Code plugin: 22 skills, 2 hooks, 1 agent, v0.3.0. Seven spectral lines on a nanometre scale stand for the loop: measure, cluster, target, spy, fix, gate, review." width="100%"><!-- x-release-please-version -->
 </a>
 
 <br/>
@@ -86,7 +86,7 @@ Inside Claude Code, run these two commands one at a time.
    /plugin install orthonym-skills@orthonym-skills
    ```
 
-You get all 21 skills (as `/orthonym-skills:<name>`), the `reference-consult` agent, and the
+You get all 22 skills (as `/orthonym-skills:<name>`), the `reference-consult` agent, and the
 `block-git-add-all` hook. The `ask-gate` hook is opt-in: see [`hooks/README.md`](hooks/README.md).
 Claude picks up a skill from its description when your task matches it.
 
@@ -129,6 +129,7 @@ Ready to use. No setup.
 | [`enumerate-first`](skills/enumerate-first/) | "Probably unreachable", "edge case", "unlikely to matter" | Enumerate the space and count. The count is the answer. |
 | [`verify-source`](skills/verify-source/) | "The spec says…", "per IUPAC / RFC / ISO…" | Open the source, cite the section. Never a note that quotes it. |
 | [`prove-invariant`](skills/prove-invariant/) | A suite passes but you are not sure the values are *right* | Derive the invariant the output must satisfy and test that. |
+| [`test-gate`](skills/test-gate/) | Writing a regression test, or reviewing tests in a PR | Name the cheapest wrong code, run it, and see the test fail. A guard needs both directions tested. |
 | [`change-asserted-value`](skills/change-asserted-value/) | A change would move a golden file, snapshot, or asserted label | Answer "which is wrong, the code or the expectation?" with evidence first; anything weaker ships labelled unverified. |
 | [`bounded-goals`](skills/bounded-goals/) | Writing success criteria with more than one metric | One objective, explicit bounds on the rest. Multi-objective loops thrash. |
 | [`council`](skills/council/) | "Which option?", "what next?", "is X worth it?", "your call" | Search first, three or more named voices, one recorded call with a flip condition. |
