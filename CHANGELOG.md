@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.4.0](https://github.com/Kohulan/orthonym-skills/compare/v0.3.0...v0.4.0) (2026-10-08)
+
+
+### Features
+
+* **evals:** three test prompts and a near-miss for every skill ([a811f7d](https://github.com/Kohulan/orthonym-skills/commit/a811f7dd7d22c273ddf25be069de370d430b7483))
+* **hooks:** opt-in guards for the held-out split, bulk regeneration and the gate ([ee93e10](https://github.com/Kohulan/orthonym-skills/commit/ee93e102a367b29ab776bc805fb8d354ed4c4576))
+* **skills:** test-gate ([f9803be](https://github.com/Kohulan/orthonym-skills/commit/f9803be3f9083200f1cb799bce826e15cd8db34d))
+* **skills:** test-gate, a test must fail on some wrong code ([e5a1a65](https://github.com/Kohulan/orthonym-skills/commit/e5a1a6591120c5676825380630fcbee46fa302e6))
+
+
+### Bug Fixes
+
+* **skills:** wrong steps, silent script failures and rules no skill defined ([2929cc1](https://github.com/Kohulan/orthonym-skills/commit/2929cc1c34f62434957b403b6da4e80cc4a9faf3))
+
+
+### Documentation
+
+* five hooks, evals, and validate commands that check the skills ([6f5f9a0](https://github.com/Kohulan/orthonym-skills/commit/6f5f9a0084a7d371fc63649ee833b4cad6a400f2))
+* **skills:** checklists, go-back steps and one term per concept ([c0b05b2](https://github.com/Kohulan/orthonym-skills/commit/c0b05b271dbeb86bdc033c189346350755204e56))
+
 ## [0.3.0](https://github.com/Kohulan/orthonym-skills/compare/v0.2.2...v0.3.0) (2026-09-30)
 
 
