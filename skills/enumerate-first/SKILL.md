@@ -31,7 +31,7 @@ one measurement away.
 4. **Classify before fixing.** Group violations — three defect classes look like
    one bug until you group them.
 5. **Keep it as a gate** if it is fast enough, and mutation-test it (see
-   `prove-invariant`).
+   `prove-invariant`). If the gate passes on the mutant, tighten it and return to Step 3.
 
 ## Cheap before expensive
 
@@ -41,16 +41,10 @@ Order probes by cost and let the cheap one filter for the expensive one:
 - Escalate only the survivors to the expensive check.
 - Batch the expensive check once over all survivors rather than per item.
 
-A diagnostic that costs a subprocess launch per item will not be run often
-enough to matter. Latency of the check *is* a correctness property, because it
-determines how many times you look.
-
 ## Before tuning anything
 
-Confirm the decision point executes. Instrument it and count invocations for the target
-inputs (the `spy-site` skill has the method).
-Documented central logic being called zero times is common, not exotic — check
-before spending effort on its behaviour.
+Confirm the decision point executes: count its calls for the target inputs (`spy-site`).
+Documented central logic called zero times is common, not exotic.
 
 ## Red flags
 

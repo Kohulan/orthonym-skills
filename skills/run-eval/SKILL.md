@@ -11,6 +11,15 @@ numbers that are not comparable across sessions, and can be wrong by a large fac
 without anyone noticing (a several-fold mirage has actually happened from an ad-hoc
 script).
 
+Copy this checklist and track your progress:
+- [ ] 1. Reuse (`reuse-before-rerun`): same split, config and commit already run? Go to Step 4
+- [ ] 2. Run the shipped config on `<dev-split>`; held-out only on the user's explicit words
+- [ ] 3. Run the gates-off config when the failures need diagnosing
+- [ ] 4. Read headline, emit rate and precision-on-emitted together
+- [ ] 5. Compare with the goals/bounds file; cite the run id with every number
+
+If the record lacks the commit SHA, dirty flag or split hash, fix the harness and return to Step 2.
+
 ## Wire this up
 
 Substitute for your project:
@@ -26,9 +35,6 @@ Substitute for your project:
 <your-project-python> <your-eval-command> --split <dev-split>
 ```
 
-Use your project's real interpreter (a pinned venv/uv environment, not a bare system
-`python`, if your project pins dependencies that way).
-
 | split | n | wall clock | when |
 |---|---|---|---|
 | `<dev-split>` | (small) | short | the loop. Default. |
@@ -38,13 +44,15 @@ Use your project's real interpreter (a pinned venv/uv environment, not a bare sy
 A held-out split should refuse to run without an explicit "I mean it" flag or similar
 guard. Do not pass that flag on your own initiative. It exists so at least one number
 at the end of the project has never been optimised against; spending it early on
-routine iteration cannot be undone.
+routine iteration cannot be undone. Optional guard: the opt-in `guard-holdout` hook
+(`hooks/guard-holdout.py` in this plugin; setup in `hooks/README.md`) stops a held-out run
+until the user has agreed.
 
 ## Read multiple numbers, not one
 
 A single accuracy figure cannot tell "we fixed a wrong output" from "we stopped
 producing one". Read at least a headline correctness metric **plus** an emit/coverage
-rate and a precision-on-emitted (or precision-on-produced) rate together, e.g.:
+rate and a precision-on-emitted rate together, e.g.:
 
 ```
 headline_correct_rate     38.2%   191/500   <- HEADLINE
@@ -57,10 +65,7 @@ while the headline round-trip-exact rate stayed at **exactly 191**, and precisio
 what was emitted fell 96.0% → 43.3%. Loosening a gate bought raw coverage, not
 correctness — a single rate would have hidden that. If your emit/coverage rate rose
 and your precision fell, the change bought coverage with less honesty; say so
-explicitly rather than reporting the coverage number alone. The same discipline applies
-to any chemistry task: a property predictor that widens its confidence band to cover
-more compounds, or a retrosynthesis model that proposes more candidate routes per
-target, needs the same two-number check.
+explicitly rather than reporting the coverage number alone.
 
 **Never quote a cheap proxy metric as the result** — string/token similarity (BLEU,
 token accuracy, edit distance) against a reference label, or any metric computed
@@ -97,15 +102,9 @@ terms — cluster the gates-off run, report the shipped one.
 
 ## Before you run
 
-- For any split that takes more than a minute, look for an existing run of the same split,
-  config and commit first (`reuse-before-rerun`).
-- **You may run alongside other measurement or gate work**, provided nothing writes to
-  the same output artifact concurrently. If your eval spawns concurrent worker
-  processes that contend over a shared external resource (a license, a GPU, an
-  external validator subprocess/interpreter), use an explicit budgeting mechanism
-  (a semaphore/lock that is provably released even if a worker is killed) rather than
-  assuming exclusivity or checking with `pgrep` — `pgrep` self-matches and cannot tell
-  you how many slots are actually free.
+- **You may run alongside other measurement or gate work** if nothing writes the same
+  output artifact. Budget a shared resource (license, GPU, validator) with a lock that is
+  released even when a worker is killed, not with `pgrep`, which matches itself.
 - Check what your run's logs look like at scale before relying on grep-based
   filtering. Verbose per-row warnings can make a large run's output unreadable; filter
   them from what you read, keeping the full log on disk (e.g.

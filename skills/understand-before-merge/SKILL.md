@@ -21,12 +21,15 @@ reads as confident and complete has failed at this, no matter how good the code 
 
 ## Output contract
 
-Deliver three parts, in this order and kept separate; the code alone is not the deliverable
-("Scaling to the task" below says when parts 2 and 3 shrink or drop).
+Deliver the three parts below, in order and kept separate; the code alone is not the deliverable.
+Copy this checklist and track your progress:
+- [ ] Tier picked ("Scaling to the task" says when parts 2 and 3 shrink or drop)
+- [ ] Part 1: a short why on each non-obvious decision; only durable ones go in the file
+- [ ] Part 2: each applicable axis tabled; every "yes" has a location; 1-2 rows **trace this**
+- [ ] Part 2 closes with "What I did not handle", written as consequences
+- [ ] Part 3: 3-7 open questions, none answered; no commit, merge or PR until the human replies
 
-1. **The code**, with a short "why" attached to each non-obvious decision
-2. **Failure-mode table** - what happens when reality misbehaves
-3. **Open questions** - things you cannot answer, that the human must
+If a box fails, fix that part and check again.
 
 ### Part 1: Code with its why
 
@@ -35,8 +38,7 @@ a choice between two valid approaches, an ordering constraint, a swallowed error
 default value, a timeout number, a data structure picked for a non-obvious reason.
 
 Leave self-evident lines unannotated. `i += 1` needs no explanation, and narrating
-obvious code trains the reader to skim - which is exactly the habit this skill exists
-to break.
+obvious code trains the reader to skim.
 
 Where the "why" goes depends on whether it is durable:
 
@@ -90,9 +92,8 @@ do not - an inapplicable row is noise:
 Close the table with **"What I did not handle"**. Write each item as its consequence, not as
 a missing feature. "No retry logic" reads as a backlog item the reviewer can defer; "a dropped
 connection loses the batch with no record of which molecules were in it" reads as what it
-actually is. The first invites skimming, the second is hard to skim past - and skimming is the
-exact behaviour this skill exists to prevent. List the omissions even where leaving them out
-was obviously correct, because silence about a gap reads as coverage.
+actually is. List the omissions even where leaving them out was obviously correct, because
+silence about a gap reads as coverage.
 
 ### Part 3: Open questions
 
@@ -135,10 +136,9 @@ fix is agreed, a short second table for the new behaviour is worth adding.
 
 **When the correct fix depends on an unanswered question, show the options, not a patch.**
 If two repairs are both defensible and they mean different things, show both, state what
-each implies, and put
-the choice in the open questions. Picking one and presenting it as *the* fix buries a decision
-that was never yours to make - and a fix that quietly resolves an ambiguity is a common way to
-cause the next incident while closing the current one.
+each implies, and put the choice in the open questions. Picking one and presenting it as *the*
+fix buries a decision that was never yours to make - and a fix that quietly resolves an
+ambiguity is a common way to cause the next incident while closing the current one.
 
 **Separate the reported bug from what you noticed nearby.** Repairing the actual problem while
 quietly hardening four other things in the same diff makes the change unreviewable, because

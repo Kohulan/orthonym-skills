@@ -5,15 +5,9 @@ description: Ranks the failures of an eval or benchmark run by a structural feat
 
 # Cluster the failures
 
-```bash
-<your-eval-command> --split <split>                     # produce a run record first
-<your-cluster-script>                                    # newest run
-<your-cluster-script> --run <run_id> --json clusters.json
-```
-
 Wire this up: point `<your-cluster-script>` at whatever groups your run's failing rows by
-a feature of the **input** (see below) — it does not need to be fancy, a groupby over a
-handful of derived columns is enough.
+a feature of the **input** (see below) — a groupby over a handful of derived columns is
+enough. Derive the features with RDKit (`pip install rdkit`) or your own toolkit.
 
 ## Analysis only — this is the load-bearing constraint
 
@@ -30,6 +24,17 @@ It is stated here, not left to memory, because a clustering tool is exactly the 
 makes row-specific fixes look attractive: agents under metric pressure have moved the number
 by rewriting output strings.
 
+## Steps
+
+1. **Record a run:** `<your-eval-command> --split <split>`. Use the diagnostic (gates-off)
+   run if a gate hides causes (below); note the shipped run's headline beside it.
+2. **Cluster it on the input:** `<your-cluster-script> --run <run_id> --json clusters.json`
+   (no `--run`: the newest run), features most specific first.
+3. **List the structural tells** separately, on emitted rows only.
+4. **Read the largest cluster's failing rows.** If they fail in a different layer, re-cluster
+   on that layer's feature and return to Step 2.
+5. **Hand one cluster on:** `check-target`, then your fix/eval loop (see *Then*).
+
 ## Cluster on the input, not the output
 
 A categorizer that buckets on substrings of what your tool **produced** answers "what did
@@ -44,15 +49,11 @@ layer is what fails, not the fused-ring layer): scaffold/ring-system class (acyc
 mono/bicyclic → fused polycyclic → spiro → bridged/von-Baeyer-type → many isolated rings)
 → charge state → stereocenter count → heavy-atom-count band → functional-group class →
 any domain-specific composite feature (glycoside/cyclic-sugar, a particular reaction
-class, a particular protein-family pocket, …). Naming is one example task this ladder
-applies to as well as property prediction, reaction/retrosynthesis prediction, docking, or
-generative design — the point is a feature of the input graph, never a substring of the
-prediction.
+class, a particular protein-family pocket, …).
 
-If your project already has per-class cohort enumerators (scripts that pull out "all the
-glycosides", "all the steroids", "all the charged species", etc.), extend those rather
-than inventing a parallel taxonomy — consistency across tools matters more than any one
-tool's elegance.
+If your project already has per-class cohort enumerators (scripts that pull out all the
+glycosides, steroids, charged species…), extend those rather than inventing a parallel
+taxonomy.
 
 ## Cluster the diagnostic (gates-off) run
 
