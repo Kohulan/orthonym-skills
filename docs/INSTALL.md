@@ -26,7 +26,8 @@ You get every skill (namespaced as `/orthonym-skills:<name>`, e.g. `/orthonym-sk
 `reference-consult` agent, and the `block-git-add-all` hook. The other four hooks (`ask-gate`,
 `guard-holdout`, `guard-regen`, `gate-guard`) are **not** enabled by the plugin; enable the ones you
 want per project (see "Hooks" below).
-Update with `/plugin update orthonym-skills@orthonym-skills`. Validate a checkout with
+Update from a terminal with `claude plugin marketplace update orthonym-skills`, then
+`claude plugin update orthonym-skills@orthonym-skills`, and restart Claude Code. Validate a checkout with
 `claude plugin validate .`.
 
 ## Option 1 — Per-project (recommended to start)

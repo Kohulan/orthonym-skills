@@ -20,8 +20,8 @@ Skills, hooks and an agent for [Claude Code](https://docs.claude.com/en/docs/cla
 property prediction, structure-to-name, reaction and retrosynthesis prediction, docking and QSAR,
 molecular generation, cheminformatics pipelines.
 
-[Why](#why) · [The loop](#the-loop) · [Install](#install) · [Skills](#skills) · [Hooks](#hooks) ·
-[Agent](#agent) · [Catalog](docs/skills-catalog.md) · [Cite](#cite)
+[Why](#why) · [The loop](#the-loop) · [Install](#install) · [Update](#update) · [What's new](#whats-new-in-040) ·
+[Skills](#skills) · [Hooks](#hooks) · [Agent](#agent) · [Catalog](docs/skills-catalog.md) · [Cite](#cite)
 
 ## Why
 
@@ -112,8 +112,74 @@ hooks and agent setup: [`docs/INSTALL.md`](docs/INSTALL.md).
 ```bash
 git clone https://github.com/Kohulan/orthonym-skills.git ~/orthonym-skills
 ln -s ~/orthonym-skills/skills/spy-site ~/.claude/skills/spy-site
-git -C ~/orthonym-skills pull      # update
 ```
+</details>
+
+## Update
+
+**Plugin.** Run these two commands in a terminal, then restart Claude Code. The new version loads
+in the next session.
+
+```bash
+claude plugin marketplace update orthonym-skills
+claude plugin update orthonym-skills@orthonym-skills
+```
+
+**Symlinked clone.** Pull; the links pick up the new files.
+
+```bash
+git -C ~/orthonym-skills pull
+```
+
+<details>
+<summary><b>Copied skills</b></summary>
+<br/>
+
+Pull the clone, then refresh every skill you copied into `~/.claude/skills`. This replaces those
+folders, so any local edit to them is lost; leave out a skill you changed by hand.
+
+```bash
+git -C ~/orthonym-skills pull
+for d in ~/.claude/skills/*/; do
+  s=~/orthonym-skills/skills/$(basename "$d")
+  [ -d "$s" ] && rsync -a --delete "$s/" "$d"
+done
+```
+
+For a project copy, use `/path/to/your/project/.claude/skills/` in place of `~/.claude/skills/`.
+If you wired an opt-in hook by copying its script, copy the script again from `hooks/`.
+</details>
+
+## What's new in 0.4.0
+
+- **Every skill follows Anthropic's [skill-authoring rules](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices).**
+  Descriptions say what the skill does, then when to use it. Multi-step skills have a checklist
+  with "go back to step N" lines. Each skill uses one term per concept.
+- **12 bug fixes** in skills and scripts. For example, `sweep.sh` no longer reports "nothing found"
+  on a bad date. `run-gate` no longer trusts a verdict file left by an earlier run. `handoff` no
+  longer edits its note after committing it.
+- **[`test-gate`](skills/test-gate/)**, a new skill: a test must fail on some plausible wrong code.
+- **Three opt-in hooks:** `guard-holdout`, `guard-regen` and `gate-guard` (see [Hooks](#hooks)).
+- **Evals:** three test prompts and one near-miss per skill, under [`evals/`](evals/). The lint
+  checks the rules a script can check.
+
+The full list is in [`CHANGELOG.md`](CHANGELOG.md).
+
+<details>
+<summary><b>Does the plugin help? Eval results for 0.4.0</b></summary>
+<br/>
+
+The five skills with the biggest changes, three cases each, one run per model, with and without
+the plugin. A Sonnet judge graded each reply against the case's rubric.
+
+| Model | With plugin | Without plugin |
+|:---|:---|:---|
+| Haiku | 12/15 | 6/15 |
+| Sonnet | 15/15 | 8/15 |
+| Opus | 15/15 | 6/15 |
+
+Haiku loaded a skill in only 2 of its 15 runs, so its score shows the descriptions alone. Run the
+suite yourself with the command under [Contributing](#contributing).
 </details>
 
 ## Skills
@@ -130,7 +196,7 @@ Ready to use. No setup.
 | [`verify-source`](skills/verify-source/) | "The spec says…", "per IUPAC / RFC / ISO…" | Open the source, cite the section. Never a note that quotes it. |
 | [`prove-invariant`](skills/prove-invariant/) | A suite passes but you are not sure the values are *right* | Derive the invariant the output must satisfy and test that. |
 | [`test-gate`](skills/test-gate/) | Writing a regression test, or reviewing tests in a PR | Name the cheapest wrong code, run it, and see the test fail. A guard needs both directions tested. |
-| [`change-asserted-value`](skills/change-asserted-value/) | A change would move a golden file, snapshot, or asserted label | Answer "which is wrong, the code or the expectation?" with evidence first; anything weaker ships labelled unverified. |
+| [`change-asserted-value`](skills/change-asserted-value/) | A change would move a golden file, snapshot, or asserted label | Answer "which is wrong, the code or the expectation?" with evidence first; anything weaker ships labelled unverified. A bulk regeneration lists every changed value first. |
 | [`bounded-goals`](skills/bounded-goals/) | Writing success criteria with more than one metric | One objective, explicit bounds on the rest. Multi-objective loops thrash. |
 | [`council`](skills/council/) | "Which option?", "what next?", "is X worth it?", "your call" | Search first, three or more named voices, one recorded call with a flip condition. |
 | [`fable-review`](skills/fable-review/) | Before shipping a load-bearing plan, finding, or diagnosis | An adversarial review by a *different* model family. Refute, don't agree. |
@@ -143,19 +209,20 @@ Wire in your project's commands once. The [catalog](docs/skills-catalog.md) says
 
 | Skill | When it fires | What it forces |
 |:---|:---|:---|
-| [`kickoff`](skills/kickoff/) | Session start, "continue", "resume" | Self-prime from the handoff note, both memory layers and `git log`; drift-check before trusting the plan. |
+| [`kickoff`](skills/kickoff/) | Session start with no task given yet; "continue", "resume", "where were we" | Self-prime from the handoff note, both memory layers and `git log`; drift-check before trusting the plan. |
 | [`run-eval`](skills/run-eval/) | "What is the accuracy?" | A fixed, hashed split; several numbers, so "fixed a wrong output" ≠ "stopped emitting one". |
 | [`cluster-failures`](skills/cluster-failures/) | Deciding what to fix next | Group by a structural feature of the input. Analysis only, never per-item patches. |
 | [`refusal-census`](skills/refusal-census/) | Ranking build order | Attribute each abstention to its code site; rank by *sole-blocker* count. |
 | [`eval-loop`](skills/eval-loop/) | The improvement loop itself | measure → one class → root fix → re-measure → gate → log, with bounded goals. |
 | [`reuse-before-rerun`](skills/reuse-before-rerun/) | Before any run longer than a minute; "how many…", "where is the run from…" | One sweep of ledger, repo, scratch dirs, notes. Then a 3-line **REUSE / EXTEND / RERUN** verdict. |
-| [`run-gate`](skills/run-gate/) | Before shipping a phase | Background launch, wait on the verdict file, read the *structured* verdict, never the exit code. |
+| [`run-gate`](skills/run-gate/) | Before shipping a phase | Clear the old verdict, launch in the background, wait for the new verdict file, read the *structured* verdict, never the exit code. |
 | [`watching-background-jobs`](skills/watching-background-jobs/) | Anything running longer than ~5 minutes | Own the watch loop; one progress line per wake-up; CPU check before calling a stall. |
-| [`handoff`](skills/handoff/) | Wrapping up a session | Lessons into both memory layers; a resume note; never trim durable notes. |
+| [`handoff`](skills/handoff/) | Wrapping up a session | Lessons into both memory layers; a resume note `kickoff` can check against git; never trim durable notes. |
 
 ### Media skills
 
-Need Node, and Chrome and ffmpeg (`scripts/setup.sh` finds them or fetches what is missing).
+Needs Node.js. `scripts/setup.sh` fetches Chrome for Testing, fetches ffmpeg through `uv` when it is
+missing, and names any tool it cannot get.
 
 | Skill | When it fires | What it forces |
 |:---|:---|:---|
@@ -189,13 +256,13 @@ Mechanical guards for rules that must hold every time, where prose held only mos
 are `PreToolUse` hooks; only `block-git-add-all` is on with the plugin, the rest are opt-in.
 [`hooks/README.md`](hooks/README.md) has the settings block, the variables and the one-line tests.
 
-| Hook | Matcher | Denies | Escape |
-|:---|:---|:---|:---|
-| [`block-git-add-all`](hooks/block-git-add-all.py) | `Bash` | `git add -A`, `git add .`, `git add --all`, `git commit -a` | Name the paths. |
-| [`ask-gate`](hooks/ask-gate.py) | `AskUserQuestion` | Any question that is not one of the 4 hard stops: destructive, security / publish, 30k+ rows or 1h+ run, plan so broken every path is a guess | `HARD STOP:` prefix, `ASK_GATE_OFF=1`, `.claude/ask-gate.off` |
-| [`guard-holdout`](hooks/guard-holdout.py) | `Bash` | A command matching `EVAL_HOLDOUT_PATTERN`, until you agree to spend the held-out split | `# holdout-approved` after you agree |
-| [`guard-regen`](hooks/guard-regen.py) | `Bash` | A bulk snapshot or golden regeneration (`--snapshot-update`, `jest -u`, `UPDATE_GOLDEN=1` ...) | `# values-reviewed` after each value is listed |
-| [`gate-guard`](hooks/gate-guard.py) | `Bash` | A full gate (`GATE_CMD_RE`) under `timeout`, or while another gate holds the verdict lock | Remove `timeout`; wait for the other gate |
+| Hook | With the plugin | Backs up | Denies | Escape |
+|:---|:---|:---|:---|:---|
+| [`block-git-add-all`](hooks/block-git-add-all.py) | on | every skill that commits | `git add -A`, `git add .`, `git add --all`, `git commit -a` | Name the paths. |
+| [`ask-gate`](hooks/ask-gate.py) | opt-in | your "don't wait on me" directive | Any question that is not one of the 4 hard stops: destructive, security / publish, 30k+ rows or 1h+ run, plan so broken every path is a guess | `HARD STOP:` prefix, `ASK_GATE_OFF=1`, `.claude/ask-gate.off` |
+| [`guard-holdout`](hooks/guard-holdout.py) | opt-in | `eval-loop`, `run-eval`, `bounded-goals` | A command matching `EVAL_HOLDOUT_PATTERN`, until you agree to spend the held-out split | `# holdout-approved` after you agree |
+| [`guard-regen`](hooks/guard-regen.py) | opt-in, no setup | `change-asserted-value` | A bulk snapshot or golden regeneration (`--snapshot-update`, `jest -u`, `UPDATE_GOLDEN=1` ...) | `# values-reviewed` after each value is listed |
+| [`gate-guard`](hooks/gate-guard.py) | opt-in | `run-gate` | A full gate (`GATE_CMD_RE`) under `timeout`, or while another gate holds the verdict lock | Remove `timeout`; wait for the other gate |
 
 ## Agent
 
@@ -234,10 +301,12 @@ Every skill has at least three test prompts and one near-miss under [`evals/<ski
 Run them with and without the plugin (the without-plugin arm is the baseline):
 
 ```bash
-claude plugin eval . --tag <skill> --model sonnet --runs 3 --no-publish
+claude plugin eval . --tag <skill> --model sonnet --judge-model sonnet --runs 3 --no-publish
 ```
 
-A change to a skill brings its eval result, with and without the plugin, to the PR.
+The default judge is a small model and can fail a long, correct reply; `--judge-model sonnet`
+grades more reliably. A change to a skill brings its eval result, with and without the plugin, to
+the PR.
 
 ## Cite
 
