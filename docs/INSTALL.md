@@ -23,8 +23,9 @@ The repo is a Claude Code plugin marketplace with one plugin. In Claude Code:
 ```
 
 You get every skill (namespaced as `/orthonym-skills:<name>`, e.g. `/orthonym-skills:spy-site`), the
-`reference-consult` agent, and the `block-git-add-all` hook. The `ask-gate` hook is **not** enabled by
-the plugin — it changes how Claude asks questions, so enable it per project (see "Hooks" below).
+`reference-consult` agent, and the `block-git-add-all` hook. The other four hooks (`ask-gate`,
+`guard-holdout`, `guard-regen`, `gate-guard`) are **not** enabled by the plugin; enable the ones you
+want per project (see "Hooks" below).
 Update with `/plugin update orthonym-skills@orthonym-skills`. Validate a checkout with
 `claude plugin validate .`.
 
@@ -111,23 +112,27 @@ The reasoning is the reusable part; the placeholders mark exactly what is yours 
 
 ## Hooks
 
-Two PreToolUse guards live in [`hooks/`](../hooks/). With the plugin installed (Option 0),
-`block-git-add-all` is already on. To add `ask-gate`, copy only `ask-gate.py` and paste only its
-`AskUserQuestion` entry from [`hooks/README.md`](../hooks/README.md) into `.claude/settings.json`; a
-project copy of the Bash guard would run on every Bash call next to the plugin's:
+Five PreToolUse guards live in [`hooks/`](../hooks/). With the plugin installed (Option 0),
+`block-git-add-all` is already on. The other four are opt-in: copy the scripts you want and paste only
+their entries, and the `env` values they need, from [`hooks/README.md`](../hooks/README.md) into
+`.claude/settings.json`. A project copy of the git guard would run on every Bash call next to the
+plugin's:
 
 ```bash
 mkdir -p /path/to/your/project/.claude/hooks
-cp hooks/ask-gate.py /path/to/your/project/.claude/hooks/
-```
-
-Without the plugin, copy all three files and paste the whole `hooks` block from the same README:
-
-```bash
-mkdir -p /path/to/your/project/.claude/hooks
-cp hooks/ask-gate.py hooks/block-git-add-all.py hooks/block-git-add-all.sh \
+cp hooks/ask-gate.py hooks/guard-holdout.py hooks/guard-regen.py hooks/gate-guard.py \
    /path/to/your/project/.claude/hooks/
 ```
+
+Without the plugin, also copy the git guard and paste the whole `hooks` block from the same README:
+
+```bash
+cp hooks/block-git-add-all.py hooks/block-git-add-all.sh /path/to/your/project/.claude/hooks/
+```
+
+`guard-holdout` and `gate-guard` do nothing until their variables (`EVAL_HOLDOUT_PATTERN`,
+`GATE_CMD_RE`, `GATE_VERDICT_FILE`) are set in the `env` block of `settings.json` or in the shell
+that launches `claude`.
 
 Test each hook with the one-line pipe commands in the same README before relying on it. Open `/hooks`
 once in Claude Code after editing settings so the change is picked up.
