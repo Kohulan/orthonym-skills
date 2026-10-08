@@ -63,18 +63,29 @@ if (a.stills) {
 } else {
   const out = path.resolve(a.out || 'out.mp4'), silent = out.replace(/\.mp4$/, '') + '.video.mp4';
   const vf = [`scale=${W}:${H}:flags=lanczos:out_range=tv`, 'format=yuv420p'].join(',');
+  // x264 preset 'slow': a smaller file at the same CRF; frame capture, not encoding, sets the render time.
   const ff = spawn(FFMPEG, ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(fps), '-c:v', 'mjpeg', '-i', '-',
     '-vf', vf, '-color_range', 'tv', '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709',
     '-c:v', 'libx264', '-preset', 'slow', '-crf', String(a.crf || 17), '-profile:v', 'high', '-movflags', '+faststart', silent],
     { stdio: ['pipe', 'inherit', 'inherit'] });
+  ff.on('error', e => console.error(`cannot start ffmpeg (${FFMPEG}): ${e.message}`));
+  ff.stdin.on('error', () => {});                                  // a dead ffmpeg is reported below by its exit code
+  let ffDone = false;
+  const closed = new Promise(r => ff.on('close', c => { ffDone = true; r(c); }));
   const n = Math.round(dur * fps), t0 = Date.now();
-  for (let i = 0; i < n; i++) {
+  for (let i = 0; i < n && !ffDone; i++) {                         // stop capturing if ffmpeg died
     await frame(from + i / fps);
+    // JPEG 95 into the pipe: faster than PNG screenshots, near-lossless before x264 re-encodes it.
     const buf = await page.screenshot({ type: 'jpeg', quality: 95 });
-    if (!ff.stdin.write(buf)) await new Promise(r => ff.stdin.once('drain', r));
+    if (!ff.stdin.write(buf)) await Promise.race([new Promise(r => ff.stdin.once('drain', r)), closed]);
     if (i % (fps * 5) === 0) process.stdout.write(`  frame ${i}/${n}  (${((Date.now() - t0) / 1000).toFixed(0)}s)\n`);
   }
-  ff.stdin.end(); await new Promise(r => ff.on('close', r));
+  ff.stdin.end();
+  const code = await closed;
+  if (code !== 0) {
+    console.error(`ffmpeg exited with code ${code}; no video written (its error is printed above)`);
+    await browser.close(); process.exit(1);
+  }
 
   let wav = null;
   if (!a['no-audio'] && !a.from && await page.evaluate(() => typeof window.renderAudio === 'function')) {
@@ -90,5 +101,8 @@ if (a.stills) {
   } else fs.renameSync(silent, out);
   console.log(`${n} frames, ${dur.toFixed(2)} s at ${fps} fps -> ${out}${wav ? ' (with sound)' : ''}  in ${((Date.now() - t0) / 1000).toFixed(0)}s`);
 }
-if (errors.length) console.log(`PAGE ERRORS (${errors.length}):\n  ` + [...new Set(errors)].slice(0, 8).join('\n  '));
+if (errors.length) {                                                // exit 2 so a broken stage never passes as a clean render
+  console.log(`PAGE ERRORS (${errors.length}):\n  ` + [...new Set(errors)].slice(0, 8).join('\n  '));
+  process.exitCode = 2;
+}
 await browser.close();

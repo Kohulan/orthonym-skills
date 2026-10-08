@@ -12,7 +12,7 @@ You are not doing the work. You are writing the prompt that makes another agent 
 ## Flow
 
 1. **Read the goal.** One line restatement in your head, not on screen.
-2. **Set the bar.** If the user supplied a reference, use it. If not, offer **2 or 3 candidate bars**, one line each, and stop. Wait for their pick. Do not write the prompt yet.
+2. **Set the bar** (the named reference to beat). If the user supplied one, use it. If not, offer **2 or 3 candidate bars**, one line each, and stop. Wait for their pick. Do not write the prompt yet.
 3. **Write the prompt.** One block, paste-ready, no preamble, no headings inside it, no narration after it.
 4. **Offer to run it.** One flat line under the prompt: "I can run this here." Not a question.
 
@@ -41,7 +41,7 @@ Bars by goal type:
 
 When you propose bars, prefer the hardest one the agent can genuinely reach. A bar that is too easy makes the loop exit on round one.
 
-If the goal has a measurable half (load time, token cost, benchmark score, word count, pass rate), name it alongside the reference. Taste plus a number beats taste alone.
+If the goal has a measurable half (load time, token cost, benchmark score, word count, pass rate), name it alongside the bar. Taste plus a number beats taste alone.
 
 ## Prompt template
 

@@ -183,11 +183,10 @@ fetches playwright-core and Chrome for Testing into the skill's own `.tools/`.
 
 ## Hooks (`hooks/`)
 
-Mechanical guards for the two rules that prose instructions kept losing under pressure. The plugin
-install turns on `block-git-add-all`; with the plugin, add `ask-gate` by copying only `ask-gate.py` and
-pasting only its `AskUserQuestion` entry from [`hooks/README.md`](../hooks/README.md) into your
-`settings.json` (a project copy of the Bash guard would run next to the plugin's). Without the plugin,
-copy all three files and paste the whole `hooks` block.
+Mechanical guards for rules that must hold every time. The plugin install turns on
+`block-git-add-all`; the other four are opt-in: copy the scripts you want and paste only their entries
+(and `env` values) from [`hooks/README.md`](../hooks/README.md) into your `settings.json` (a project
+copy of the git guard would run next to the plugin's). Without the plugin, copy the git guard too.
 
 ### `block-git-add-all`
 PreToolUse on `Bash`. Denies bulk staging (`git add -A`, `git add .`, `git add --all`, `git commit -a`)
@@ -200,6 +199,21 @@ expensive run (30k+ rows or 1h+), or a plan so broken every path is a guess — 
 a reason that tells the agent to choose and proceed. Denials are logged to `.claude/ask-gate.log` for
 review. Opt-in: prefix a question with `HARD STOP:` to force it through, or disable with
 `ASK_GATE_OFF=1` / a `.claude/ask-gate.off` file.
+
+### `guard-holdout` (opt-in)
+PreToolUse on `Bash`, for `eval-loop`, `run-eval` and `bounded-goals`. Denies a command that matches
+`EVAL_HOLDOUT_PATTERN` (set it to what runs the held-out split, such as its override flag) and tells the
+agent to ask first; after the user agrees, the agent re-runs it with `# holdout-approved`. Does nothing
+until the pattern is set.
+
+### `guard-regen` (opt-in)
+PreToolUse on `Bash`, for `change-asserted-value`. Denies a bulk snapshot or golden-file regeneration
+(`--snapshot-update`, `--force-regen`, `jest -u`, `UPDATE_GOLDEN=1` and similar) until each changed
+value is listed with its evidence; then `# values-reviewed` lets it through. Needs no setup.
+
+### `gate-guard` (opt-in)
+PreToolUse on `Bash`, for `run-gate`. For commands matching `GATE_CMD_RE`, denies a `timeout` wrapper
+and, with `GATE_VERDICT_FILE` set, a second gate while `<verdict file>.lock` holds a live PID.
 
 ## Agent (`agents/`)
 

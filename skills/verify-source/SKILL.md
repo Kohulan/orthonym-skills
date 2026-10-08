@@ -32,16 +32,19 @@ dissolved the blocker.
    RFC — not a wiki, not a tutorial, not a previous analysis.
 2. **Fetch it.** `curl` it to the scratchpad and cache it; you will read it more
    than once. WebFetch answers a prompt about the page with a small model rather than
-   returning its text, so use it only to find where the text lives.
-3. **Extract text you can grep.** For PDFs: `pdftotext -layout file.pdf out.txt`.
-   Quote only from text you extracted yourself.
+   returning its text, so use it only to find where the text lives. Cannot obtain it
+   (paywalled, offline)? State no rule: call it unverified and name the edition needed.
+3. **Extract text you can grep.** For PDFs: `pdftotext -layout file.pdf out.txt` (poppler:
+   `apt install poppler-utils` or `brew install poppler`). Quote only from text you extracted
+   yourself. If the cited section number is not in `out.txt` (empty or garbled text, e.g. a
+   scanned PDF), a grep over it proves nothing: return to Step 2 for a text edition.
 4. **Locate and read around it.** `grep -n` the section number and the operative
    phrases (`"highest"`, `"lowest"`, `"shall"`, `"arbitrarily"`), then read the
    surrounding lines. Governing rules are often one section away from where you
    expect.
 5. **Quote verbatim**, with the section number, in whatever you write.
-6. **If the rule is not there, say so explicitly** — "IR-9.3.5.3 states no
-   selection rule" is a finding, and usually a more valuable one than confirming.
+6. **If the section is there but the rule is not, say so explicitly** — "IR-9.3.5.3
+   states no selection rule" is a finding, and usually a more valuable one than confirming.
 
 ## Red flags
 

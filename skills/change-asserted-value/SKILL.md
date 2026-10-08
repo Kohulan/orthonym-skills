@@ -1,6 +1,6 @@
 ---
 name: change-asserted-value
-description: "Requires three artifacts before a committed expected value moves (a primary-source quote, an independent check that does not use the code under test, and a mutation test) and records anything weaker as unverified. Use when a change would alter a golden file, snapshot, asserted label, reference output, or benchmark expectation, including when the new value looks obviously right or the old one looks obviously wrong. Triggers on updating a failing assertion to match current output, 'the test expectation is stale', or a fix that moves reference data. Not for writing new tests (use prove-invariant)."
+description: "Requires three artifacts before a committed expected value moves (a primary-source quote, an independent check that does not use the code under test, and a mutation test) and records anything weaker as unverified. Use when a change would alter a golden file, snapshot, asserted label, reference output, or benchmark expectation, including when the new value looks obviously right or the old one looks obviously wrong. Triggers on updating a failing assertion to match current output, 'the test expectation is stale', or a fix that moves reference data. Not for writing new tests (use test-gate)."
 ---
 
 # change-asserted-value
@@ -8,9 +8,8 @@ description: "Requires three artifacts before a committed expected value moves (
 ## The rule
 
 **Three artifacts before the value moves. If you cannot produce all three, the
-new value is unverified: change it only when it is marked unverified in the commit
-message, at the assertion and in a durable note ("When you only have weak evidence"
-below), and say so plainly.**
+new value is unverified: change it only with the labels under "When you only have
+weak evidence" below.**
 
 Updating an assertion to match new output is the single easiest way to convert a
 bug into a specification.
@@ -23,10 +22,15 @@ bug into a specification.
    necessary-condition property (`prove-invariant`), an internal-consistency
    argument, or a separate implementation. Re-deriving the value by hand from the
    same reasoning that produced the change does not count.
-3. **A mutation test.** Revert the fix, confirm the test now fails, restore. This
-   proves the new expectation has teeth.
+3. **A mutation test.** On a scratch copy (see `test-gate`), revert the fix and confirm
+   the test fails. If it still passes, the test cannot see the change: tighten it and repeat.
 
 Then state, in one line: **what would make this wrong?**
+
+**Many values at once** (a snapshot or golden-file regeneration): list every old → new pair
+first, then apply the three artifacts to each. Optional guard: the opt-in `guard-regen` hook
+(`hooks/guard-regen.py` in this plugin; setup in `hooks/README.md`) stops a bulk snapshot or
+golden-file regeneration until each changed value is listed.
 
 ## Why this exists
 

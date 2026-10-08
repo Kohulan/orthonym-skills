@@ -1,7 +1,7 @@
 # 3D (three.js) and fluids (fluid.js)
 
 Use them where they carry the story: a molecule turning in 3D, a product object, an ink wipe
-between scenes, a logo emerging from smoke. Not as wallpaper.
+between shots, a logo emerging from smoke. Not as wallpaper.
 
 ## The rule that makes both work in a video
 
@@ -56,7 +56,8 @@ cylinders offset along the ring plane, or one thicker one.
 
 render.mjs launches Chrome with GPU flags; on a Mac, WebGL runs on the real GPU (Metal via
 ANGLE). Always render one still of a 3D scene before a full render. If the canvas is blank:
-check PAGE ERRORS, then relaunch with `--use-angle=swiftshader` (software, slower but always works).
+check PAGE ERRORS, then re-render with `CHROME_ARGS=--use-angle=swiftshader node $SK/scripts/render.mjs ...`
+(software, slower but always works).
 
 ## Fluids (fluid.js)
 
@@ -78,7 +79,7 @@ const sim = Kit.stepper((dt, now) => {
   `velocityDissipation` 0.1-0.5; `shading` 0 (flat) to 1.2 (embossed ink).
 - On a dark ground: `mix-blend-mode: screen` on the canvas, saturated colours at 0.6-1.0.
   On a light ground: blend `multiply` and use the colour you want the ink to be, darkened.
-- Ink wipe: 6-10 big splats from one edge within 0.3 s, colour = the next scene's ground, raise
-  `densityDissipation` after the next scene is revealed so the ink clears.
+- Ink wipe: 6-10 big splats from one edge within 0.3 s, colour = the next shot's ground, raise
+  `densityDissipation` after the next shot is revealed so the ink clears.
 - Cost: stills that jump forward re-simulate from 0 (Kit.stepper), so a board with late shots is
   slower; keep simRes at 128 and dyeRes at 512-1024.

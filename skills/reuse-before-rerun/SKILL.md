@@ -17,7 +17,8 @@ full-corpus answer is a rerun, and so is a spy over ~100+ rows.
 
 ## Wire this in
 
-`sweep.sh` reads its roots from env vars — set them once:
+`sweep.sh` (run it; it calls `_group.py` beside it, and you need not read either) needs bash, git
+and python3 (standard library only). It reads its roots from env vars — set them once:
 
 - `RBR_REPO` — repo to search (default: git toplevel, else `$PWD`)
 - `RBR_LEDGER` — the ledger (default: `$RBR_REPO/RESULTS-LEDGER.md`)
@@ -31,6 +32,15 @@ Also substitute your expensive commands below, and your notes / memory tool in s
 
 ## The protocol (in order, no skipping)
 
+Copy this checklist and track your progress:
+```
+- [ ] 1 Question named (corpus · size · config · metric · HEAD)
+- [ ] 2 sweep.sh run + one notes/memory query
+- [ ] 3 REUSE / EXTEND / RERUN picked
+- [ ] 4 Verdict block written; user OK if past the expensive threshold
+- [ ] 5 Ledger row appended when the run finishes
+```
+
 1. **Name the question in one line:** corpus + size + engine/config + metric + code state (a
    HEAD hash, or "any" if the question is about the past).
 2. **Sweep once** — one Bash call, then one query to your notes / memory tool
@@ -38,7 +48,6 @@ Also substitute your expensive commands below, and your notes / memory tool in s
    ```bash
    bash <skills-dir>/reuse-before-rerun/sweep.sh <keyword> [since YYYY-MM-DD] [until YYYY-MM-DD]
    ```
-   It reads the ledger, then the repo, then every extra root — newest first.
 3. **Pick one outcome:**
    - **REUSE** — same corpus and size exists, and `git log --oneline --since=<run date> -- <src>`
      is empty, or the question is about the past. Report path, date, HEAD.
@@ -47,6 +56,7 @@ Also substitute your expensive commands below, and your notes / memory tool in s
    - **RERUN** — nothing usable exists. Say which of the five places came up empty.
    - Commits since the run date do not make it RERUN by themselves. Report the last full number
      plus the measured gain of each shipped fix, and mark it "incremental, not re-measured".
+   - Sweep reports rows not shown? Narrow the keyword or add a date window; return to Step 2.
 4. **Write the verdict block** in every reply that reports a number or launches a run, REUSE
    included, even when nothing is launched, so the reader can see what was searched. Exactly
    these 3 lines, right after the numbers:
@@ -63,13 +73,15 @@ Also substitute your expensive commands below, and your notes / memory tool in s
 
 ## Answering "where is the run from <date>"
 
-Same command with the date window — `sweep.sh <keyword> 2026-01-13 2026-01-15` — across all
-roots, not only the repo. "I can't find it" is not "it does not exist" until the ledger, the repo,
-every scratchpad, your notes and your memory tool all came up empty. Name each one you checked.
+Same command with the date window — `sweep.sh <keyword> 2026-01-13 2026-01-15` (until is
+exclusive) — across all roots, not only the repo. "I can't find it" is not "it does not exist"
+until the ledger, the repo, every scratchpad, your notes and your memory tool all came up empty.
+Name each one you checked.
 
 ## Ledger format
 
-Create it once — newest first, append-only, one row per expensive run:
+Create it once — newest first, append-only, one row per expensive run. Strict: keep `date`
+first as YYYY-MM-DD; sweep.sh reads only rows that start `| 20`.
 
 ```markdown
 | date | tag | engine | HEAD | rows | headline | path |

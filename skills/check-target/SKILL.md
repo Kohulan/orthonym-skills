@@ -40,12 +40,12 @@ counterexamples — a clustering script that only iterates failing rows has exac
 | non-failing hits | list them explicitly — these are the counterexamples |
 
 **4. Decompose by cause.** Inspect the actual outputs (names, labels, values). If the matched
-rows split into groups with different mechanisms, the target is N targets and must be re-scoped
-before any fix.
+rows split into groups with different mechanisms, the target is N targets: re-scope to the
+largest one and return to Step 1.
 
 **5. Check the outcome spread.** A single defect class does not usually span
-`parse_fail` + `wrong_structure` + `exact_match`. Spread across outcome types is evidence of
-multiple causes.
+`parse_fail` + `wrong_structure` + `exact_match`. If the hits span 3 or more outcome types,
+return to Step 4: there is more than one cause.
 
 ## Refusal conditions
 

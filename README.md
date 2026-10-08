@@ -1,7 +1,7 @@
 <a id="top"></a>
 
 <a href="https://github.com/Kohulan/orthonym-skills">
-  <img src="docs/assets/banner.svg" alt="Orthonym Skills. Decide from measurement, not from a confident guess. Claude Code plugin: 22 skills, 2 hooks, 1 agent, v0.3.0. Seven spectral lines on a nanometre scale stand for the loop: measure, cluster, target, spy, fix, gate, review." width="100%"><!-- x-release-please-version -->
+  <img src="docs/assets/banner.svg" alt="Orthonym Skills. Decide from measurement, not from a confident guess. Claude Code plugin: 22 skills, 5 hooks, 1 agent, v0.3.0. Seven spectral lines on a nanometre scale stand for the loop: measure, cluster, target, spy, fix, gate, review." width="100%"><!-- x-release-please-version -->
 </a>
 
 <br/>
@@ -87,7 +87,7 @@ Inside Claude Code, run these two commands one at a time.
    ```
 
 You get all 22 skills (as `/orthonym-skills:<name>`), the `reference-consult` agent, and the
-`block-git-add-all` hook. The `ask-gate` hook is opt-in: see [`hooks/README.md`](hooks/README.md).
+`block-git-add-all` hook. The other four hooks are opt-in: see [`hooks/README.md`](hooks/README.md).
 Claude picks up a skill from its description when your task matches it.
 
 <details>
@@ -185,13 +185,17 @@ gate · 2100/5000 (42%) · 40/min · ETA 08:43 UTC · last: "[2100/5000] row ok"
 
 ## Hooks
 
-Mechanical guards for the two rules that prose instructions kept losing under pressure. Both are
-`PreToolUse` hooks. [`hooks/README.md`](hooks/README.md) has the settings block and the one-line tests.
+Mechanical guards for rules that must hold every time, where prose held only most of the time. All
+are `PreToolUse` hooks; only `block-git-add-all` is on with the plugin, the rest are opt-in.
+[`hooks/README.md`](hooks/README.md) has the settings block, the variables and the one-line tests.
 
 | Hook | Matcher | Denies | Escape |
 |:---|:---|:---|:---|
 | [`block-git-add-all`](hooks/block-git-add-all.py) | `Bash` | `git add -A`, `git add .`, `git add --all`, `git commit -a` | Name the paths. |
 | [`ask-gate`](hooks/ask-gate.py) | `AskUserQuestion` | Any question that is not one of the 4 hard stops: destructive, security / publish, 30k+ rows or 1h+ run, plan so broken every path is a guess | `HARD STOP:` prefix, `ASK_GATE_OFF=1`, `.claude/ask-gate.off` |
+| [`guard-holdout`](hooks/guard-holdout.py) | `Bash` | A command matching `EVAL_HOLDOUT_PATTERN`, until you agree to spend the held-out split | `# holdout-approved` after you agree |
+| [`guard-regen`](hooks/guard-regen.py) | `Bash` | A bulk snapshot or golden regeneration (`--snapshot-update`, `jest -u`, `UPDATE_GOLDEN=1` ...) | `# values-reviewed` after each value is listed |
+| [`gate-guard`](hooks/gate-guard.py) | `Bash` | A full gate (`GATE_CMD_RE`) under `timeout`, or while another gate holds the verdict lock | Remove `timeout`; wait for the other gate |
 
 ## Agent
 
@@ -220,12 +224,20 @@ rather than emit a wrong structure. That framing makes them concrete instead of 
 Run the release gate before a pull request:
 
 ```bash
-python3 scripts/lint_skills.py        # frontmatter, names, triggers, leaked project tokens
-claude plugin validate . --strict     # plugin + marketplace manifests
+python3 scripts/lint_skills.py                          # skill-authoring rules, evals, leaked project tokens
+claude plugin validate . --strict                       # marketplace manifest
+claude plugin validate skills --strict                  # every SKILL.md frontmatter
+claude plugin validate .claude-plugin/plugin.json --strict
 ```
 
-Every skill is tested the way it was written: a baseline run without the skill that shows the
-failure, then a run with it that shows compliance. Bring both to the PR.
+Every skill has at least three test prompts and one near-miss under [`evals/<skill>/`](evals/).
+Run them with and without the plugin (the without-plugin arm is the baseline):
+
+```bash
+claude plugin eval . --tag <skill> --model sonnet --runs 3 --no-publish
+```
+
+A change to a skill brings its eval result, with and without the plugin, to the PR.
 
 ## Cite
 

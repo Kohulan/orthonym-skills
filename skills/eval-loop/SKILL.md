@@ -8,14 +8,18 @@ description: Runs a bounded improvement loop on a chemistry model or pipeline (m
 One iteration = one failure cluster. Stop after a small fixed number of iterations (e.g.
 3) or when the goal threshold in your goals/bounds file is met, then report.
 
-```
-run eval  ->  cluster failures  ->  fix ONE cluster  ->  re-run  ->  check goals  ->  log
-```
+Copy this checklist and track your progress:
+- [ ] 1. Measure: shipped and gates-off runs, both run ids noted
+- [ ] 2. Diagnose: largest cluster, examples read, site proven by `spy-site`
+- [ ] 3. Fix one cluster at the root
+- [ ] 4. Re-measure: churn both ways, then the full eval
+- [ ] 5. Gate: enforcer and pre-gate pass against a current baseline
+- [ ] 6. Log: one row, negative results too; a fresh copy for the next iteration
 
 **Enforce your goals/bounds file mechanically, not by eye.** After a re-run, evaluate
 the bounded contract with an enforcer script (or, at minimum, a checklist you actually
 run through every time) that derives every hard and relaxable bound from the run + gate
-artifacts and fails loudly on any hard-bound violation:
+artifacts and fails loudly on any hard-bound violation, naming the bound and both values:
 
 ```bash
 <your-goals-enforcer> --run <runs-directory>/<id>.json --gate <gate-verdict-file>
@@ -25,10 +29,10 @@ A hard-bound violation (e.g. a wrong-structure/wrong-prediction rate rising, a
 protected-set regression, or an exact-match requirement breaking) means **revert, do
 not trade**: if a change makes a hard bound worse, undo the change, full stop, no
 matter what else it improved elsewhere. Write that rule down once in your own project's
-docs (an `eval/LOOP-CONTRACT.md` or equivalent) and read it alongside the goals file, so
-a fix that trades away a hard bound for a soft one is never mistaken for progress. The
+docs (an `eval/LOOP-CONTRACT.md` or equivalent) and read it alongside the goals/bounds file,
+so a fix that trades away a hard bound for a soft one is never mistaken for progress. The
 failure curriculum for the next iteration should be minted from the run or a wider
-audit — never by touching your protected splits.
+audit — never from the held-out split or the protected set.
 
 This is a **developer** workflow. Do not implant any part of it into the product/library
 itself: no self-correction loop, no retry ladder, no agentic behaviour inside the
@@ -49,17 +53,12 @@ clusterable run:
 ```
 
 **2. Diagnose.** Use the `cluster-failures` skill (or equivalent) on the diagnostic
-run. Take the largest cluster — but read its actual examples first. A cluster can look
-large because a totally different layer fails on inputs that merely happen to share
-one surface feature (same scaffold class, same ring system, same functional group) —
-sharing that feature doesn't mean sharing a cause.
+run. Take the largest cluster, but read its examples first: rows that share a surface
+feature need not share a cause (`cluster-failures` explains why).
 
-Then locate the actual code site by measurement, with the `spy-site` skill (or
-equivalent): a site named in a comment, roadmap, or design doc is often called zero
-times for the cases it was meant to fix. Count calls on the site for the target rows,
-and validate the counter against two or more known positives before trusting a
-zero-calls reading, because a single positive can mislead (for example, one served
-from a warm cache).
+Then prove the code site runs for the target rows with `spy-site` (or equivalent) before
+editing it; a site named in a comment, roadmap, or design doc is often called zero times.
+If it records zero calls on the target rows, return to Step 2 with the next site or cluster.
 
 **3. Fix at the root.** Follow your project's fix-methodology doc if you have one (the
 governing rule, restated: build the whole class of cases correctly, or fail closed on
@@ -90,7 +89,7 @@ iteration's headline number.
 **5. Gate.** A change must not regress your protected-set metric: run the fast pre-gate
 (see the `run-gate` skill) and read the actual pass count against a **current**
 baseline — a bare PASS verdict is not sufficient if the baseline it's compared against
-is stale.
+is stale. If a hard bound got worse or the gate fails, revert and return to Step 3.
 
 **6. Log.** Append one row to your project's eval log: iteration number, cluster
 worked, run ids before and after, the delta on every tracked bound, the commit, and one
@@ -100,11 +99,8 @@ from repeating the same attempt.
 
 ## Bounded objectives — maximise one, bound the rest
 
-Per iteration, declare one objective and hold every other tracked number as a bound,
-relaxing a bound only deliberately and visibly. Optimising several metrics at once
-stalls the loop, because any change that regresses any metric gets reverted and no
-necessary trade-off is ever made (the `bounded-goals` skill covers writing that
-contract).
+Per iteration, maximise one objective and hold every other tracked number as a bound,
+relaxed only deliberately and visibly (`bounded-goals` writes that contract).
 
 Example table (substitute your project's actual metrics — a property predictor might
 use MAE-on-holdout as the objective with calibration/coverage as bounds; a
@@ -115,15 +111,12 @@ bound):
 |---|---|---|
 | **maximise** | your headline correctness metric | the objective |
 | bound | protected-set pass count ≥ current baseline | hard, never relaxed |
-| bound | precision/coverage on produced outputs ≥ current | relax only with a stated reason |
+| bound | precision-on-emitted and emit rate ≥ current | relax only with a stated reason |
 | bound | output size/length/complexity ≤ current mean | **a bound, never an objective** |
 | bound | runtime/inference cost ≤ current | relax deliberately, and say so |
 
-**Bound a cheap proxy like output length; never make it an objective.** Pressure that
-shortens outputs also truncates them into wrong ones (e.g. `caffein` instead of
-caffeine, or a truncated systematic name for a simple structure) that can still pass a
-validity check. An agent that rewarded shorter outputs this way scored an order of
-magnitude lower on held-out correctness than a project that only bounded length.
+**Bound a cheap proxy like output length; never make it an objective.** Length pressure
+truncates outputs into wrong ones (`caffein` for caffeine) that still pass a validity check.
 
 ## Plateau trigger — hand it to a fresh agent
 
@@ -145,23 +138,23 @@ calling anything a plateau.
 - **One cluster per iteration.** Two unrelated fixes in one iteration destroy the
   attribution the next decision depends on.
 - **Never touch your held-out split** unless the user asks in so many words. It exists
-  to be spent exactly once, at the end.
+  to be spent exactly once, at the end. Optional guard: the opt-in `guard-holdout` hook
+  (`hooks/guard-holdout.py` in this plugin; setup in `hooks/README.md`) stops a held-out run
+  until the user has agreed.
 - **Never re-sample a split.** Split files are the contract; a good harness records
   their content hash and refuses to compare runs across a hash change.
 - **Watch coverage and precision together.** A headline correctness metric rising while
-  precision-on-produced falls usually means abstention/coverage widened, not that
+  precision-on-emitted falls usually means abstention/coverage widened, not that
   outputs got better — especially when the headline metric is reference-free and
   measured identical whether validity gates are on or off, in which case a move that
   only shifts coverage/precision changed honesty, not correctness.
-- **You may run alongside other read-only measurement work**, provided you're not
-  writing to the same gate/verdict artifact. If concurrent runs contend over a shared
-  external resource (a license, a GPU, a validator subprocess), use an explicit
-  budgeting mechanism, not `pgrep` (self-matches, can't count available slots).
+- **You may run alongside other read-only measurement work** if nothing writes the same
+  gate/verdict artifact; budget shared resources as `run-eval` says.
 
 ## Stopping
 
 Stop at a small fixed number of iterations (e.g. 3) or when your headline metric clears
-its goal-file threshold. Then report: the trajectory across every tracked bound, which
-clusters were worked, which were tried and refuted, and the next-largest remaining
-cluster. If several iterations moved nothing, say so plainly — that's a finding about
-where the real difficulty is, not a failure to report.
+its threshold in the goals/bounds file. Then report: the trajectory across every tracked
+bound, which clusters were worked, which were tried and refuted, and the next-largest
+remaining cluster. If several iterations moved nothing, say so plainly — that's a finding
+about where the real difficulty is, not a failure to report.

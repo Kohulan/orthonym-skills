@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # sweep.sh <keyword> [since YYYY-MM-DD] [until YYYY-MM-DD]
+# until is exclusive: for one day D, pass D and D+1. Keep the keyword a plain word: it is
+# matched literally in file contents and inside a *keyword* file-name glob.
 # One-call search for an existing result before re-running anything expensive.
 # Order: ledger -> files (repo + extra roots) -> notes.
 #
@@ -11,6 +13,11 @@
 set -u
 KW="${1:?usage: sweep.sh <keyword> [since YYYY-MM-DD] [until YYYY-MM-DD]}"
 SINCE="${2:-}"; UNTIL="${3:-}"
+# A date find cannot parse would otherwise read as "no results" (its error goes to /dev/null below).
+for d in "$SINCE" "$UNTIL"; do
+  [ -z "$d" ] || find "$0" -newermt "$d" >/dev/null 2>&1 \
+    || { echo "sweep: cannot read date '$d' (use YYYY-MM-DD)" >&2; exit 2; }
+done
 
 REPO="${RBR_REPO:-$(git rev-parse --show-toplevel 2>/dev/null || printf '%s' "$PWD")}"
 LEDGER="${RBR_LEDGER:-$REPO/RESULTS-LEDGER.md}"
@@ -34,7 +41,8 @@ group() { python3 "$(dirname "$0")/_group.py"; }
 
 echo "== 1. LEDGER  $LEDGER =="
 if [ -f "$LEDGER" ]; then
-  grep -i -- "$KW" "$LEDGER" 2>/dev/null | grep '^| 20' || echo "(no ledger row matches '$KW')"
+  # Ledger rows start with the date column ("| 20YY-MM-DD"); this skips the header rows.
+  grep -iF -- "$KW" "$LEDGER" 2>/dev/null | grep '^| 20' || echo "(no ledger row matches '$KW')"
 else
   echo "(no ledger at $LEDGER — create it: see 'Ledger format' in SKILL.md)"
 fi
@@ -52,7 +60,7 @@ fi
 echo; echo "== 3. NOTES mentioning '$KW'  (docs/notes across all roots, max 20) =="
 find "${ROOTS[@]}" "${PRUNE[@]}" -type f \( -name '*.md' -o -name '*.txt' -o -name '*.rst' \
   -o -name '*.jsonl' \) -print0 2>/dev/null \
-  | xargs -0 -r grep -Ils -- "$KW" 2>/dev/null | xargs -r ls -t 2>/dev/null | head -20
+  | xargs -0 -r grep -IlsF --null -- "$KW" 2>/dev/null | xargs -0 -r ls -t 2>/dev/null | head -20
 
 echo; echo "Roots searched: ${ROOTS[*]}"
 echo "Next: ONE query to your notes / memory tool for \"$KW result\", then write the 3-line verdict block."
