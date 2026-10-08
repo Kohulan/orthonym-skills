@@ -1,6 +1,6 @@
 ---
 name: test-gate
-description: "Use when writing, changing or reviewing tests: a regression test for a fix, a PR or diff that adds tests, a coverage push, or a green suite you are not sure would catch a bug. Triggers on 'add a test for', 'review these tests', 'is this test enough', fail-closed guards and health checks, locks and concurrency tests, checks that loop over outputs, and mocks or fixtures that already hold the answer. Not for changing an existing expected value (use change-asserted-value)."
+description: "Checks that a test fails on some plausible wrong code, such as a guard that always allows or always refuses, an empty result, an identity transform or a missing lock, and gates each new test on four answers: behaviour, regression, owner and seam. Use when writing, changing or reviewing tests: a regression test for a fix, a PR or diff that adds tests, a coverage push, or a green suite that may not catch a bug. Triggers on 'add a test for', 'review these tests', 'is this test enough', fail-closed guards and health checks, locks and concurrency tests, checks that loop over outputs, and mocks or fixtures that already hold the answer. Not for changing an existing expected value (use change-asserted-value) or deriving a property the output must satisfy (use prove-invariant)."
 ---
 
 # test-gate
@@ -54,16 +54,15 @@ empty list. Add inputs that must produce output, with exact expected values.
 - A name that promises more than its input exercises.
 - A helper that exists only for the test.
 
-## Review output
+## Review procedure
 
-One line per test and fixture, in three parts:
-
-1. The verdict: keep, change or drop.
-2. The wrong versions you ran, and whether the test failed on each.
-3. The fix, for anything that is not a keep.
-
-Run the wrong versions on a fresh copy of your own (`mktemp -d`), because a shared scratch
-directory can hold another run's files. Leave the real tree as you found it. A claim that
-the test "would fail" counts only after you have seen it fail.
+1. Copy the tree to a fresh directory of your own (`mktemp -d`); a shared scratch directory
+   can hold another run's files. Check that the copy's tests import the copy, not an editable
+   install of the real tree (print `<pkg>.__file__`). Leave the real tree as you found it.
+2. For each test and fixture, pick the wrong versions from the table, in both directions.
+3. Run each wrong version in the copy. A test that still passes on one is not done: fix it and
+   return to this step. "Would fail" counts only after you have seen it fail.
+4. Report one line per test and fixture: keep, change or drop; the wrong versions you ran and
+   whether the test failed on each; the fix, for anything that is not a keep.
 
 Related: `prove-invariant` for deriving a property the output must satisfy.

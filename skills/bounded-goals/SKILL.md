@@ -7,12 +7,11 @@ description: "Writes the success criteria of an optimization or evaluation loop 
 
 ## The rule
 
-**Maximize one metric. Bound the rest with explicitly relaxable ceilings, plus a
+**Maximize one metric. Give every other metric an explicitly relaxable bound, plus a
 written trade licence.**
 
 A conjunction of soft objectives — *maximize A and minimize B and minimize C* —
-is an implicit veto on every Pareto move. It does not express a preference; it
-forbids progress.
+is an implicit veto on every Pareto move: it forbids progress.
 
 ## Why this exists
 
@@ -23,14 +22,15 @@ runtime ceiling was deliberately loosened 3.7 → 5.0 → 6.2 → 20.6 ms to let
 accuracy move, then optimized back down to 10.2 ms at the end. Accuracy went
 95.0% → 97.8% while mean name length *fell* 98.2 → 83.0 characters.
 
-A sibling project's criteria read `G1 >= baseline AND G2 >= 0.45 AND G3 >= 0.95`,
-conjunctive, with no written trade licence. That is the freeze configuration.
+A sibling project's criteria read `G1 >= baseline AND G2 >= 0.45 AND G3 >= 0.95`, with no
+trade licence: the freeze configuration. Bounded: maximize G1; G2 >= 0.45, relaxable to 0.40
+if G1 gains a point; G3 >= 0.95, fixed.
 
-## The contract
+## The contract (all five fields required; the layout is a default)
 
 ```
 maximize:  ONE metric — the thing the project is actually for
-bounds:    every other metric, each with a ceiling marked relaxable-or-not
+bounds:    every other metric, each with a bound (floor or ceiling) marked relaxable or not
 licence:   plain sentences — "may regress X to Y in order to move Z"
 held-out:  a split the loop never reads; run by a human at intervals
 stamp:     derived:true on subset runs, so a subset number can never be
@@ -48,8 +48,11 @@ stamp:     derived:true on subset runs, so a subset number can never be
 - **Never rank on the proxy.** Bounding output length is healthy; *selecting*
   candidates by length produces truncated garbage that still passes the oracle.
   Bound it, do not optimize it.
-- **Keep the held-out set genuinely held out.** Once it has informed a decision,
-  it is a dev set and you no longer have a held-out set.
+- **Check the bounds can all hold before the loop starts.** The baseline must meet every
+  fixed bound, and no two bounds may forbid every move (coverage floor + byte-identical output).
+- **Keep the held-out set genuinely held out.** Once it has informed a decision, it is a dev
+  set. Optional guard: the opt-in `guard-holdout` hook (`hooks/guard-holdout.py` in this
+  plugin; setup in `hooks/README.md`) stops a held-out run until the user has agreed.
 - **Diagnostics ride free.** One expensive pass should emit status, outputs,
   proxies, telemetry and failures together, so a new question costs nothing.
 

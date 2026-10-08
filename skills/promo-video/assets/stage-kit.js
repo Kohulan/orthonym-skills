@@ -7,6 +7,7 @@
 // requestAnimationFrame, CSS transitions or Math.random(). Everything moves
 // because t moved. Stateful things (a fluid sim, particles) step by exactly
 // 1/fps per call; see Kit.stepper.
+// Contents: clamp, lerp, prog · ease, tween · rng, noise1 · timeline · splitLines, splitChars, riseLines · footage · stepper · css
 (function () {
   const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
   const lerp = (a, b, k) => a + (b - a) * k;
@@ -79,15 +80,15 @@
     });
   }
 
-  // App-footage camera. data = footage.json from capture.mjs. cams = [[beatKey,
-  // scale, [cx, cy] | null]] where null centres on the beat's recorded rect.
+  // App-footage camera. data = footage.json from capture.mjs. cams = [[markerKey,
+  // scale, [cx, cy] | null]] where null centres on the marker's recorded rect.
   function footage(data, cams = [], { move = 1.1, delay = .15 } = {}) {
     const t0 = data.markers[0].t;
     const beat = Object.fromEntries(data.markers.map(m => [m.key, { t: m.t - t0, rect: m.rect }]));
     const frames = data.frames.map(([f, t]) => [f, t - t0]);
     const W = data.W, H = data.H;
     const shots = cams.map(([k, s, c]) => {
-      if (!beat[k]) throw new Error(`footage: no beat "${k}"`);
+      if (!beat[k]) throw new Error(`footage: no marker "${k}"; recorded: ${Object.keys(beat).join(', ')}`);
       if (!c && beat[k].rect && s > 1) { const r = beat[k].rect; c = [r.x + r.w / 2, r.y + r.h / 2]; }
       c = c || [W / 2, H / 2];
       const vw = W / s, vh = H / s;

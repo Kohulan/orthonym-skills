@@ -1,7 +1,7 @@
 // shots.mjs -- what to film in the real app. Run: node <skill>/scripts/capture.mjs shots.mjs --outdir footage
-// Every `mark` is a story beat the stage can hang a caption and a camera move on;
+// Every `mark` is a marker the stage can hang a caption and a camera move on;
 // give it the selectors to frame and the stage zooms to their union rect.
-// Pace for the viewer, not the machine: a beat needs ~2.5-4 s of screen time to read.
+// Pace for the viewer, not the machine: a marker needs ~2.5-4 s of screen time to read.
 export default {
   url: 'https://example.org',
   viewport: { width: 1080, height: 1000 },    // >= the site's desktop breakpoint; the stage scales it into a window

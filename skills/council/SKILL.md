@@ -28,8 +28,8 @@ unvalidated number. Search + council makes the answer convergent instead of a co
 
 - Extract every load-bearing claim from the question and from your loaded context
   (handoff, memory, planning notes). Treat each as a claim to test, not a fact.
-- Give each independent facet its own investigator, run in parallel (parallel `Agent` calls,
-  or a `Workflow`); check a facet you can settle in a handful of tool calls inline. The
+- Give each independent facet its own investigator, run in parallel (parallel `Agent`
+  calls); check a facet you can settle in a handful of tool calls inline. The
   standard three facets for a "should we do X?" question:
   1. **Validate the headline number** for X (re-derive the reachable win from ground truth).
   2. **Size the alternative** (what does the road-not-taken actually offer?).
@@ -56,7 +56,7 @@ Surface real disagreement rather than manufacturing consensus.
 
 ### 3. The chair synthesizes — the answer the user reads
 
-Produce, in this order, leading with the verdict:
+Always use this order, leading with the call:
 
 1. **The call** — one option, stated first, unmissable.
 2. **Confidence** + the single biggest remaining uncertainty.
@@ -64,8 +64,7 @@ Produce, in this order, leading with the verdict:
    asked to see the options; show them.
 4. **What would flip the call** — the one observation that would change the answer.
 
-The search and the council voices follow the call as its support, so the verdict is the first
-thing the user reads.
+The search and the council voices follow the call, as its support.
 
 ## Scale to the stakes
 
@@ -86,18 +85,22 @@ thing the user reads.
 
 | Excuse | Reality |
 |---|---|
-| "The handoff/memory already gives the number." | Loaded numbers are hypotheses. Reproduce-first exists *because* they over-count 15–50×. Re-derive it this turn. |
 | "I probed a couple examples, that's enough." | Confirming a class "fails closed" ≠ counting the reachable win. Size the whole pool. |
-| "One well-reasoned answer is cleaner than a council." | A single lens is how a false premise ships. The council makes one voice attack the others. |
 | "They're clearly leaning toward X." | Steering to the expected answer defeats the point. Weigh the evidence, then be willing to tell them they're wrong. |
-| "It depends / both are viable." | Non-answer. Make the call, then state what would flip it. |
 
-## Worked example (illustrative)
+## Worked examples (illustrative)
 
 **Q:** "Fix the low-confidence-prediction cluster, or ship the pending featurizer
 refactor — your call?" The handoff said the cluster = "~100 rows, one root cause."
-**Call:** ship the featurizer refactor first, targeting its low-risk sub-fix. **Flips if:**
-the cluster turns out to gate a future model family — then build the contained half only.
+**Call:** ship the featurizer refactor first, targeting its low-risk sub-fix.
+**Confidence:** high; biggest uncertainty: whether the cluster gates a future model family.
+
+| Option | Reachable wins | Risk | Effort |
+|---|---|---|---|
+| Featurizer sub-fix | ~45 | low | smaller |
+| Cluster fix | 2 | moderate+ (determinism) | larger |
+
+**Flips if:** the cluster turns out to gate a future model family — then build the contained half only.
 **Search (3 parallel investigators):** a corpus scan finds **2** genuine reachable wins from
 a targeted cluster fix (most tagged rows are out-of-domain scaffolds the model was never
 trained on); the ledger shows **~45 low-risk wins** from the featurizer refactor's smaller
@@ -105,3 +108,8 @@ sub-fix; a code trace shows the cluster fix un-masks a determinism defect in a s
 normalization step (moderate+ risk).
 **Council:** 🛠️ "2 wins behind a determinism-sensitive guard is a bad trade." 📊 "2 vs ~45
 reachable — not close." 🔬 "The ~100 was another over-counted pool."
+
+**Q (small, reversible):** "Batch size 32 or 64 for tonight's retrain?" **Call:** 64.
+**Confidence:** medium; the run ledger shows both prior runs at 64 converged. **Options:** 32
+(slower) / 64 (half the wall-clock). **Flips if:** out-of-memory at 64. **Council:** 🛠️ "Fits
+in memory." 📊 "Halves the wall-clock." 🔬 "Only two prior runs."

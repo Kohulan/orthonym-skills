@@ -38,8 +38,10 @@ project doesn't keep a formal roadmap doc, this check degrades gracefully to ste
      let a session re-litigate a decision the roadmap already closed.
 2. **Phase-order conflict?** Is the NEXT TASK the current roadmap phase, or has work
    jumped ahead / sideways without the roadmap being updated first?
-3. **Anchor integrity?** Does the handoff note's "last commit" and phase match
-   `git log`? If not, the anchor is stale.
+3. **Anchor integrity?** Does the handoff note's "Last commit" and phase match
+   `git log`? "Last commit" is the last work commit; commits after it that touch only the
+   note itself (`git log --oneline <last-commit>..HEAD -- . ':!<your-handoff-note>'` is
+   empty) are fine. Anything else after it, or a hash not in the log: the anchor is stale.
 4. **Scope creep?** Is the next action a phase in the roadmap, or unplanned work?
 
 ## Output (return this verbatim shape, ≤10 lines)
@@ -47,7 +49,7 @@ project doesn't keep a formal roadmap doc, this check degrades gracefully to ste
 DRIFT CHECK — <PASS | DRIFT | STALE-ANCHOR>
 Current phase: <phase id + title from roadmap>
 Next task (handoff note): <one line>
-Verdict: <PASS = aligned; DRIFT = names the conflicting locked decision or phase; STALE-ANCHOR = the note's last commit or phase does not match git log>
+Verdict: <PASS = aligned; DRIFT = names the conflicting locked decision or phase; STALE-ANCHOR = the note's last commit or phase does not match git log, beyond the note's own commit>
 If DRIFT/STALE-ANCHOR: the one correction to make before working, citing the roadmap line (file:line) or commit hash it rests on.
 ```
 

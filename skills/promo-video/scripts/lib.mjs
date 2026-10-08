@@ -19,10 +19,13 @@ export function getTools() {
 export async function launch({ headless = true } = {}) {
   const t = getTools();
   const { chromium } = await import(path.join(t.NODE_MODULES, 'playwright-core', 'index.mjs'));
+  // Extra Chrome flags from the environment, e.g. CHROME_ARGS=--use-angle=swiftshader for a
+  // blank WebGL canvas (references/3d-and-fluids.md, "Headless GPU").
+  const extra = (process.env.CHROME_ARGS || '').split(/\s+/).filter(Boolean);
   return chromium.launch({
     executablePath: t.CHROME, headless,
     args: ['--allow-file-access-from-files', '--enable-unsafe-webgpu', '--ignore-gpu-blocklist',
-      '--enable-gpu-rasterization', '--autoplay-policy=no-user-gesture-required'],
+      '--enable-gpu-rasterization', '--autoplay-policy=no-user-gesture-required', ...extra],
   });
 }
 

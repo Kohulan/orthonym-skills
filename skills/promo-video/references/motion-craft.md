@@ -24,7 +24,7 @@ sitting still.
 
 1. **Hook (0-3 s):** the brand mark arriving with energy, or the single most striking visual.
 2. **Promise (one line):** what it does, in the viewer's words.
-3. **Proof beats (2-5 beats, 3-6 s each):** each beat shows ONE real thing, with ONE caption.
+3. **Proof shots (2-5 shots, 3-6 s each):** each shot shows ONE real thing, with ONE caption.
 4. **The differentiator:** the thing competitors cannot show.
 5. **Call to action (last 5-7 s):** logo, URL as a pill, one line, partner logos. Hold it long
    enough to read the URL twice.
@@ -55,16 +55,16 @@ sitting still.
 ## Transitions worth using
 
 - **Mask reveal:** lines rise through an overflow-hidden box (Kit.riseLines).
-- **Match cut:** an element in scene A becomes an element in scene B (the logo glass becoming the
+- **Match cut:** an element in shot A becomes an element in shot B (the logo glass becoming the
   "O" of the wordmark).
-- **Ink wipe:** large fluid splats flood the frame, the next scene appears under them as they fade.
-- **3D fly-through:** the camera dollies into an object and out the other side into the next scene.
+- **Ink wipe:** large fluid splats flood the frame, the next shot appears under them as they fade.
+- **3D fly-through:** the camera dollies into an object and out the other side into the next shot.
 - **Window tilt:** a browser window rises from below with a perspective tilt that flattens out.
 
 ## Real product footage
 
 - Film the live product with capture.mjs (never fake UI). Warm caches first so results land at
-  once; let the page's own entrance animation play; pace each beat 2.5-4 s.
+  once; let the page's own entrance animation play; give each marker 2.5-4 s.
 - Film at DPR 2; present inside a floating browser window (title bar, URL pill, soft shadow) on
   a branded background. That window, plus captions in a band above it, is the proven layout.
 - Zoom the camera to the feature each caption talks about. Record the zoom target as a marker rect.
@@ -83,8 +83,8 @@ sitting still.
 ## Self-check before showing anything
 
 1. Contact sheet every 2-2.5 s (`ffmpeg -vf "fps=1/2.5,scale=270:-1,tile=8x4"`): pacing, gaps.
-2. Full-size frames at every beat's midpoint: legibility, caption collisions, cut-off content.
+2. Full-size frames at every shot's midpoint: legibility, caption collisions, cut-off content.
 3. The first frame and a cover frame (the moment that best sells it) as PNGs.
-4. Spectrogram (`showspectrumpic`) against the beat sheet: hits land where planned.
+4. Spectrogram (`showspectrumpic`) against the shot list: hits land where planned.
 5. Loudness: `ffmpeg -i out.mp4 -af ebur128=framelog=quiet -f null -` reads about -14 LUFS.
 6. render.mjs printed no PAGE ERRORS.

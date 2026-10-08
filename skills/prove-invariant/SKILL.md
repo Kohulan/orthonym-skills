@@ -1,6 +1,6 @@
 ---
 name: prove-invariant
-description: "Derives a property the output must satisfy by necessity (symmetry, invariance, counting, an algebraic identity), gates the output on it, and mutation-tests the gate. Use when adding or reviewing tests for correctness-critical output, when a suite passes but the values may still be wrong, or when stored expectations (golden files, snapshots, asserted labels) are the only oracle. Triggers on 'all tests pass but', 'is this actually correct', regression suites for scientific or algorithmic output, and before trusting any newly written test. Not for changing an existing expected value (use change-asserted-value)."
+description: "Derives a property the output must satisfy by necessity (symmetry, invariance, counting, an algebraic identity), gates the output on it, and mutation-tests the gate. Use when adding or reviewing tests for correctness-critical output, when a suite passes but the values may still be wrong, or when stored expectations (golden files, snapshots, asserted labels) are the only oracle. Triggers on 'all tests pass but', 'is this actually correct', regression suites for scientific or algorithmic output, and before trusting any newly written test. Not for changing an existing expected value (use change-asserted-value) or checking that a test can fail at all (use test-gate)."
 ---
 
 # prove-invariant
@@ -44,8 +44,9 @@ Look for a transformation the answer must respect:
 1. **State the property in one sentence**, as a necessity — "reflection is an
    involution on the permutation indices, so counts must balance."
 2. **Implement it as a gate** over a broad sample, not a handful of cases.
-3. **Mutation-test it.** Break the fix, confirm the gate fails, restore. A gate
-   you have not seen fail is a gate you have not tested.
+3. **Mutation-test it.** On a scratch copy (see `test-gate`), inject a violation or
+   revert the fix, and confirm the gate fails. If it passes, the gate is blind to that
+   bug: tighten it and repeat. A gate you have not seen fail is a gate you have not tested.
 4. **State necessary vs sufficient, out loud, in the test's own docs.** Say what
    it cannot catch.
 

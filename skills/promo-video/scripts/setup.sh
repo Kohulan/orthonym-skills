@@ -2,16 +2,20 @@
 # One-time (and idempotent) tool check for promo-video. Prints three lines the
 # other scripts read back:  NODE_MODULES=...  CHROME=...  FFMPEG=...
 # Run it at the start of every video job; it installs only what is missing.
+# On failure it names each missing tool on stderr ("MISSING: ...") and exits 1.
 set -euo pipefail
 SKILL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 TOOLS="$SKILL_DIR/.tools"
 mkdir -p "$TOOLS"
 
 # playwright-core: drives Chrome for capture and frame rendering. Kept inside the
-# skill so no project's package.json is touched.
+# skill so no project's package.json is touched. stderr stays visible so a failed
+# install says why.
 if [ ! -d "$TOOLS/node_modules/playwright-core" ]; then
+  command -v npm >/dev/null || { echo "MISSING: npm (install Node.js, current LTS: https://nodejs.org)" >&2; exit 1; }
   echo '{"name":"promo-video-tools","private":true}' > "$TOOLS/package.json"
-  (cd "$TOOLS" && npm i -s playwright-core@1.58 >/dev/null 2>&1)
+  (cd "$TOOLS" && npm i -s playwright-core@1.58 >/dev/null) ||
+    { echo "MISSING: playwright-core (npm install failed in $TOOLS; offline?)" >&2; exit 1; }
 fi
 
 # Chrome for Testing: reuse any Playwright download; fetch one only if none exists.
@@ -27,7 +31,7 @@ find_chrome() {
 }
 CHROME="$(find_chrome || true)"
 if [ -z "$CHROME" ]; then
-  (cd "$TOOLS" && npx -y playwright-core@1.58 install chromium >/dev/null 2>&1) || true
+  (cd "$TOOLS" && npx -y playwright-core@1.58 install chromium >/dev/null) || true
   CHROME="$(find_chrome || true)"
 fi
 
@@ -41,4 +45,7 @@ fi
 echo "NODE_MODULES=$TOOLS/node_modules"
 echo "CHROME=$CHROME"
 echo "FFMPEG=$FFMPEG"
-[ -n "$CHROME" ] && [ -n "$FFMPEG" ] || { echo "MISSING: install Chrome (npx playwright install chromium) or ffmpeg (brew install ffmpeg)" >&2; exit 1; }
+missing=0
+[ -n "$CHROME" ] || { echo "MISSING: Chrome for Testing (npx -y playwright-core@1.58 install chromium)" >&2; missing=1; }
+[ -n "$FFMPEG" ] || { echo "MISSING: ffmpeg (brew install ffmpeg, or sudo apt install ffmpeg; or install uv to fetch one)" >&2; missing=1; }
+exit "$missing"

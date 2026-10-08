@@ -20,7 +20,7 @@ it exit.
 ## Wire this in
 
 Substitute: `<job>` — the launch command · `<log-file>` — its **line-buffered** log (unbuffered,
-or progress is unmeasurable) · `<verdict-file>` — the sentinel written *only* on completion ·
+or progress is unmeasurable) · `<verdict-file>` — the file the job writes *only* on completion ·
 `<scratchpad>/watch.json` — the checkpoint · your stall threshold and any known quiet phases.
 
 ## The pattern
@@ -29,16 +29,16 @@ or progress is unmeasurable) · `<verdict-file>` — the sentinel written *only*
 - Confirm the process is alive: by PID when you have one (`ps -p <pid>`), else with one letter
   bracketed (`pgrep -fa '[m]yjob'`, with the plain name nowhere else in that command line),
   because a plain `pgrep -fa <job>` also matches the shell running the check. If already dead,
-  go straight to the crash path — never arm a watchdog on a corpse.
+  go straight to Step 4 — never arm a watch loop on a corpse.
 - Record progress markers: log size / line count + mtime.
-- If the job writes a sentinel/verdict file, check for a **stale one from a prior run** and
+- If the job writes a verdict file, check for a **stale one from a prior run** and
   record its mtime — "done" later means *mtime newer than launch*, not *file exists*.
 
-**2. Arm the watchdog:**
+**2. Arm the watch loop:**
 - Persist a checkpoint (`{lines, log_mtime, launch_ts}`) to disk — each wake-up is a fresh turn.
-- Schedule the next check: 240–270s while watching something fast-changing (stays inside the
-  5-min prompt cache), or 1200s+ as a slow heartbeat for multi-hour jobs. Avoid 300s (worst
-  of both) and 60s polling (burns cache for nothing).
+- Schedule the next check from how fast the job's state changes: a phase that takes ~8 min gets
+  one ~480s check, not eight 60s ones; 1200s+ is the slow heartbeat for multi-hour jobs. Follow
+  the `ScheduleWakeup` tool's own guidance on the delay. Never poll every 60s.
 - Completion needs no polling — the exit notification is free and re-invokes you.
 - If `Monitor` is your wake-up tool, make its filter emit on failure lines (`Traceback|Error|Killed`)
   as well as on progress, because a progress-only filter stays silent through a crash or hang;
@@ -46,16 +46,18 @@ or progress is unmeasurable) · `<verdict-file>` — the sentinel written *only*
 
 **3. Each wake-up:**
 - Re-stat log/output against the checkpoint.
-- Progress since last check → update the checkpoint, re-arm, and end the wake-up with **the
-  progress line** below. That one line is the wake-up's whole output.
-- Flat for ≥ the stall threshold → **check CPU before crying stall** (`ps -o %cpu` on the
-  worker): a busy process with a quiet log is a compute phase, not a hang. Wedged = 0% CPU +
-  frozen log + no verdict.
-- Truly wedged → notify the user with evidence (minutes flat, last log line, CPU state) and
-  **leave the process running** — never kill or restart without their say-so.
+- Progress since last check → update the checkpoint, re-arm (Step 2), and end the wake-up with
+  **the progress line** below. That one line is the wake-up's whole output.
+- Flat, but under the stall threshold or with the worker busy (**check CPU before crying stall**:
+  `ps -o %cpu` on the worker) → a quiet compute phase, not a hang: re-arm silently (Step 2).
+- Flat for ≥ the stall threshold, 0% CPU and no verdict file → wedged: notify the user with
+  evidence (minutes flat, last log line, CPU state) and **leave the process running** — never
+  kill or restart without their say-so.
 
 **4. On completion (the task-notification fires):**
-- Read the verdict file, verify its mtime postdates the launch, grab the log tail.
+- Read the verdict file, verify its mtime postdates the launch, grab the log tail. No fresh
+  verdict file → a crash: report the exit code and log tail, and copy the log to the scratchpad
+  before it can be clobbered.
 - Notify verdict-first — numbers in the alert, full reconciliation in the chat:
   `"Gate PASS — 843 golds (+3 vs 840), 0 new regressions, 1h12m"` *(example from a SMILES→IUPAC
   namer)*. Use `PushNotification` only if it is in this harness's tool list (probe with
@@ -85,8 +87,7 @@ elapsed, then an evidence-based answer ("yes — 4,100 → 5,300 rows in 22 min,
 ## Stall thresholds
 
 Default 20 min of flat output. Widen to 40+ min for known quiet phases — a determinism pass, or
-a stage that only writes on completion, goes silent legitimately. If a healthy-but-slow job
-outlives the watchdog timeout, silently re-arm; never ping the user for "still running fine".
+a stage that only writes on completion, goes silent legitimately.
 
 ## Hard rules
 
@@ -94,11 +95,9 @@ outlives the watchdog timeout, silently re-arm; never ping the user for "still r
   git-mutating agent: they compete with the job for cores and memory, and a git mutation can
   change files the job is reading.
 - If the user asks for "a cheap agent that keeps checking": honor the **intent** (cheap,
-  continuous monitoring), not the letter. Own the schedule loop; optionally delegate each
+  continuous monitoring), not the letter. Own the watch loop; optionally delegate each
   *single* health-check to a one-shot cheap subagent that returns one verdict line from the log
   tail — and say in one sentence that you are doing this, and why.
-- Report failures faithfully: a crash notification carries the exit code and log tail, and
-  preserves the log (copy it to the scratchpad) before it can be clobbered.
 
 ## Rationalization table
 
@@ -106,8 +105,8 @@ outlives the watchdog timeout, silently re-arm; never ping the user for "still r
 |---|---|
 | "Progress is not worth a message; I'll report at the end" | Silence is why the user polls. It is one line. Post it. |
 | "The user asked for a persistent watcher subagent" | Nothing wakes it on a schedule, and its report arrives only when its run ends — the loop must live with you. Substitute and say so. |
-| "The exit notification will cover it" | It covers *exit* only. A hung process never exits; stalls are invisible without the poll loop. |
-| "I'll poll every 60s to be safe" | 8 cache-burning wakes per quiet stretch. 240–270s in-cache, or commit to 1200s+. |
+| "The exit notification will cover it" | It covers *exit* only. A hung process never exits; stalls are invisible without the watch loop. |
+| "I'll poll every 60s to be safe" | 8 wasted wakes per quiet stretch. Pick the delay from how fast the job changes, or commit to 1200s+. |
 | "Log is quiet — it's hung, restart it" | Check CPU first. Quiet ≠ dead, and restarting destroys evidence. Never restart unilaterally. |
 | "The user will ask if they want status" | Dozens of wasted "is it done?" turns. Push the verdict the moment it exists. |
 | "I'll spawn the watcher and end my turn — done" | You just orphaned the job. If you did not arm a wake-up, nobody is watching. |

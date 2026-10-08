@@ -1,6 +1,6 @@
 ---
 name: fable-review
-description: Gets one adversarial review of a load-bearing plan, diagnosis, or finding from a reviewer on a different model family (fable by default), told to refute its premise. Use when a plan, diagnosis, or finding is about to ship and its premise, if wrong, would waste the next iteration. Triggers on "fable-review", "review the plan with fable", "get a second opinion", a diagnosis about to size or scope a build, and any claim repeated across sessions without being re-derived. Not for ordinary line-by-line code review.
+description: Gets one adversarial review of a load-bearing plan, diagnosis, or finding from a reviewer on a different model family (fable by default), told to refute its premise. Use when a plan, diagnosis, or finding is about to ship and its premise, if wrong, would waste the next iteration. Triggers on "fable-review", "review the plan with fable", "get a second opinion", a diagnosis about to size or scope a build, and any claim repeated across sessions without being re-derived. Not for ordinary line-by-line code review (use understand-before-merge).
 ---
 
 # Fable review — independent cross-model challenge of a plan/diagnosis
@@ -39,7 +39,7 @@ If your organization's model allowlist permits no version of the requested famil
 runs the reviewer on the session's own model and shows a warning; check the model named on the
 reviewer's row in `/tasks` before counting the review as cross-model.
 
-## The review brief (fill in the doc path)
+## The review brief (fill in the paths)
 
 > You are an adversarial reviewer on a different model family from the author. Your job is to
 > refute, not to agree. Read `<DOC PATH>` (and any files/commits it cites). This is
@@ -47,12 +47,12 @@ reviewer's row in `/tasks` before counting the review as cross-model.
 > pipeline, a reaction-outcome predictor>`; the dominant failure mode here is a confident-but-wrong
 > premise that passes every gate because gates verify code, not reasoning.
 >
-> Read your project's fix-methodology / engineering-log doc for its standing invariants — at
-> minimum: spy-before-you-code, verify-your-harness-actually-ran, VERIFIED-vs-ASSUMED tagging on
-> load-bearing claims, rank-by-sole-blocker (not touched-count), and any bounded-goal
-> satisfiability rule. For every load-bearing claim in the plan, not only the first few:
-> 1. Is it tagged VERIFIED (with a command/citation-incl-section-heading) or ASSUMED? An ASSUMED
->    claim may not justify deleting a guard or sizing a fix.
+> Read `<METHODOLOGY DOC PATH>` for your project's standing invariants — at minimum:
+> spy-before-you-code, verify-your-harness-actually-ran, VERIFIED-vs-ASSUMED tagging on
+> load-bearing claims, rank-by-sole-blocker (not touched-count), and bounds that can all hold
+> at once (`bounded-goals`). VERIFIED = cites the command and output, run id or quoted source
+> that shows it; ASSUMED = does not. For every load-bearing claim, not only the first few:
+> 1. Is it VERIFIED or ASSUMED? An ASSUMED claim may not justify deleting a guard or sizing a fix.
 > 2. Could the measurement be right but the diagnosis wrong? Name a concrete alternative cause.
 > 3. Is any reachability/yield/size number derived from static inspection or a warm-cache/batch
 >    run rather than a fresh-process measurement over the target rows?

@@ -41,12 +41,13 @@ cp.CandidatePool.best = spy
 **3. Validate the spy against ≥2 known positives.** Not one. A trivially simple input (e.g. the
 smallest molecule your pipeline handles) can record zero calls to a helper meant to be
 universal, so a single positive can be silently wrong — you cannot tell "the site is off the
-path" from "my spy is broken" with one data point. If neither positive registers, the spy is
-broken; fix the spy before believing any zero.
+path" from "my spy is broken" with one data point. If either positive records zero, the spy
+or that positive is wrong: fix it and return to Step 2. Believe no zero until both register.
 
 **4. Assert the counter is non-zero before believing any number derived from it.** A probe
 calling a non-existent method "succeeds" by never running — verify your harness actually
 ran before trusting its zero. A `-k` selector matching no test exits 5 and looks like a pass.
+If the harness did not run, return to Step 2.
 
 **5. Run over the target rows and record the count.**
 
@@ -55,13 +56,11 @@ ran before trusting its zero. A `-k` selector matching no test exits 5 and looks
 Report **REFUTED** and stop editing that site if:
 
 - the site records 0 calls for the target rows — the fix cannot land there
-- the spy did not register on ≥2 known positives — the spy is untrustworthy
 - the site is reached but the value it computes is discarded downstream (check what the
   caller does with the return, not just that the call happened)
 
 On REFUTED, record the refutation in the task brief or your project's eval log, then locate
-the real site by measurement. Only a *guess* about where the code is — never a measured
-refutation — is grounds to stop the task.
+the real site by measurement. A refutation ends work on that site, not the task.
 
 ## Finding the real site after a refutation
 
