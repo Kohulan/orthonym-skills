@@ -1,0 +1,329 @@
+<title>{{TITLE}}</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+  /* Layout: a proof table. The image sits on a scrollable board on the left, the list of marks is the ticket column on the right; on a phone the list drops below the board. */
+  :root {
+    --bg: #f6f7fa;
+    --panel: #ffffff;
+    --fg: #1b2033;
+    --muted: #6b7390;
+    --line: #d9deea;
+    --navy: #072563;
+    --accent: #c61354;
+    --accent-ink: #ffffff;
+    --ok: #096779;
+    --ok-soft: #e0eef0;
+    --hover: #eef1f7;
+    --shadow: 0 6px 24px rgba(7, 37, 99, 0.14);
+    --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121521; --panel: #1b1f2e; --fg: #e8ebf3; --muted: #9aa3bd; --line: #2d3348;
+      --navy: #9fb3e3; --accent: #ef4f87; --accent-ink: #ffffff; --ok: #4fb8c6; --ok-soft: #1c2f36; --hover: #242a3d;
+      --shadow: 0 6px 24px rgba(0, 0, 0, 0.5); color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121521; --panel: #1b1f2e; --fg: #e8ebf3; --muted: #9aa3bd; --line: #2d3348;
+    --navy: #9fb3e3; --accent: #ef4f87; --accent-ink: #ffffff; --ok: #4fb8c6; --ok-soft: #1c2f36; --hover: #242a3d;
+    --shadow: 0 6px 24px rgba(0, 0, 0, 0.5); color-scheme: dark;
+  }
+  html, body { height: 100%; }
+  body { background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 15px; line-height: 1.45; padding-inline: 16px; padding-block: 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; }
+  * { box-sizing: border-box; }
+  header { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; }
+  h1 { font-size: 18px; font-weight: 600; margin: 0; color: var(--navy); text-wrap: balance; }
+  .hint { color: var(--muted); font-size: 14px; margin: 0; flex: 1 1 260px; min-width: 0; }
+  .zoom { display: flex; gap: 4px; align-items: center; }
+  .zoom span { color: var(--muted); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; margin-right: 4px; }
+  button { font: inherit; cursor: pointer; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); padding: 5px 10px; }
+  button:hover { background: var(--hover); }
+  button:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  button.active { border-color: var(--navy); color: var(--navy); font-weight: 600; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+  button.primary:hover { filter: brightness(1.08); background: var(--accent); }
+  button.quiet { border-color: transparent; background: transparent; color: var(--muted); }
+  button.quiet:hover { background: var(--hover); color: var(--fg); }
+  button.danger { color: var(--accent); }
+  main { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 14px; }
+  @media (max-width: 860px) { main { grid-template-columns: minmax(0, 1fr); } }
+  .board { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: auto; min-height: 60vh; max-height: calc(100vh - 110px); position: relative; }
+  @media (max-width: 860px) { .board { max-height: 75vh; } }
+  .stage { position: relative; width: 100%; cursor: crosshair; }
+  .stage img { display: block; width: 100%; height: auto; user-select: none; -webkit-user-drag: none; }
+  .pin { position: absolute; width: 30px; height: 30px; margin: -30px 0 0 -15px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--accent); border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.35); cursor: pointer; padding: 0; }
+  .pin b { display: block; transform: rotate(45deg); color: #fff; font-family: var(--mono); font-size: 13px; font-weight: 500; line-height: 26px; text-align: center; }
+  .pin.done { background: var(--ok); }
+  .pin.draft { background: var(--navy); }
+  .pin.focus { outline: 3px solid var(--navy); outline-offset: 2px; }
+  .pop { position: absolute; z-index: 5; width: min(320px, 90%); background: var(--panel); color: var(--fg); border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow); padding: 10px; cursor: default; display: flex; flex-direction: column; gap: 8px; }
+  .pop .num { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: 0.04em; }
+  .pop textarea { width: 100%; min-height: 84px; resize: vertical; font: inherit; font-size: 14px; border: 1px solid var(--line); border-radius: 6px; padding: 7px 8px; background: var(--bg); color: var(--fg); }
+  .pop .row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .pop .row .spacer { flex: 1; }
+  aside { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; display: flex; flex-direction: column; min-height: 0; max-height: calc(100vh - 110px); }
+  aside .head { padding: 10px 12px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  aside .head strong { font-weight: 600; }
+  aside .head span { color: var(--muted); font-size: 13px; flex: 1 1 auto; }
+  .send { padding: 8px 12px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; }
+  .send button { width: 100%; padding: 9px 12px; }
+  .send button:disabled { opacity: 0.55; cursor: default; filter: none; }
+  .send .why { color: var(--muted); font-size: 13px; margin: 0; }
+  .send .why.ok { color: var(--ok); }
+  .send .why.warn { color: var(--accent); }
+  aside ol { list-style: none; margin: 0; padding: 0; overflow: auto; flex: 1 1 auto; }
+  aside li { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 8px; padding: 9px 12px; border-bottom: 1px solid var(--line); cursor: pointer; align-items: start; }
+  aside li:hover, aside li.focus { background: var(--hover); }
+  aside li .n { font-family: var(--mono); font-size: 12px; color: #fff; background: var(--accent); border-radius: 50%; width: 24px; height: 24px; line-height: 24px; text-align: center; }
+  aside li.done .n { background: var(--ok); }
+  aside li .note { white-space: pre-wrap; overflow-wrap: anywhere; min-width: 0; }
+  aside li.done .note { color: var(--muted); text-decoration: line-through; }
+  aside li .where { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .empty { padding: 18px 12px; color: var(--muted); }
+  .banner { padding: 8px 12px; border-radius: 6px; background: var(--ok-soft); color: var(--ok); font-size: 14px; }
+  .banner.warn { background: #fdecf2; color: var(--accent); }
+  :root[data-theme="dark"] .banner.warn { background: #3a1a28; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .banner.warn { background: #3a1a28; } }
+  @media (prefers-reduced-motion: no-preference) { .pin { transition: transform 0.15s; } .pin:hover { transform: rotate(-45deg) scale(1.15); } }
+</style>
+
+<header>
+  <h1>{{TITLE}}</h1>
+  <p class="hint" id="hint">Click or tap anywhere on the image to drop a numbered pin and write what should change there. When the round is complete, press "Done, send to Claude" and the open pins go to Claude as one request.</p>
+  <div class="zoom" role="group" aria-label="Zoom">
+    <span>Zoom</span>
+    <button id="z1" class="active" data-z="1">Fit</button>
+    <button id="z2" data-z="1.6">1.6×</button>
+    <button id="z3" data-z="2.4">2.4×</button>
+    <button id="z4" data-z="3.5">3.5×</button>
+  </div>
+</header>
+
+<main>
+  <div class="board" id="board">
+    <div class="stage" id="stage">
+      <img id="poster" src="board.jpg" alt="{{ALT}}" draggable="false">
+    </div>
+  </div>
+  <aside>
+    <div class="head"><strong>Marks</strong><span id="count">none yet</span></div>
+    <ol id="list"></ol>
+    <div class="empty" id="empty">No pins yet. Click on the image to add the first one.</div>
+    <div class="send" id="send" hidden>
+      <button id="sendBtn" class="primary" disabled>Done, send to Claude</button>
+      <p class="why" id="sendWhy">Checking whether Claude is listening…</p>
+    </div>
+  </aside>
+</main>
+
+<script>
+(function () {
+  const stage = document.getElementById("stage");
+  const board = document.getElementById("board");
+  const img = document.getElementById("poster");
+  const list = document.getElementById("list");
+  const empty = document.getElementById("empty");
+  const count = document.getElementById("count");
+  const hint = document.getElementById("hint");
+
+  let db = null, pinsCol = null, pins = [], pop = null, draft = null, focusId = null;
+
+  // ---- zoom ----
+  document.querySelectorAll(".zoom button").forEach((b) => b.addEventListener("click", () => {
+    document.querySelectorAll(".zoom button").forEach((x) => x.classList.remove("active"));
+    b.classList.add("active");
+    const z = parseFloat(b.dataset.z);
+    const fit = board.clientWidth - 2;
+    const prevW = stage.clientWidth;
+    const cx = (board.scrollLeft + board.clientWidth / 2) / prevW, cy = (board.scrollTop + board.clientHeight / 2) / prevW;
+    stage.style.width = z === 1 ? "100%" : Math.round(fit * z) + "px";
+    const newW = stage.clientWidth;
+    board.scrollLeft = cx * newW - board.clientWidth / 2;
+    board.scrollTop = cy * newW - board.clientHeight / 2;
+  }));
+
+  // ---- rendering ----
+  function pct(v) { return (Math.round(v * 10) / 10).toFixed(1); }
+  function render() {
+    stage.querySelectorAll(".pin").forEach((p) => p.remove());
+    const all = draft ? pins.concat([draft]) : pins;
+    for (const p of all) {
+      const el = document.createElement("button");
+      el.className = "pin" + (p.done ? " done" : "") + (p.draft ? " draft" : "") + (p.id === focusId ? " focus" : "");
+      el.style.left = p.x + "%"; el.style.top = p.y + "%";
+      el.setAttribute("aria-label", "Pin " + p.n);
+      el.innerHTML = "<b>" + p.n + "</b>";
+      el.addEventListener("click", (e) => { e.stopPropagation(); if (!p.draft) openPop(p); });
+      stage.appendChild(el);
+    }
+    if (pop) stage.appendChild(pop);
+    list.innerHTML = "";
+    for (const p of pins) {
+      const li = document.createElement("li");
+      li.className = (p.done ? "done" : "") + (p.id === focusId ? " focus" : "");
+      const n = document.createElement("span"); n.className = "n"; n.textContent = p.n;
+      const note = document.createElement("span"); note.className = "note"; note.textContent = p.note || "(no text)";
+      const where = document.createElement("span"); where.className = "where"; where.textContent = region(p);
+      li.append(n, note, where);
+      li.addEventListener("click", () => { focusId = p.id; render(); scrollTo(p); openPop(p); });
+      list.appendChild(li);
+    }
+    const open = pins.filter((p) => !p.done).length;
+    count.textContent = pins.length ? open + " open, " + (pins.length - open) + " done" : "none yet";
+    empty.hidden = pins.length > 0;
+  }
+  function region(p) {
+    const col = p.x < 33 ? "left" : p.x < 67 ? "centre" : "right";
+    const row = p.y < 33 ? "top" : p.y < 67 ? "middle" : "bottom";
+    return row + ", " + col;
+  }
+  function scrollTo(p) {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    board.scrollTo({ left: (p.x / 100) * w - board.clientWidth / 2, top: (p.y / 100) * h - board.clientHeight / 2, behavior: "smooth" });
+  }
+
+  // ---- popover ----
+  function closePop() { if (pop) { pop.remove(); pop = null; } draft = null; render(); }
+  function placePop(p) {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    const left = (p.x / 100) * w, top = (p.y / 100) * h;
+    pop.style.left = Math.max(4, Math.min(left + 14, w - 330)) + "px";
+    pop.style.top = (top + 20 + 260 > h ? Math.max(4, top - 270) : top + 10) + "px";
+  }
+  function openPop(p) {
+    if (pop) pop.remove();
+    focusId = p.id;
+    pop = document.createElement("div");
+    pop.className = "pop";
+    pop.addEventListener("click", (e) => e.stopPropagation());
+    const num = document.createElement("div"); num.className = "num";
+    num.textContent = (p.draft ? "New pin " : "Pin ") + p.n + "  ·  " + region(p) + (p.done ? "  ·  done" : "");
+    const ta = document.createElement("textarea");
+    ta.id = "note-" + p.n; ta.placeholder = "What should change here?"; ta.value = p.note || "";
+    const row = document.createElement("div"); row.className = "row";
+    const save = document.createElement("button"); save.className = "primary"; save.textContent = p.draft ? "Save pin" : "Save";
+    const cancel = document.createElement("button"); cancel.className = "quiet"; cancel.textContent = p.draft ? "Cancel" : "Close";
+    row.append(save, cancel);
+    if (!p.draft) {
+      const sp = document.createElement("span"); sp.className = "spacer";
+      const done = document.createElement("button"); done.textContent = p.done ? "Reopen" : "Mark done";
+      const del = document.createElement("button"); del.className = "quiet danger"; del.textContent = "Delete";
+      let armed = false;
+      del.addEventListener("click", async () => {
+        if (!armed) { armed = true; del.textContent = "Really delete?"; return; }
+        try { await pinsCol.doc(p.id).delete(); closePop(); } catch (e) { fail(e); }
+      });
+      done.addEventListener("click", async () => {
+        try { await pinsCol.doc(p.id).update({ done: !p.done, note: ta.value.trim() }); closePop(); } catch (e) { fail(e); }
+      });
+      row.append(sp, done, del);
+    }
+    save.addEventListener("click", async () => {
+      const note = ta.value.trim();
+      if (!note) { ta.focus(); return; }
+      try {
+        if (p.draft) await pinsCol.doc(String(p.n).padStart(3, "0")).set({ n: p.n, x: p.x, y: p.y, note, done: false, created: new Date().toISOString() });
+        else if (note !== p.note) await pinsCol.doc(p.id).update({ note });
+        closePop();
+      } catch (e) { fail(e); }
+    });
+    cancel.addEventListener("click", closePop);
+    ta.addEventListener("keydown", (e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) save.click(); if (e.key === "Escape") closePop(); });
+    pop.append(num, ta, row);
+    render();
+    placePop(p);
+    ta.focus();
+  }
+  function fail(e) {
+    const code = e && e.code;
+    hint.textContent = code === "invalid_argument" ? "This view cannot save pins (read-only access)." : "Saving failed (" + (code || "unknown") + "). Try again in a moment.";
+    hint.className = "hint banner warn";
+  }
+
+  // ---- adding ----
+  stage.addEventListener("click", (e) => {
+    if (e.target.closest(".pin") || e.target.closest(".pop")) return;
+    if (pop && !draft) { closePop(); return; }
+    if (!pinsCol) { hint.textContent = "Pins cannot be saved in this view."; hint.className = "hint banner warn"; return; }
+    const r = img.getBoundingClientRect();
+    const x = ((e.clientX - r.left) / r.width) * 100, y = ((e.clientY - r.top) / r.height) * 100;
+    if (x < 0 || x > 100 || y < 0 || y > 100) return;
+    const n = pins.reduce((m, p) => Math.max(m, p.n || 0), 0) + 1;
+    draft = { id: "draft", n, x: Math.round(x * 100) / 100, y: Math.round(y * 100) / 100, note: "", draft: true };
+    openPop(draft);
+  });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && pop) closePop(); });
+  window.addEventListener("resize", () => { render(); });
+
+  // ---- send to Claude ----
+  const sendBox = document.getElementById("send"), sendBtn = document.getElementById("sendBtn"), sendWhy = document.getElementById("sendWhy");
+  let comments = null, lastCheck = 0, checking = false;
+  function why(t, cls) { sendWhy.textContent = t; sendWhy.className = "why" + (cls ? " " + cls : ""); }
+  async function checkSend(force) {
+    if (!comments || checking) return;
+    const now = Date.now();
+    if (!force && now - lastCheck < 15000) return;
+    lastCheck = now; checking = true;
+    try {
+      const st = await comments.canSendToClaude();
+      const open = pins.filter((p) => !p.done).length;
+      if (st === "available") {
+        sendBtn.disabled = open === 0;
+        why(open ? "Sends the " + open + " open pin" + (open > 1 ? "s" : "") + " to Claude as one comment. Claude replies in the thread and starts on the changes." : "Add at least one pin first.");
+      } else if (st === "no_session") { sendBtn.disabled = true; why("No Claude session is listening right now. Pins stay saved; Claude can read them when asked.", "warn"); }
+      else if (st === "writers_only") { sendBtn.disabled = true; why("Only an editor of this page can send to Claude.", "warn"); }
+      else { sendBox.hidden = true; }
+    } catch (e) { sendBox.hidden = true; }
+    checking = false;
+  }
+  function requestText() {
+    const open = pins.filter((p) => !p.done);
+    let t = "Markup round: please apply these " + open.length + " open pin" + (open.length > 1 ? "s" : "") + " (positions are % of the image width and height).\n";
+    for (const p of open) t += "\nPin " + p.n + " (" + region(p) + "; x " + pct(p.x) + "%, y " + pct(p.y) + "%): " + (p.note || "").replace(/\s+/g, " ").trim();
+    if (new TextEncoder().encode(t).length > 4000) t = t.slice(0, 3800) + "\n[truncated; read the rest from the pins collection]";
+    return t;
+  }
+  sendBtn.addEventListener("click", async () => {
+    if (!comments) return;
+    sendBtn.disabled = true; why("Sending…");
+    try {
+      const anchor = await comments.anchorFor(board);
+      await comments.sendToClaude({ anchor, text: requestText() });
+      why("Sent. Claude answers in the comment thread and starts on the changes; pins are marked done as they land.", "ok");
+    } catch (e) {
+      const c = e && e.code;
+      if (c === "consent_required") why("Not sent: allow this page to comment as you, then press again.", "warn");
+      else if (c === "forbidden") { sendBox.hidden = true; return; }
+      else if (c === "claude_unavailable" || c === "unavailable") why("Not sent: no Claude session could receive it right now. Try again later; the pins stay saved.", "warn");
+      else if (c === "rate_limited") why("Not sent: too many sends in a row. Wait a moment.", "warn");
+      else why("Not sent (" + (c || "unknown") + "). The pins stay saved.", "warn");
+      sendBtn.disabled = false;
+    }
+  });
+  window.addEventListener("focus", () => checkSend(true));
+
+  // ---- store ----
+  render();
+  (async () => {
+    comments = window.claude && window.claude.use ? await window.claude.use("comments") : null;
+    if (comments && typeof comments.canSendToClaude === "function") { sendBox.hidden = false; checkSend(true); setTimeout(() => checkSend(true), 4000); setTimeout(() => checkSend(true), 15000); }
+  })();
+  (async () => {
+    db = window.claude && window.claude.use ? await window.claude.use("db") : null;
+    if (!db) {
+      hint.textContent = "This view cannot reach the pin store, so pins cannot be added or saved here.";
+      hint.className = "hint banner warn";
+      return;
+    }
+    pinsCol = db.collection("pins");
+    pinsCol.orderBy("n").onSnapshot((snap) => {
+      pins = snap.docs.filter((d) => d.exists).map((d) => Object.assign({ id: d.id }, d.data()));
+      if (pop && focusId && focusId !== "draft" && !pins.some((p) => p.id === focusId)) { pop.remove(); pop = null; }
+      render();
+      checkSend(false);
+    }, (e) => fail(e));
+  })();
+})();
+</script>
