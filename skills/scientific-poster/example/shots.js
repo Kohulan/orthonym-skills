@@ -1,6 +1,7 @@
 const { chromium } = require("playwright");
+// Usage: node shots.js <test input file> <output folder>
 const F = process.argv[2] || "<path to a real test input file>";
-const OUT = process.argv[2];
+const OUT = process.argv[3] || ".";
 (async () => {
   const b = await chromium.launch();
   const ctx = await b.newContext({ viewport: { width: 2000, height: 1160 }, deviceScaleFactor: 2 });
