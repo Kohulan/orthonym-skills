@@ -1,6 +1,6 @@
 ---
 name: scientific-poster
-description: Makes a scientific conference poster (A0 or A1 portrait, editable pptx plus print PDF) from a manuscript, a codebase or both, and runs the review on a pin board where the user marks the render and sends each round back. Every number comes from a source, one decision question covers format, size and emphasis, the build is a pptxgenjs script in a fixed layout, validated and rendered before anyone sees it. Use when the user wants a poster for a conference, a meeting or a lab wall, or wants to revise one made this way ("make a poster", "A0 poster from the paper", "update the poster, I marked the changes"). Not for slide decks, single figures, papers or flyers.
+description: Makes a scientific conference poster (A0 or A1 portrait, editable pptx plus print PDF) from a manuscript, a codebase or both, and runs the review on a pin board where the user marks the render and sends each round back. Every number comes from a source, one decision question covers format, size and emphasis, the build is a pptxgenjs script in a fixed layout, validated and rendered before anyone sees it. Use when the user wants a poster for a conference, a meeting or a lab wall (also from a README or a benchmark table, in any size or orientation), or wants to revise one made this way ("make a poster", "A0 poster from the paper", "update the poster, I marked the changes", "the pins are on the board, apply them"). Not for slide decks, single figures, papers or flyers.
 ---
 
 # Scientific poster
@@ -38,15 +38,21 @@ Copy this checklist and track your progress:
 
 ## 2. One decision question
 
-Ask once, with the question picker, offering defaults: format (pptx), size (A0, 33.11 × 46.81 in,
-or A1), emphasis (whole pipeline, mirrors the manuscript; or results; or the
-tool). Skip what the request already says. The layout is portrait only: when the request
-asks for landscape, say so in the same question and offer portrait. Conference name and date go on the poster only when
-stated; otherwise leave them out and list it as an open item. Everything else is a routine choice.
+Ask once, in the first reply (also when the user asked only for a plan), with the question picker,
+at most three items, each with a default: format (pptx), size
+(A0, 33.11 × 46.81 in, or A1), emphasis (whole pipeline, mirrors the manuscript; or results; or the
+tool). Skip what the request already says. Do not ask about anything else. Logos, URLs, funding, the illustration and the
+conference come from the sources; what is missing goes under "Open items" as a statement with its
+default ("Logos: taken from the repo; an official file can replace them later"), never as a question.
+
+The layout is portrait only, and there is no landscape variant to build. When the request asks for
+landscape, say so in the same question and offer portrait at the stated size; do not offer or
+recommend a custom landscape layout. Conference name and date go on the poster only when stated.
 
 ## 3. Assets (`references/assets.md`)
 
-Logos from the repos, institution logos, QR codes (repository, web app, a `mailto:` contact),
+Logos from the repos, logos of the institutions the sources name (never one from the example or
+from memory), QR codes (repository, web app, a `mailto:` contact),
 UI screenshots taken through the real app with Playwright (`example/shots.js`), the gradient plus
 hexagon background from `example/bg.js`, and one illustration for the problem statement: a shape
 diagram drawn by the script as the fallback, plus a prompt file for an image generator
