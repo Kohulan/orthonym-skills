@@ -179,6 +179,18 @@ ships a review page where the user pins notes to moments. Includes three.js and 
 solver (`assets/fluid.js`). **Needs:** Node, Chrome and ffmpeg; `scripts/setup.sh` finds them or
 fetches playwright-core and Chrome for Testing into the skill's own `.tools/`.
 
+### `scientific-poster`
+Makes a conference poster (A0 portrait by default) as an editable single-slide pptx plus a print PDF,
+built from a manuscript and a codebase. Gathers every number with its source, asks one decision
+question (format, size, emphasis), collects logos, QR codes, UI screenshots (`example/shots.js`), a
+gradient background (`example/bg.js`) and an illustration, builds with pptxgenjs in a fixed layout
+(`references/layout.md`), validates and renders before anyone sees it, delivers into the project's
+`poster/`, then publishes a pin board (`assets/board.html`) where the user marks what to change and
+presses "Done, send to Claude"; the round is read back, applied and republished. **Needs:** Node,
+LibreOffice, poppler (`pdftoppm`), Python with Pillow, and Anthropic's `pptx` skill for
+`validate.py`, `soffice.py` and `apply_theme.js` (`PPTX_SKILL` points at it). The pin board needs
+the claude.ai Artifact tool; without it the review runs on the preview image in chat.
+
 ---
 
 ## Hooks (`hooks/`)

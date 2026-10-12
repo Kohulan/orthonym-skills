@@ -1,0 +1,22 @@
+const { chromium } = require("playwright");
+// Usage: node shots.js <test input file> <output folder>
+const F = process.argv[2] || "<path to a real test input file>";
+const OUT = process.argv[3] || ".";
+(async () => {
+  const b = await chromium.launch();
+  const ctx = await b.newContext({ viewport: { width: 2000, height: 1160 }, deviceScaleFactor: 2 });
+  const p = await ctx.newPage();
+  await p.goto("https://cheminfo.beilstein.org/bchemxtract/", { waitUntil: "networkidle" });
+  await p.waitForTimeout(1500);
+  await p.screenshot({ path: OUT + "/web-landing.png" });
+  await p.goto("https://cheminfo.beilstein.org/bchemxtract/extract", { waitUntil: "networkidle" });
+  await p.setInputFiles('input[type="file"]', F);
+  await p.waitForURL(/\/browse/, { timeout: 90000 });
+  await p.waitForLoadState("networkidle");
+  await p.waitForTimeout(4000);
+  console.log("url", p.url());
+  await p.setViewportSize({ width: 2000, height: 1500 });
+  await p.waitForTimeout(1000);
+  await p.screenshot({ path: OUT + "/web-browse-full.png" });
+  await b.close();
+})().catch(e => { console.error("ERR", e.message); process.exit(1); });

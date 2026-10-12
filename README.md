@@ -1,7 +1,7 @@
 <a id="top"></a>
 
 <a href="https://github.com/Kohulan/orthonym-skills">
-  <img src="docs/assets/banner.svg" alt="Orthonym Skills. Decide from measurement, not from a confident guess. Claude Code plugin: 22 skills, 5 hooks, 1 agent, v0.4.0. Seven spectral lines on a nanometre scale stand for the loop: measure, cluster, target, spy, fix, gate, review." width="100%"><!-- x-release-please-version -->
+  <img src="docs/assets/banner.svg" alt="Orthonym Skills. Decide from measurement, not from a confident guess. Claude Code plugin: 23 skills, 5 hooks, 1 agent, v0.4.0. Seven spectral lines on a nanometre scale stand for the loop: measure, cluster, target, spy, fix, gate, review." width="100%"><!-- x-release-please-version -->
 </a>
 
 <br/>
@@ -86,7 +86,7 @@ Inside Claude Code, run these two commands one at a time.
    /plugin install orthonym-skills@orthonym-skills
    ```
 
-You get all 22 skills (as `/orthonym-skills:<name>`), the `reference-consult` agent, and the
+You get all 23 skills (as `/orthonym-skills:<name>`), the `reference-consult` agent, and the
 `block-git-add-all` hook. The other four hooks are opt-in: see [`hooks/README.md`](hooks/README.md).
 Claude picks up a skill from its description when your task matches it.
 
@@ -155,11 +155,12 @@ Wire in your project's commands once. The [catalog](docs/skills-catalog.md) says
 
 ### Media skills
 
-Need Node, and Chrome and ffmpeg (`scripts/setup.sh` finds them or fetches what is missing).
+`promo-video` needs Node, Chrome and ffmpeg (`scripts/setup.sh` finds them or fetches what is missing). `scientific-poster` needs Node, LibreOffice, poppler and Anthropic's `pptx` skill.
 
 | Skill | When it fires | What it forces |
 |:---|:---|:---|
 | [`promo-video`](skills/promo-video/) | "Make a video", a launch or explainer video, "something to post" | Interview first, a storyboard of stills before anything moves, then a review page; every caption from real facts and real UI. Frame-exact MP4 from HTML, with 3D, fluid ink and a composed or supplied soundtrack. |
+| [`scientific-poster`](skills/scientific-poster/) | "Make a poster", a conference or A0 poster from a manuscript, a repo or both | Numbers only from the sources, one decision question, a pptxgenjs build in a fixed A0 layout, validated and rendered before anyone sees it, then a pin board where the user marks what to change and sends the round back. |
 
 ### Output
 
