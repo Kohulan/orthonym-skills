@@ -1,5 +1,5 @@
 ---
-description: Stated size and emphasis are respected without re-asking; numbers come from the README only.
+description: Stated size and emphasis are respected without re-asking, a landscape request is told the layout is portrait only, and numbers come from the README only.
 tags: [scientific-poster]
 max_turns: 20
 allowed_tools: [Skill, Read, Glob, Grep]

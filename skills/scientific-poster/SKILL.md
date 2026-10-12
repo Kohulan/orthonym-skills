@@ -1,6 +1,6 @@
 ---
 name: scientific-poster
-description: Makes a scientific conference poster (A0 or A1, editable pptx plus print PDF) from a manuscript, a codebase or both, and runs the review on a pin board where the user marks the render and sends each round back. Every number comes from a source, one decision question covers format, size and emphasis, the build is a pptxgenjs script in a fixed layout, validated and rendered before anyone sees it. Use when the user wants a poster for a conference, a meeting or a lab wall, or wants to revise one made this way ("make a poster", "A0 poster from the paper", "update the poster, I marked the changes"). Not for slide decks, single figures, papers or flyers.
+description: Makes a scientific conference poster (A0 or A1 portrait, editable pptx plus print PDF) from a manuscript, a codebase or both, and runs the review on a pin board where the user marks the render and sends each round back. Every number comes from a source, one decision question covers format, size and emphasis, the build is a pptxgenjs script in a fixed layout, validated and rendered before anyone sees it. Use when the user wants a poster for a conference, a meeting or a lab wall, or wants to revise one made this way ("make a poster", "A0 poster from the paper", "update the poster, I marked the changes"). Not for slide decks, single figures, papers or flyers.
 ---
 
 # Scientific poster
@@ -10,9 +10,9 @@ Output: a single-slide `.pptx`, a print PDF, a preview JPEG, the build script an
 the pptx is never hand-edited. The worked example in `example/` is a real cheminformatics poster;
 `example/reference-render.jpg` shows the finished layout.
 
-Needs: Node (pptxgenjs, jszip, sharp, playwright), LibreOffice, poppler (`pdftoppm`), Python 3 with
-Pillow, and Anthropic's `pptx` skill (github.com/anthropics/skills) for `validate.py`, `soffice.py`
-and `apply_theme.js`; export its folder as `PPTX_SKILL`. The pin board needs the claude.ai Artifact
+Needs: Node (pptxgenjs, sharp, playwright), LibreOffice, poppler (`pdftoppm`), Python 3 with
+Pillow, and Anthropic's `pptx` skill (github.com/anthropics/skills) for `validate.py` and
+`soffice.py`; export its folder as `PPTX_SKILL`. The pin board needs the claude.ai Artifact
 tool with the `db` and `comments` capabilities; without it, run the review on the preview image in
 chat.
 
@@ -38,9 +38,10 @@ Copy this checklist and track your progress:
 
 ## 2. One decision question
 
-Ask once, with the question picker, offering defaults: format (pptx), size and orientation (A0
-portrait, 33.11 × 46.81 in), emphasis (whole pipeline, mirrors the manuscript; or results; or the
-tool). Skip what the request already says. Conference name and date go on the poster only when
+Ask once, with the question picker, offering defaults: format (pptx), size (A0, 33.11 × 46.81 in,
+or A1), emphasis (whole pipeline, mirrors the manuscript; or results; or the
+tool). Skip what the request already says. The layout is portrait only: when the request
+asks for landscape, say so in the same question and offer portrait. Conference name and date go on the poster only when
 stated; otherwise leave them out and list it as an open item. Everything else is a routine choice.
 
 ## 3. Assets (`references/assets.md`)
@@ -69,7 +70,7 @@ build folder.
 
 ## 5. Deliver
 
-Copy the pptx, the PDF, the preview, `poster.js`, `bg.js`, `shots.js`, `assets/` and a README from
+Copy the pptx, the PDF, the preview, `poster.js`, `theme.js`, `bg.js`, `shots.js`, `assets/` and a README from
 `example/README.md` (rebuild command, asset provenance, number sources) into `<project>/poster/`.
 When the layout changes, move the previous outputs to `poster/backup/` first. Record the decisions
 and the build location in project memory.
@@ -91,9 +92,8 @@ official file should replace.
 ## Things that bite
 
 - `pres.layout` must be set after `defineLayout`, or the file reports an unknown layout.
-- `breakLine` is ignored inside placeholders; use `\n` in the run text.
-- A stacked bar series present in one category only needs `null` in the others, and its data labels
-  must be `ctr`, `inEnd` or `inBase`.
-- Charts over a background image need `chartArea.fill` and `plotArea.fill` at 100 % transparency.
+- pptxgenjs always writes Office's colour scheme. `example/theme.js` writes the poster palette into
+  the theme after `writeFile`; without it every `pres.SchemeColor` shape renders Office blue.
 - LibreOffice substitutes fonts it lacks; keep Calibri or Arial so the render predicts PowerPoint.
-- A public web instance is not a load-test target: a handful of screenshot uploads, not dozens.
+- Chart and placeholder pitfalls (`breakLine`, stacked bars, transparent charts) are in
+  `references/build-qa.md`.
