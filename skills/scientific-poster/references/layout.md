@@ -1,10 +1,11 @@
-# Layout spec (A0 portrait, inches; scale proportionally for A1)
+# Layout spec (A0 portrait, inches; scale proportionally for A1; portrait only)
 
 Contents: canvas and columns, vertical budget, type scale, colour roles, content rules.
 
 The layout follows the Orthonym conference poster: wordmark as the title, a full-width abstract
 band, open sections separated by rules instead of boxed cards, a soft gradient background with a
-hexagon motif. `example/poster.js` implements it; `example/reference-render.jpg` shows it.
+hexagon motif. `example/poster.js` implements it for the BChemXtract poster; `example/reference-render.jpg` shows
+it. There is no landscape variant.
 
 ## Canvas and columns
 
@@ -48,7 +49,7 @@ Take the institution's brand colours; the example uses navy, magenta and teal. R
 | grey text | 6B7390 |
 
 Use `pres.SchemeColor` for shapes and text; hex only where pptxgenjs demands it (chart colours,
-grid lines, shadows, table cell fills). Put the palette in `THEME` and apply it with `apply_theme.js`
+grid lines, shadows, table cell fills). Put the palette in `THEME` and apply it with `theme.js`
 after `writeFile`.
 
 ## Content rules

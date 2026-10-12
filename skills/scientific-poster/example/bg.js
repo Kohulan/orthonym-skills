@@ -1,4 +1,5 @@
 // Soft gradient background with a faint hexagon motif, A0 portrait at 100 px/in.
+const path = require("path");
 const sharp = require("sharp");
 const W = 3311, H = 4681;
 const r = 70; // hex radius px
@@ -39,4 +40,4 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
 <rect width="100%" height="100%" fill="url(#g4)"/>
 ${hexes}
 </svg>`;
-sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toFile("../assets/bg.png").then((i) => console.log("bg", i.width, i.height, i.size));
+sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toFile(path.join(__dirname, "assets", "bg.png")).then((i) => console.log("bg", i.width, i.height, i.size));

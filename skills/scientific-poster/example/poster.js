@@ -3,7 +3,7 @@
 const pptxgen = require("pptxgenjs");
 const path = require("path");
 const fs = require("fs");
-const { applyTheme } = require(process.env.PPTX_SKILL + "/scripts/apply_theme.js");
+const { applyTheme } = require("./theme.js");
 
 const A = (f) => path.join(__dirname, "assets", f);
 const OUT = process.argv[2] || path.join(__dirname, "BChemXtract_Poster_A0.pptx");

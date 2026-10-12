@@ -188,8 +188,8 @@ gradient background (`example/bg.js`) and an illustration, builds with pptxgenjs
 `poster/`, then publishes a pin board (`assets/board.html`) where the user marks what to change and
 presses "Done, send to Claude"; the round is read back, applied and republished. **Needs:** Node,
 LibreOffice, poppler (`pdftoppm`), Python with Pillow, and Anthropic's `pptx` skill for
-`validate.py`, `soffice.py` and `apply_theme.js` (`PPTX_SKILL` points at it). The pin board needs
-the claude.ai Artifact tool; without it the review runs on the preview image in chat.
+`validate.py` and `soffice.py` (`PPTX_SKILL` points at it). The pin board needs the claude.ai
+Artifact tool; without it the review runs on the preview image in chat.
 
 ---
 
