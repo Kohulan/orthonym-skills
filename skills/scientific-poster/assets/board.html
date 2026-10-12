@@ -154,7 +154,7 @@
       el.className = "pin" + (p.done ? " done" : "") + (p.draft ? " draft" : "") + (p.id === focusId ? " focus" : "");
       el.style.left = p.x + "%"; el.style.top = p.y + "%";
       el.setAttribute("aria-label", "Pin " + p.n);
-      el.innerHTML = "<b>" + p.n + "</b>";
+      const label = document.createElement("b"); label.textContent = String(p.n); el.appendChild(label);
       el.addEventListener("click", (e) => { e.stopPropagation(); if (!p.draft) openPop(p); });
       stage.appendChild(el);
     }
@@ -319,7 +319,10 @@
     }
     pinsCol = db.collection("pins");
     pinsCol.orderBy("n").onSnapshot((snap) => {
-      pins = snap.docs.filter((d) => d.exists).map((d) => Object.assign({ id: d.id }, d.data()));
+      // Rows are written by any viewer: keep only well-formed pins.
+      const ok = (v) => Number.isFinite(v) && v >= 0 && v <= 100;
+      pins = snap.docs.filter((d) => d.exists).map((d) => Object.assign({ id: d.id }, d.data()))
+        .filter((p) => Number.isInteger(p.n) && ok(p.x) && ok(p.y));
       if (pop && focusId && focusId !== "draft" && !pins.some((p) => p.id === focusId)) { pop.remove(); pop = null; }
       render();
       checkSend(false);
