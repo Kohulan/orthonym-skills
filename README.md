@@ -18,9 +18,10 @@ Orthonym engine (checked IUPAC names for chemical structures) was built with.
 Skills, hooks and an agent for [Claude Code](https://docs.claude.com/en/docs/claude-code), hardened on
 [Orthonym](https://github.com/Steinbeck-Lab/Orthonym), a real deterministic cheminformatics engine. For anyone who builds chemistry software or ML tools:
 property prediction, structure-to-name, reaction and retrosynthesis prediction, docking and QSAR,
-molecular generation, cheminformatics pipelines.
+molecular generation, cheminformatics pipelines. Two media skills show the finished work: a
+promo video and a conference poster.
 
-[Why](#why) · [The loop](#the-loop) · [Install](#install) · [Update](#update) · [What's new](#whats-new-in-040) ·
+[Why](#why) · [The loop](#the-loop) · [Install](#install) · [Update](#update) · [What's new](#whats-new-in-050) ·
 [Skills](#skills) · [Hooks](#hooks) · [Agent](#agent) · [Catalog](docs/skills-catalog.md) · [Cite](#cite)
 
 ## Why
@@ -150,7 +151,19 @@ For a project copy, use `/path/to/your/project/.claude/skills/` in place of `~/.
 If you wired an opt-in hook by copying its script, copy the script again from `hooks/`.
 </details>
 
-## What's new in 0.4.0
+## What's new in 0.5.0
+
+- **[`scientific-poster`](skills/scientific-poster/)**, a new media skill: a conference poster (A0 or
+  A1) from a manuscript, a codebase or both. Every number comes from a source. You get an editable
+  pptx and a print PDF, and you review each round on a pin board: click the render, write what to
+  change, send the round back.
+- **Pin board fix:** the board shows pin numbers as text, not HTML, and skips malformed pins.
+
+The full list is in [`CHANGELOG.md`](CHANGELOG.md).
+
+<details>
+<summary><b>What came in 0.4.0</b></summary>
+<br/>
 
 - **Every skill follows Anthropic's [skill-authoring rules](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices).**
   Descriptions say what the skill does, then when to use it. Multi-step skills have a checklist
@@ -163,14 +176,8 @@ If you wired an opt-in hook by copying its script, copy the script again from `h
 - **Evals:** three test prompts and one near-miss per skill, under [`evals/`](evals/). The lint
   checks the rules a script can check.
 
-The full list is in [`CHANGELOG.md`](CHANGELOG.md).
-
-<details>
-<summary><b>Does the plugin help? Eval results for 0.4.0</b></summary>
-<br/>
-
-The five skills with the biggest changes, three cases each, one run per model, with and without
-the plugin. A Sonnet judge graded each reply against the case's rubric.
+**Does the plugin help?** The five skills with the biggest changes, three cases each, one run per
+model, with and without the plugin. A Sonnet judge graded each reply against the case's rubric.
 
 | Model | With plugin | Without plugin |
 |:---|:---|:---|
