@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.5.1](https://github.com/Kohulan/orthonym-skills/compare/v0.5.0...v0.5.1) (2026-10-12)
+
+
+### Bug Fixes
+
+* **scientific-poster:** build without the claude.ai pptx skill, portrait only, bg.js writes beside itself ([0bf6f87](https://github.com/Kohulan/orthonym-skills/commit/0bf6f87b722d352061a8787876e8291ddb4860f0))
+* **scientific-poster:** build without the claude.ai pptx skill, portrait only, tighter decision question ([774e904](https://github.com/Kohulan/orthonym-skills/commit/774e90414077e757a196a4a67b6dcb9e21a0bdba))
+* **scientific-poster:** one question of at most three items, no landscape offer, more triggers ([de8811a](https://github.com/Kohulan/orthonym-skills/commit/de8811a85a9bbe0540e1f42546aa69b521d3b4dd))
+
 ## [0.5.0](https://github.com/Kohulan/orthonym-skills/compare/v0.4.0...v0.5.0) (2026-10-12)
 
 
