@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.5.0](https://github.com/Kohulan/orthonym-skills/compare/v0.4.0...v0.5.0) (2026-10-12)
+
+
+### Features
+
+* **skills:** scientific-poster, a conference poster built from sources and reviewed on a pin board ([f42805b](https://github.com/Kohulan/orthonym-skills/commit/f42805b7eed3a484b69d4aef172ace7a6144a37f))
+* **skills:** scientific-poster, a conference poster built from sources and reviewed on a pin board ([cd4a5f3](https://github.com/Kohulan/orthonym-skills/commit/cd4a5f3e11bf0069d82cd1eb5d4300bba2de8af8))
+
+
+### Bug Fixes
+
+* **scientific-poster:** pin board renders pin numbers as text, not HTML ([0bf19f4](https://github.com/Kohulan/orthonym-skills/commit/0bf19f4ff89618b0781efe93591ba12c67ab1f3d))
+* **scientific-poster:** pin board renders pin numbers as text, not HTML ([07b1c8f](https://github.com/Kohulan/orthonym-skills/commit/07b1c8f894a3031a635cbf6cdbdc6674d4e41ed2))
+* **scientific-poster:** screenshot example takes input file and output folder as arguments ([1c6120a](https://github.com/Kohulan/orthonym-skills/commit/1c6120a16374e49a3a2e1a64856dd1c22b63ab20))
+
+
+### Documentation
+
+* how to update, what changed in 0.4.0, and the eval results ([f2e1b63](https://github.com/Kohulan/orthonym-skills/commit/f2e1b630a4194fb104bf1ce815f7778d3414da53))
+* update commands, what's new in 0.4.0 and 0.5.0, eval results ([5422680](https://github.com/Kohulan/orthonym-skills/commit/5422680f6a529ae5303e0e0c1d72a6bd4d2e23d3))
+* what's new in 0.5.0, the scientific-poster skill ([f87bad3](https://github.com/Kohulan/orthonym-skills/commit/f87bad3818e51dbf69ac650c9a71ed382be2566a))
+
 ## [0.4.0](https://github.com/Kohulan/orthonym-skills/compare/v0.3.0...v0.4.0) (2026-10-08)
 
 
