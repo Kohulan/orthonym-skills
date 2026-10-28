@@ -184,9 +184,13 @@ Makes a conference poster (A0 portrait by default) as an editable single-slide p
 built from a manuscript and a codebase. Gathers every number with its source, asks one decision
 question (format, size, emphasis), collects logos, QR codes, UI screenshots (`example/shots.js`), a
 gradient background (`example/bg.js`) and an illustration, builds with pptxgenjs in a fixed layout
-(`references/layout.md`), validates and renders before anyone sees it, delivers into the project's
+(`references/layout.md`), validates it, checks that no text is under 7 pt on an A4 print
+(`scripts/fontcheck.py`, 28 pt on A0) and renders it before anyone sees it, delivers into the project's
 `poster/`, then publishes a pin board (`assets/board.html`) where the user marks what to change and
-presses "Done, send to Claude"; the round is read back, applied and republished. **Needs:** Node,
+presses "Done, send to Claude"; the round is read back, applied and republished. Content rules from
+real review rounds (denominators, data-set selection, redesigns that keep every item, self-measured
+results) are in `references/content.md`; a pptx the user has edited by hand is changed in place
+with a backup (`scripts/patch_text.py`), not rebuilt. **Needs:** Node,
 LibreOffice, poppler (`pdftoppm`), Python with Pillow, and Anthropic's `pptx` skill for
 `validate.py` and `soffice.py` (`PPTX_SKILL` points at it). The pin board needs the claude.ai
 Artifact tool; without it the review runs on the preview image in chat.

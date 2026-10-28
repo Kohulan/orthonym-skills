@@ -22,17 +22,25 @@ it. There is no landscape variant.
 
 | Band | y (in) | Content |
 |---|---|---|
-| Header | 0.65–8.0 | wordmark w 17.0 at (1.0, 0.65); institution logo w 7.8 right-aligned, centred on the wordmark; paper title 40 pt bold, two balanced lines via `\n`, at y 4.7; authors 32 pt at y 6.35 (w 13); affiliations 21 pt, right-aligned at x 14.0, three lines ending with "* Correspondence to: mail" |
-| Abstract | 8.5–14.4 | rotated accent tab (3.4 × 0.9, `rotate: 270`, shape and text separately) at x 1.45; abstract 25 pt justified, x 2.5 w 21.6, `lineSpacingMultiple 1.04`; two QR codes 2.7 in at x 25.1 and 28.9 with two-line labels; two italic URLs below |
-| Row 2 | 15.0–32.6 | left: section title, illustration 11.0 wide (3:1), caption 20 pt italic grey, one-row legend, seven step boxes h 1.36 gap 0.32 with 23 pt bold title and 18 pt text, down arrows between; right: "Results" title, two halves each with a 28 pt sub-heading; half 1 three stat tiles h 2.5 (46 pt value, 18 pt label), stacked column chart h 8.2, two bullets 22 pt; half 2 horizontal bar chart h 7.0, table rowH 0.7 (21 pt), note 22 pt; both halves end with an italic accent takeaway at y R2B − 1.3 |
-| Row 3 | 33.1–43.0 | left: section title, four pill rows h 1.6 (pill 3.5 × 0.8, outlined, first letter in the accent) with a bold 22 pt line and a grey 20 pt detail, a spine line, an italic closing line, "What comes next:" run-in bold at 20 pt; right: section title, two screenshots side by side with shadow, 18 pt italic captions, two bullets 22 pt |
-| Footer | 43.5–46.3 | licence line 20 pt w 26; references 15 pt in two columns (w 12.6 and 13.4, y +0.95); funding 15 pt grey (y +2.15); "Built on" plus a library logo; "Contact" label and contact QR 2.55 in at x 29.55 |
+| Header | 0.65–8.1 | wordmark w 17.0 at (1.0, 0.65); institution logo w 7.8 right-aligned, centred on the wordmark; paper title 52 pt bold, two balanced lines via `\n`, at y 4.7; authors 36 pt at y 6.6 (w 13); affiliations 28 pt, right-aligned at x 14.0, three short lines ending with "* mail" |
+| Abstract | 8.6–13.6 | rotated accent tab (3.4 × 0.9, `rotate: 270`, shape and text separately) at x 1.45; abstract 30 pt justified, centred vertically, x 2.5 w 21.6, at most ~120 words; two QR codes 2.6 in at x 25.1 and 28.9 with one-word labels; two italic URLs below |
+| Row 2 | 14.2–32.5 | left: section title, illustration 10.0 wide (3:1), caption 28 pt italic grey, legend two by two, seven step boxes h 1.22 gap 0.32 with 32 pt bold title and one 28 pt line, down arrows between; right: "Results" title, two halves each with a 32 pt sub-heading; half 1 three stat rows h 1.15 (54 pt value left, 28 pt two-line label right), stacked column chart h 8.4 with hidden value axis, two bullets 30 pt; half 2 horizontal bar chart h 7.6, table rowH 0.74 (28 pt), note 30 pt; both halves end with an italic accent takeaway at y R2B − 1.3 |
+| Row 3 | 33.0–42.55 | left: section title, four pill rows h 1.62 (pill 3.4 × 0.85, outlined, first letter in the accent) with a bold 30 pt line and a grey 28 pt detail, a spine line, a one-line italic closing line, "Next:" run-in bold at 28 pt; right: section title, two screenshots side by side with shadow, 28 pt italic captions, two bullets 30 pt |
+| Footer | 43.05–46.25 | licence line 28 pt w 26; short references 28 pt in two columns of three (w 12.6, y +0.7); funding 28 pt grey (y +2.25); "Built on" plus a library logo; "Contact" label and contact QR 2.55 in at x 29.55 |
 
 ## Type scale
 
-Section titles 40 pt regular, centred over their column. Sub-headings 28 pt bold. Body 22–25 pt.
-Captions and legends 18–20 pt. References and funding 15 pt. Chart text uses `"+mn-lt"` as the font
-face. Nothing below 15 pt on A0. Calibri (or Arial) so the LibreOffice render predicts PowerPoint.
+The floor: nothing under 7 pt when the whole poster is printed on A4 and held at arm's length,
+which is 28 pt on A0 (20 pt on A1). On A0: title 52 pt bold, section titles 48 pt regular centred
+over their column, sub-headings and step titles 32 pt bold, body 30 pt, captions, legends, labels,
+references, funding and all chart text 28 pt. Chart text uses `"+mn-lt"` as the font face and has
+every size set (title, axes, data labels, legend); a chart default renders at 10–18 pt. Calibri (or
+Arial) so the LibreOffice render predicts PowerPoint. `scripts/fontcheck.py` checks the floor.
+
+The floor costs space: at 28 pt a line holds about 5.5 characters per inch of box width (Calibri).
+Budget text by that before building, and shorten text that does not fit; never set it smaller.
+The UI text inside a screenshot is part of the image and cannot meet the floor; give screenshots
+space instead (`references/content.md`).
 
 ## Colour roles
 
@@ -55,8 +63,12 @@ after `writeFile`.
 ## Content rules
 
 - One message per region; the takeaway lines carry the argument, the bullets carry the facts.
-- Step boxes: title plus one or two lines, at most ~110 characters, or the box wraps to three lines.
-- Table labels under ~30 characters, stat labels two short lines, chart titles one line at 22 pt.
-- Screenshot captions under ~60 characters at 18 pt for an 8.9 in column.
-- The abstract may be the manuscript abstract verbatim if it fits 11–12 lines at 25 pt in 21.6 in.
+- Step boxes: a title plus one line of at most ~60 characters at 28 pt in a 12 in column.
+- Table labels under ~20 characters; stat labels two lines of ~22 characters; chart titles one line
+  of ~45 characters in an 8.8 in half column; value columns hold numbers, the chart holds percentages.
+- Screenshot captions under ~40 characters at 28 pt for an 8.9 in column.
+- The abstract is a ~120-word version of the manuscript abstract with all of its numbers; the
+  full text does not fit at 30 pt.
+- References in short form, at most 7, the full list in the README.
 - Numbered markers only where the order is real (the pipeline); principles get pills, not numbers.
+- More rules on numbers, wording and redesigns: `references/content.md`.
