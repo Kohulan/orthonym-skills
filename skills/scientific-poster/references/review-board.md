@@ -56,4 +56,6 @@ decision gets one question with a default; everything else is applied.
 - The board is private to its owner unless shared from its Share menu; "send to Claude" works for
   editors only, and only while a session that published or read the artifact is running.
 - To start a clean sheet, delete the `pins` documents with a batch; do not publish a new URL.
+- If the board link no longer opens (the artifact was deleted), publish a new board, give the user
+  the new link and update the link in project memory; never hand over the dead one again.
 - Without the Artifact tool, send the preview image in chat and take the changes as a numbered list.

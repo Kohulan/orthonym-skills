@@ -5,7 +5,7 @@ Contents: environment, build chain, what to look for, deliverables.
 ## Environment (once per session, in a scratch folder outside the repo)
 
 ```bash
-S=<scratch folder>; SK=<folder of Anthropic's pptx skill>
+S=<scratch folder>; SK=<folder of Anthropic's pptx skill>; PS=<folder of this skill>
 mkdir -p $S/build $S/assets && cd $S/build
 npm install pptxgenjs sharp playwright              # pin playwright to the browser build you have cached
 python3 -m venv $S/venv && $S/venv/bin/pip install defusedxml lxml pillow qrcode 'markitdown[docx]'
@@ -20,6 +20,7 @@ Python steps read the skill folder from `$SK`. Run LibreOffice through the skill
 ```bash
 node poster.js \
 && $S/venv/bin/python $SK/scripts/office/validate.py X.pptx \
+&& $S/venv/bin/python $PS/scripts/fontcheck.py X.pptx \
 && python3 $SK/scripts/office/soffice.py --headless --convert-to pdf X.pptx >/dev/null 2>&1 \
 && rm -f slide-*.jpg hi-*.jpg && pdftoppm -jpeg -r 45 X.pdf slide && pdftoppm -jpeg -r 110 X.pdf hi
 ```
@@ -32,6 +33,9 @@ and look at every crop, not only the overview. The 45 dpi `slide-1.jpg` is the p
 - Wrapping: a title spilling into the line below, a stat value on two lines, a table label on two
   rows, a caption pushed under the next element. Shorten the text or widen the box; do not shrink
   fonts below the scale.
+- Small text: `fontcheck.py` lists every run, table cell and chart element under the floor (7 pt
+  on an A4 print, 28 pt on A0) with its shape name, and every chart element with no size. Raise
+  the size and shorten the text; it must report 0 and 0.
 - Overlaps: bullets under an image whose height came from the wrong aspect ratio. Compute sizes
   from the file's real pixel dimensions.
 - Empty gaps: a half column whose chart is too short for its row. Grow the chart or table.
@@ -42,7 +46,13 @@ and look at every crop, not only the overview. The 45 dpi `slide-1.jpg` is the p
   must be `ctr`, `inEnd` or `inBase`.
 - Rotated text: shape and text box share the same unrotated box and `rotate: 270`; a negative x in
   the unrotated box is fine.
-- `validate.py` must print that all validations passed before the pptx leaves the build folder.
+- A brand font the render machine lacks: LibreOffice falls back to a font with other widths, so
+  the render wraps where PowerPoint does not. Alias it to a close match for the render only, in
+  `~/.config/fontconfig/conf.d/60-<font>-alias.conf`:
+  `<fontconfig><alias><family>Brand Font</family><prefer><family>Close Match</family></prefer></alias></fontconfig>`,
+  then `fc-cache -f`; say in the README that the render uses the alias.
+- `validate.py` must print that all validations passed, and `fontcheck.py` must exit 0, before the
+  pptx leaves the build folder.
 
 ## Deliverables
 
