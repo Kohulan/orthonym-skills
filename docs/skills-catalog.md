@@ -144,6 +144,18 @@ Start/resume a work session by self-priming from durable state (a handoff note +
 matches the roadmap. **Wire up:** your handoff-note path, your notes/memory location, and (optional)
 your roadmap for the drift-check.
 
+### `trace-friction`
+Review a hard session and propose changes to the agent's **environment**, not to its memory. A bundled
+scanner (`scripts/friction.py`) reads the session log and lists the hard moments: failed calls, repeated
+calls, long searches, user corrections, hook blocks, oversized tool results. Each proposal must name
+one of those moments and its cost; a smooth session ends with "nothing to change". A lesson that was
+already written down and broken again goes up a rung: check or hook first, then tool, skill, reviewer
+rule, and a steering-file pointer last. Each trace also checks whether the fixes from the last trace
+held, and lists steering to remove. It proposes only. **Triggers:** "run a retro", "why did that take
+so long", "how do we stop this happening again". **Wire up:** your friction log path and where your durable
+notes live. The scanner reads Claude Code logs; in another harness, build the ledger by hand. The seven
+question areas come from the `retro` skill in [Matt Pocock's skills](https://github.com/mattpocock/skills) (MIT).
+
 ### `handoff`
 End-of-session handoff — verify durable memory is written and produce a next-session resume note so the
 next session needs no hand-written prompt. Includes the "never trim your memory file to hit a byte

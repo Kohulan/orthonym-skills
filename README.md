@@ -1,7 +1,7 @@
 <a id="top"></a>
 
 <a href="https://github.com/Kohulan/orthonym-skills">
-  <img src="docs/assets/banner.svg" alt="Orthonym Skills. Decide from measurement, not from a confident guess. Claude Code plugin: 23 skills, 5 hooks, 1 agent, v0.5.0. Seven spectral lines on a nanometre scale stand for the loop: measure, cluster, target, spy, fix, gate, review." width="100%"><!-- x-release-please-version -->
+  <img src="docs/assets/banner.svg" alt="Orthonym Skills. Decide from measurement, not from a confident guess. Claude Code plugin: 24 skills, 5 hooks, 1 agent, v0.5.0. Seven spectral lines on a nanometre scale stand for the loop: measure, cluster, target, spy, fix, gate, review." width="100%"><!-- x-release-please-version -->
 </a>
 
 <br/>
@@ -66,6 +66,7 @@ otherwise slip through.
 
 [`reuse-before-rerun`](skills/reuse-before-rerun/) fires before any run over a minute.
 [`watching-background-jobs`](skills/watching-background-jobs/) fires while the gate runs.
+[`trace-friction`](skills/trace-friction/) runs after a hard session, before handoff.
 </details>
 
 The workflow skills chain into one session. The process skills fire at any step where a decision
@@ -87,7 +88,7 @@ Inside Claude Code, run these two commands one at a time.
    /plugin install orthonym-skills@orthonym-skills
    ```
 
-You get all 23 skills (as `/orthonym-skills:<name>`), the `reference-consult` agent, and the
+You get all 24 skills (as `/orthonym-skills:<name>`), the `reference-consult` agent, and the
 `block-git-add-all` hook. The other four hooks are opt-in: see [`hooks/README.md`](hooks/README.md).
 Claude picks up a skill from its description when your task matches it.
 
@@ -224,6 +225,7 @@ Wire in your project's commands once. The [catalog](docs/skills-catalog.md) says
 | [`reuse-before-rerun`](skills/reuse-before-rerun/) | Before any run longer than a minute; "how many…", "where is the run from…" | One sweep of ledger, repo, scratch dirs, notes. Then a 3-line **REUSE / EXTEND / RERUN** verdict. |
 | [`run-gate`](skills/run-gate/) | Before shipping a phase | Clear the old verdict, launch in the background, wait for the new verdict file, read the *structured* verdict, never the exit code. |
 | [`watching-background-jobs`](skills/watching-background-jobs/) | Anything running longer than ~5 minutes | Own the watch loop; one progress line per wake-up; CPU check before calling a stall. |
+| [`trace-friction`](skills/trace-friction/) | "Run a retro", "why did that take so long", "how do we stop this happening again" | A ledger of hard moments from the session log, each with a cost. No moment, no proposal. A lesson already written and broken again gets a check, not a second note. Proposes only. |
 | [`handoff`](skills/handoff/) | Wrapping up a session | Lessons into both memory layers; a resume note `kickoff` can check against git; never trim durable notes. |
 
 ### Media skills
